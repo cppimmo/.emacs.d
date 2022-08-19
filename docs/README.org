@@ -5,6 +5,9 @@
 #+DESCRIPTION: GNU Emacs Configuration Repository README.
 #+LANGUAGE: en
 
+% Prefered output format is Plain Text -> ASCII File. Place the result in the
+% root directory.
+
 This repository is for versioning my GNU Emacs configuration files. I hope to
 keep them platform independent, so I can use them across all my machines (both
 UNIX-like and Windows).
