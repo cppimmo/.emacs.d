@@ -42,6 +42,7 @@
 (global-display-line-numbers-mode 1)
 ;; Enable overwriting of marked region.
 (delete-selection-mode t)
+
 ;; Set the fill column in auto fill mode.
 (add-hook 'text-mode-hook '(lambda()
 							  ;; (turn-on-auto-fill) ; Keep as reference.
@@ -79,13 +80,16 @@
 ;; (setq-default whitespace-line-column 80
 ;;			  whitespace-style '(face lines-tail))
 ;; (add-hook 'cc-prog-mode-hook #'whitespace-mode)
-(require 'fill-column-indicator)
 
+;; Settings for fill column indicator package.
+;; Toggle with `fci-mode'.
+(use-package fill-column-indicator)
+(require 'fill-column-indicator)
 (setq fci-rule-column 80)
 (setq fci-rule-width 2)
 (setq fci-rule-color "red")
 
-(add-hook 'cc-mode-hook 'fci-mode)
+;; (add-hook 'cc-mode-hook 'fci-mode)
 (setq c-default-style "bsd")
 (setq-default c-basic-offset 4
 	      tab-width 4
