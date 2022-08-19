@@ -1,0 +1,28 @@
+#+TITLE: My GNU Emacs Configuration
+#+AUTHOR: Brian Hoffpauir
+#+DATE: [2022-08-18 Thu]
+#+EMAIL: nil
+#+DESCRIPTION: GNU Emacs Configuration Repository README.
+#+LANGUAGE: en
+
+This repository is for versioning my GNU Emacs configuration files. I hope to
+keep them platform independent, so I can use them across all my machines (both
+UNIX-like and Windows).
+
+* Note
+
+To use this configuration there should be no /~\slash{}.emacs/ file as this
+configuration uses an /init.el/ that is stored in the /~\slash{}.emacs.d/
+directory.  Also ensure that when cloning this repository something resembling
+following command is used:
+#+BEGIN_SRC sh
+mv ~/.emacs.d ~/.emacs.d.bak && git clone <url> ~/.emacs.d
+#+END_SRC
+This configuration uses custom.el as the customize options settings file.
+
+* Packages Used (MELPA)
+
+* License
+
+#+INCLUDE: "./LICENSE"
+

@@ -1,0 +1,9 @@
+# Ignore Emacs backup files.
+*~
+# Ignore Emacs auto saves directory.
+auto-save-list/**
+# Ignore Emacs elpa directory.
+elpa/**
+# Ignore the Emacs customize options file.
+custom.el
+

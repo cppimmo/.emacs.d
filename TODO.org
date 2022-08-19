@@ -1,0 +1,10 @@
+
+% When a task is completed mark it as DONE.
+% Use C-c C-t for /org-todo/ command.
+% See Xah Lee article:
+% http://xahlee.info/emacs/emacs/emacs_org_mode_for_todo.html
+
+* TODO Implement /Packages Used (MELPA)/ Section
+Date Issued: /<2022-08-18 Thu>/
+Date Completed: /.../
+
