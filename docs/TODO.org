@@ -8,3 +8,11 @@
 Date Issued: /<2022-08-18 Thu>/
 Date Completed: /.../
 
+* DONE Use the /lua-mode/ Package
+Date Issued: /<2022-08-20 Sat>/
+Date Completed: /<2022-08-20 Sat>/
+
+* TODO Customize the Modeline
+Date Issued: /<2022-08-20 Sat>/
+Date Completed: /.../
+

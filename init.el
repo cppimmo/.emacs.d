@@ -8,14 +8,13 @@
 ;; Try to silence annoying GPG errors, because I don't really care.
 (setq package-signature-check nil)
 
-;; Define and initialise package repositories
+;; Define and initialise package repositories.
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 (package-initialize)
 
-;; use-package to simplify the config file
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
+;; Install use-package to simplify the configuration file.
+(when (not (package-installed-p 'use-package))
   (package-install 'use-package))
 (require 'use-package)
 (setq use-package-always-ensure 't)
@@ -32,8 +31,10 @@
 
 ;; Disable tool bar.
 (tool-bar-mode -1)
-;; Always show line cursor position.
+;; Always show line cursor position in the modeline.
 (column-number-mode 1)
+;; Display time in the modeline.
+(display-time-mode 1)
 ;; Confirmation input settings.
 ;; (defalias 'yes-or-no-p 'y-or-n-p-) ; Disable for now.
 ;; Set the default directory (for find-file, etc.).
@@ -53,6 +54,8 @@
 (pomodoro-add-to-mode-line) ; Add to the modeline.
 ;; Settings for the php mode package.
 (use-package php-mode)
+;; Settings for the lua mode package.
+(use-package lua-mode)
 ;; Settings for the markdown mode package.
 (use-package markdown-mode)
 ;; The the appropriate "markdown-command" for Microsoft Windows.
