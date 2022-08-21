@@ -48,16 +48,24 @@
 (add-hook 'text-mode-hook '(lambda()
 							  ;; (turn-on-auto-fill) ; Keep as reference.
 							 (set-fill-column 80)))
+
 ;; Settings for the pomodoro package.
 (use-package pomodoro)
 (require 'pomodoro)
 (pomodoro-add-to-mode-line) ; Add to the modeline.
+
 ;; Settings for the php mode package.
 (use-package php-mode)
+
 ;; Settings for the lua mode package.
 (use-package lua-mode)
+
+;; Settings for the ox-leanpub package.
+(use-package ox-leanpub)
+
 ;; Settings for the markdown mode package.
 (use-package markdown-mode)
+
 ;; The the appropriate "markdown-command" for Microsoft Windows.
 (if (string-equal system-type "windows-nt")
 	(progn
@@ -66,9 +74,11 @@
 
 ;; Install the 2048-game package.
 (use-package 2048-game)
+
 ;; Install the doom-themes packages and set the theme.
 (use-package doom-themes
   :config (load-theme 'doom-1337 t))
+
 ;; Settings for the flyspell package.
 (use-package flyspell
   :config
@@ -84,8 +94,7 @@
 ;;			  whitespace-style '(face lines-tail))
 ;; (add-hook 'cc-prog-mode-hook #'whitespace-mode)
 
-;; Settings for fill column indicator package.
-;; Toggle with `fci-mode'.
+;; Settings for fill column indicator package. Toggle with "fci-mode".
 (use-package fill-column-indicator)
 (require 'fill-column-indicator)
 (setq fci-rule-column 80)
