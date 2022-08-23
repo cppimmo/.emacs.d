@@ -24,3 +24,7 @@ Date Completed: /<2022-08-20 Sat>/
 Date Issued: /<2022-08-23 Tue>/
 Date Completed: /<2022-08-23 Tue>/
 
+* DONE Confirm Configuration Runs on Linux
+Date Issued: /<2022-08-23 Tue>/
+Date Completed: /<2022-08-23 Tue>/
+
