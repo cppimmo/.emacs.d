@@ -79,15 +79,12 @@
 (use-package doom-themes
   :config (load-theme 'doom-1337 t))
 
-;; Settings for the flyspell package.
-(use-package flyspell
-  :config
-  (setq ispell-program-name "hunspell.exe"
-		ispell-default-dictionary "en_US")
-  :hook (text-mode . flyspell-mode)
-  :bind (("M-<f7>" . flyspell-buffer)
-		 ("<f7>" . flyspell-word)
-		 ("C-;" . flyspell-auto-correct-previous-word)))
+;; https://www.reddit.com/r/emacs/comments/8by3az/how_to_set_up_sell_check_for
+;; _emacs_in_windows/
+;; Set the ispell program name on Microsoft Windows systems.
+(if (string-equal system-type "windows-nt")
+    (progn
+      (setq ispell-program-name "C:/tools/msys64/usr/bin/aspell.exe")))
 
 ;; Configuration for the CC mode.
 ;; (setq-default whitespace-line-column 80
