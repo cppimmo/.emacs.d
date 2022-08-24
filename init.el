@@ -41,6 +41,8 @@
 (setq default-directory user-emacs-directory)
 ;; Enable line number bar globally.
 (global-display-line-numbers-mode 1)
+;; Enable visual line mode globally.
+(global-visual-line-mode t)
 ;; Enable overwriting of marked region.
 (delete-selection-mode t)
 
