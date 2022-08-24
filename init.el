@@ -43,6 +43,8 @@
 (global-display-line-numbers-mode 1)
 ;; Enable visual line mode globally.
 (global-visual-line-mode t)
+;; Set the visual line fringe indicators.
+(setq visual-line-fringe-indicators '(left-curly-arrow right-curly-arrow))
 ;; Enable overwriting of marked region.
 (delete-selection-mode t)
 
