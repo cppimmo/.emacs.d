@@ -4,9 +4,9 @@
 % See Xah Lee article:
 % http://xahlee.info/emacs/emacs/emacs_org_mode_for_todo.html
 
-* TODO Implement /Packages Used (MELPA)/ Section
+* DONE Implement /Packages Used (MELPA)/ Section
 Date Issued: /<2022-08-18 Thu>/
-Date Completed: /.../
+Date Completed: /<2022-09-02 Fri>/
 
 * DONE Use the /lua-mode/ Package
 Date Issued: /<2022-08-20 Sat>/
@@ -24,7 +24,19 @@ Date Completed: /<2022-08-20 Sat>/
 Date Issued: /<2022-08-23 Tue>/
 Date Completed: /<2022-08-23 Tue>/
 
-* DONE Finally complete Hunspell integration on Windows
+* DONE Finally Complete Hunspell Integration on Windows
 Date Issued: /<2022-08-23 Tue>/
 Date Completed: /<2022-09-01 Thu>/
+
+* DONE Add Global Binding for Toggling whitespace-mode
+Date Issued: /<2022-09-02 Fri>/
+Date Completed: /<2022-09-02 Fri>/
+
+* DONE Add Insertion for CDATA Tags in XML Documents
+Date Issued: /<2022-09-02 Fri>/
+Date Completed: /<2022-09-02 Fri>/
+
+* TODO Ensure That CDATA Insertion Binding is Only Set for the XML Major Mode
+Date Issued: /<2022-09-02 Fri>/
+Date Completed: /.../
 

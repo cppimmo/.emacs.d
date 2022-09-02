@@ -1,12 +1,14 @@
 #+TITLE: My GNU Emacs Configuration
 #+AUTHOR: Brian Hoffpauir
-#+DATE: [2022-08-18 Thu]
+#+DATE:
 #+EMAIL: nil
 #+DESCRIPTION: GNU Emacs Configuration Repository README.
 #+LANGUAGE: en
 
+#+BEGIN_COMMENT
 % Prefered output format is Plain Text -> ASCII File. Place the result in the
 % root directory.
+#+END_COMMENT
 
 This repository is for versioning my GNU Emacs configuration files. I hope to
 keep them platform independent, so I can use them across all my machines (both
@@ -25,7 +27,20 @@ This configuration uses custom.el as the customize options settings file.
 
 * Packages Used (MELPA)
 
+- use-package
+- pomodoro
+- php-mode
+- lua-mode
+- ox-leanpub
+- markdown-mode
+- 2048-game
+- doom-themes
+
+* Key Bindings
+
+- "C-M-y" - Toggle built-in whitespace minor mode.
+
 * License
 
-#+INCLUDE: "./LICENSE"
+#+INCLUDE: "../LICENSE"
 

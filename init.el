@@ -63,15 +63,31 @@
 (delete-selection-mode t)
 
 
+;; Set binding for whitespace-mode minor mode.
+(global-set-key (kbd "C-M-y") 'whitespace-mode)
+
+
+(defun cppimmo-insert-xml-cdata ()
+  "Insert CDATA tags for XML documents."
+  (interactive)
+  (insert "<![CDATA[]]>")
+  (let ((cppimmo-index 0))
+	(while (< cppimmo-index 3)
+	  (backward-char)
+	  (setq cppimmo-index (+ cppimmo-index 1)))))
+;; Set binding for CDATA tag insertion for XML documents.
+(global-set-key (kbd "C-M-!") 'cppimmo-insert-xml-cdata)
+
+
 ;; Set the fill column in auto fill mode.
 (add-hook 'text-mode-hook
-		  (lambda()
+		  (lambda ()
 			;; (turn-on-auto-fill) ; Keep as reference.
 			(set-fill-column 80)))
 
 
 ;; Settings for the pomodoro package.
-(use-package pomodoro)
+ (use-package pomodoro)
 (require 'pomodoro)
 (pomodoro-add-to-mode-line) ; Add to the modeline.
 
@@ -87,8 +103,7 @@
 (defun cppimmo-lua-mode-hook ()
   "I want tabs!"
   (setq indent-tabs-mode t) ; Enable indent tabs mode via the mode-hook.
-  (abbrev-mode nil) ; This probably isn't really relevant.
-  )
+  (abbrev-mode nil)) ; This probably isn't really relevant.
 
 (add-hook 'lua-mode-hook 'cppimmo-lua-mode-hook)
 
@@ -118,13 +133,11 @@
 
 (defun cppimmo-ispell-windows-nt ()
   "Configuration for the ispell functionality on Windows.
- It truly is an unbearable experience. The trick is to use msys2
- and the MinGW hunspell and hunspell-en packages.
+The trick is to use msys2 and the MinGW hunspell and hunspell-en packages.
  URL `https://www.reddit.com/r/emacs/comments/8by3az/how_to_set_up_sell_check_for_emacs_in_windows/'
  URL `https://stackoverflow.com/questions/8931580/hunspell-cant-open-affix-or-dictionary-files-for-dictionary-named-en-us'"
-  (setq ispell-program-name "hunspell.exe") ; Set the executable name.
-  (setq ispell-dictionary "en_US") ; Set the appropriate word dictionary.
-  )
+  (setq ispell-program-name "C:/tools/msys64/mingw64/bin/hunspell.exe") ; Set the executable name.
+  (setq ispell-dictionary "en_US")) ; Set the appropriate word dictionary.
 ;; Set the ispell program name on Microsoft Windows systems.
 (if (string-equal system-type "windows-nt")
     (progn (cppimmo-ispell-windows-nt))) ; Finaly call the window-nt configuration.
