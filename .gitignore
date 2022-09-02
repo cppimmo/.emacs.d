@@ -7,3 +7,4 @@ elpa/**
 # Ignore the Emacs customize options file.
 custom.el
 
+eln-cache/**
