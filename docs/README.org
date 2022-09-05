@@ -39,6 +39,7 @@ This configuration uses custom.el as the customize options settings file.
 * Key Bindings
 
 - "C-M-y" - Toggle built-in whitespace minor mode.
+- "C-M-!" - Insert XML CDATA tag for XML documents (I use this for styling my blog).
 
 * License
 

@@ -6,15 +6,13 @@
                       ____________________________
 
 
-                            [2022-08-18 Thu]
-
-
 Table of Contents
 _________________
 
 1. Note
 2. Packages Used (MELPA)
-3. License
+3. Key Bindings
+4. License
 
 
 This repository is for versioning my GNU Emacs configuration files. I
@@ -39,8 +37,25 @@ machines (both UNIX-like and Windows).
 2 Packages Used (MELPA)
 =======================
 
+  - use-package
+  - pomodoro
+  - php-mode
+  - lua-mode
+  - ox-leanpub
+  - markdown-mode
+  - 2048-game
+  - doom-themes
 
-3 License
+
+3 Key Bindings
+==============
+
+  - "C-M-y" - Toggle built-in whitespace minor mode.
+  - "C-M-!" - Insert XML CDATA tag for XML documents (I use this for
+    styling my blog).
+
+
+4 License
 =========
 
   BSD 2-Clause License
