@@ -6,7 +6,7 @@
 
 ;; Append my own Emacs Lisp library to the load-path variable.
 (setq load-path (append load-path
-			(list (concat user-emacs-directory "cppimmo"))))
+						(list (concat user-emacs-directory "cppimmo"))))
 
 (load "test.el")
 (cppimmo-test)
@@ -181,7 +181,7 @@ The trick is to use msys2 and the MinGW hunspell and hunspell-en packages.
   (setq ispell-dictionary "en_US")) ; Set the appropriate word dictionary.
 ;; Set the ispell program name on Microsoft Windows systems.
 (if (string-equal system-type "windows-nt")
-    (progn (cppimmo-ispell-windows-nt))) ; Finaly call the window-nt configuration.
+    (progn (cppimmo-ispell-windows-nt))) ; Finally call the window-nt configuration.
 
 ;; Configuration for the CC mode.
 (setq c-default-style "bsd")
