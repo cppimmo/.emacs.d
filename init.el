@@ -51,7 +51,7 @@ I don't use this for Linux, because I sometimes use window managers that do not
 supported the typical floating layout."
   (when window-system (set-frame-size (selected-frame) 80 24)))
 (if (string-equal system-type "windows-nt")
-	(progn (cppimmo-configure-frame-size)))
+	(progn (cppimmo-configure-frame-size-windows-nt)))
 
 
 ;; Confirmation input settings.
