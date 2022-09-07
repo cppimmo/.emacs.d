@@ -11,6 +11,8 @@
 (load "test.el")
 (cppimmo-test)
 
+(load "cppimmo-count-words-mode")
+
 ;; PACKAGE SYSTEM SETUP =========================================================
 ;; Try to silence annoying GPG errors, because I don't really care.
 (setq package-signature-check nil)
@@ -61,7 +63,7 @@ supported the typical floating layout."
 ;; Set the default directory (for find-file, etc.).
 (setq default-directory user-emacs-directory)
 
-;; (setq mouse-highlight nil)
+(setq mouse-highlight nil) ; The highlighting can white-out text on darker themes.
 (setq shift-select-mode t) ; I want to have select with shift + movement keys.
 (setq line-move-visual t)
 

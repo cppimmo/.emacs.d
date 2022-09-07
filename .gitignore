@@ -8,3 +8,7 @@ elpa/**
 custom.el
 
 eln-cache/**
+
+# Ignore byte-compiled Emacs Lisp files.
+*.elc
+
