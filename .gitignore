@@ -8,3 +8,6 @@ elpa/**
 custom.el
 
 eln-cache/**
+
+# Ignore the Emacs point save place file.
+/places
