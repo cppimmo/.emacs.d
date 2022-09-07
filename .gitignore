@@ -11,3 +11,6 @@ eln-cache/**
 
 # Ignore the Emacs point save place file.
 /places
+
+# Ignore byte-compiled Emacs Lisp files.
+*.elc

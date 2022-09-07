@@ -40,3 +40,15 @@ Date Completed: /<2022-09-02 Fri>/
 Date Issued: /<2022-09-02 Fri>/
 Date Completed: /.../
 
+* TODO Create Documentation for cppimmo-count-words-mode
+Date Issued: /<2022-09-06 Tue>/
+Date Completed: /.../
+
+* DONE Add Byte-compiled Emacs Lisp Files to .gitignore
+Date Issued: /<2022-09-06 Tue>/
+Date Completed: /<2022-09-06 Tue>/
+
+* TODO Disable Mouse Highlighting
+Date Issued: /<2022-09-06 Tue>/
+Date Completed: /<2022-09-06 Tue>/
+
