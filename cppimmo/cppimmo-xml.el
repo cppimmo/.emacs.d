@@ -3,7 +3,7 @@
   "Return formatted time string."
   (format-time-string "%m/%d/%y"))
 
-(defun cppimmo-insert-xml-cdata ()
+(defun cppimmo-xml-insert-cdata ()
   "Insert CDATA tags for XML documents.
 Moves the point back 3 characters for immediate editing."
   (interactive)
@@ -13,7 +13,7 @@ Moves the point back 3 characters for immediate editing."
 	  (backward-char)
 	  (setq index (+ index 1)))))
 
-(defun cppimmo-insert-xml-blog ()
+(defun cppimmo-xml-insert-blog ()
   "Insert XML tags that I use for my website's blog."
   (interactive)
   (insert "<?xml version=\"1.0\"?>\n")
@@ -24,7 +24,7 @@ Moves the point back 3 characters for immediate editing."
   (insert (concat "  <pubDate>" (cppimmo-xml-time-string) "</pubDate>\n"))
   (insert "</post>\n"))
 
-(defun cppimmo-insert-xml-blog-rss-item ()
+(defun cppimmo-xml-insert-blog-rss-item ()
   "Insert XML blog RSS feed entry item.
 Use for inserting relevant tags into the <channel> tag of an existing XML
 document."

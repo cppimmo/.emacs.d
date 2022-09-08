@@ -116,11 +116,11 @@ supported the typical floating layout."
   (lambda ()
 	;; Set binding for CDATA tag insertion for XML documents.
 	;;; See cppimmo/cppimmo-xml.el
-	(define-key nxml-mode-map (kbd "C-c M-!") 'cppimmo-insert-xml-cdata)
+	(define-key nxml-mode-map (kbd "C-c M-!") 'cppimmo-xml-insert-cdata)
 	;; Set binding for blog insertion for XML documents.
-	(define-key nxml-mode-map (kbd "C-c M-@") 'cppimmo-insert-xml-blog)
+	(define-key nxml-mode-map (kbd "C-c M-@") 'cppimmo-xml-insert-blog)
 	;; Set binding for RSS feed item insertion for XML documents.
-	(define-key nxml-mode-map (kbd "C-c M-#") 'cppimmo-insert-xml-blog-rss-item)))
+	(define-key nxml-mode-map (kbd "C-c M-#") 'cppimmo-xml-insert-blog-rss-item)))
 
 ;; Set the fill column in auto fill mode.
 (add-hook 'text-mode-hook
