@@ -140,10 +140,31 @@ supported the typical floating layout."
 ;; (global-auto-revert-mode 1) ; Reload buffer upon file modification.
 
 
-;; (setq make-backup-files nil)
-;; (setq backup-by-copying t)
+(defun cppimmo-backup-file-name (file-path)
+  "This function from Xah Lee creates new directories for backups.
+It creates directories that do not exist in the backup root.
+Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
+  (let (backup-root backup-file-path) ; let* could be used here, but it would be ugly.
+	(setq backup-root "~/.emacs.d/backup/")
+	;; This format remove the Windows drive letter.
+	(setq backup-file-path
+		  (format "%s%s~" backup-root
+				  (replace-regexp-in-string "^[A-Za-z]:/" "" file-path)))
+	(make-directory
+	 (file-name-directory backup-file-path)
+	 (file-name-directory backup-file-path))
+	backup-file-path)) ; Return backup-file-path string.
+
+(setq make-backup-files t) ; Make sure backups are enabled.
+;; Set the backup file name function
+(setq make-backup-file-name-function 'cppimmo-backup-file-name)
+
+
+;; Preserve creation date on Windows (irrelevant on UNIX-like systems).
+(if (string-equal system-type "windows-nt")
+	(progn (setq backup-by-copying t)))
 ;; (setq create-lockfiles nil)
-;; (setq auto-save-default nil)
+(setq auto-save-default nil) ; I save impulsively, so disabling this is fine.
 
 
 ;; PACKAGE CONFIGURATION ========================================================
