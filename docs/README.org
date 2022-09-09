@@ -26,7 +26,7 @@ configuration uses an /init.el/ that is stored in the /~\slash{}.emacs.d/
 directory.  Also ensure that when cloning this repository something resembling
 following command is used:
 #+BEGIN_SRC sh
-mv ~/.emacs.d ~/.emacs.d.bak && git clone <url> ~/.emacs.d
+mv ~/.emacs.d ~/.emacs.d.bak && mv ~/.emacs ~/.emacs.bak && git clone <url> ~/.emacs.d
 #+END_SRC
 This configuration uses custom.el as the customize options settings file.
 
