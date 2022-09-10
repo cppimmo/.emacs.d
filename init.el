@@ -8,9 +8,7 @@
 (setq load-path (append load-path
 						(list (concat user-emacs-directory "cppimmo"))))
 
-(load "test.el")
-(cppimmo-test)
-
+(load "cppimmo-xml")
 (load "cppimmo-count-words-mode")
 
 ;; PACKAGE SYSTEM SETUP =========================================================
@@ -55,6 +53,36 @@ supported the typical floating layout."
 (if (string-equal system-type "windows-nt")
 	(progn (cppimmo-configure-frame-size-windows-nt)))
 
+;; Thank you, Xah Lee.
+;; Set font for symbols (symbol . [8220 8704 9472])
+(set-fontset-font
+ t
+ 'symbol
+ (cond
+  ((string-equal system-type "windows-nt")
+   (cond
+    ((member "Segoe UI Symbol" (font-family-list)) "Segoe UI Symbol")))
+  ((string-equal system-type "darwin")
+   (cond
+    ((member "Apple Symbols" (font-family-list)) "Apple Symbols")))
+  ((string-equal system-type "gnu/linux")
+   (cond
+    ((member "Symbola" (font-family-list)) "Symbola")))))
+
+(progn
+  ;; Set font for emoji (if before emacs 28, should come after setting symbols. emacs 28 now has 'emoji . before, emoji is part of 'symbol)
+  (set-fontset-font
+   t
+   (if (version< emacs-version "28.1")
+       '(#x1f300 . #x1fad0)
+     'emoji
+     )
+   (cond
+    ((member "Apple Color Emoji" (font-family-list)) "Apple Color Emoji")
+    ((member "Noto Color Emoji" (font-family-list)) "Noto Color Emoji")
+    ((member "Noto Emoji" (font-family-list)) "Noto Emoji")
+    ((member "Segoe UI Emoji" (font-family-list)) "Segoe UI Emoji")
+    ((member "Symbola" (font-family-list)) "Symbola"))))
 
 ;; Confirmation input settings.
 (if (version< emacs-version "28.1")
@@ -63,7 +91,7 @@ supported the typical floating layout."
 ;; Set the default directory (for find-file, etc.).
 (setq default-directory user-emacs-directory)
 
-(setq mouse-highlight nil) ; The highlighting can white-out text on darker themes.
+(setq mouse-highlight t) ; The highlighting can white-out text on darker themes, enable it however.
 (setq shift-select-mode t) ; I want to have select with shift + movement keys.
 (setq line-move-visual t)
 
@@ -83,18 +111,16 @@ supported the typical floating layout."
 (global-set-key (kbd "C-M-y") 'whitespace-mode)
 
 
-(defun cppimmo-insert-xml-cdata ()
-  "Insert CDATA tags for XML documents.
-Moves the point back 3 characters for immediate editing."
-  (interactive)
-  (insert "<![CDATA[]]>")
-  (let ((index 0))
-	(while (< index 3)
-	  (backward-char)
-	  (setq index (+ index 1)))))
-;; Set binding for CDATA tag insertion for XML documents.
-(global-set-key (kbd "C-M-!") 'cppimmo-insert-xml-cdata)
-
+;; Set special bindings for the default nxml-mode.
+(eval-after-load 'nxml-mode
+  (lambda ()
+	;; Set binding for CDATA tag insertion for XML documents.
+	;;; See cppimmo/cppimmo-xml.el
+	(define-key nxml-mode-map (kbd "C-c M-!") 'cppimmo-xml-insert-cdata)
+	;; Set binding for blog insertion for XML documents.
+	(define-key nxml-mode-map (kbd "C-c M-@") 'cppimmo-xml-insert-blog)
+	;; Set binding for RSS feed item insertion for XML documents.
+	(define-key nxml-mode-map (kbd "C-c M-#") 'cppimmo-xml-insert-blog-rss-item)))
 
 ;; Set the fill column in auto fill mode.
 (add-hook 'text-mode-hook
@@ -114,10 +140,31 @@ Moves the point back 3 characters for immediate editing."
 ;; (global-auto-revert-mode 1) ; Reload buffer upon file modification.
 
 
-;; (setq make-backup-files nil)
-;; (setq backup-by-copying t)
+(defun cppimmo-backup-file-name (file-path)
+  "This function from Xah Lee creates new directories for backups.
+It creates directories that do not exist in the backup root.
+Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
+  (let (backup-root backup-file-path) ; let* could be used here, but it would be ugly.
+	(setq backup-root "~/.emacs.d/backup/")
+	;; This format remove the Windows drive letter.
+	(setq backup-file-path
+		  (format "%s%s~" backup-root
+				  (replace-regexp-in-string "^[A-Za-z]:/" "" file-path)))
+	(make-directory
+	 (file-name-directory backup-file-path)
+	 (file-name-directory backup-file-path))
+	backup-file-path)) ; Return backup-file-path string.
+
+(setq make-backup-files t) ; Make sure backups are enabled.
+;; Set the backup file name function
+(setq make-backup-file-name-function 'cppimmo-backup-file-name)
+
+
+;; Preserve creation date on Windows (irrelevant on UNIX-like systems).
+(if (string-equal system-type "windows-nt")
+	(progn (setq backup-by-copying t)))
 ;; (setq create-lockfiles nil)
-;; (setq auto-save-default nil)
+(setq auto-save-default nil) ; I save impulsively, so disabling this is fine.
 
 
 ;; PACKAGE CONFIGURATION ========================================================
@@ -132,8 +179,7 @@ Moves the point back 3 characters for immediate editing."
 ;; Settings for the pomodoro package.
  (use-package pomodoro)
 (require 'pomodoro)
-(pomodoro-add-to-mode-line) ; Add to the modeline.
-
+(pomodoro-add-to-mode-line) ; Add to themes.
 
 ;; Settings for the php mode package.
 (use-package php-mode)
@@ -157,6 +203,9 @@ Moves the point back 3 characters for immediate editing."
 
 ;; Settings for the markdown mode package.
 (use-package markdown-mode)
+;; Settings for the markdown preview mode
+(use-package markdown-preview-eww)
+
 
 ;; The the appropriate "markdown-command" for Microsoft Windows.
 (if (string-equal system-type "windows-nt")

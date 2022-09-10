@@ -36,7 +36,7 @@ Date Completed: /<2022-09-02 Fri>/
 Date Issued: /<2022-09-02 Fri>/
 Date Completed: /<2022-09-02 Fri>/
 
-* TODO Ensure That CDATA Insertion Binding is Only Set for the XML Major Mode
+* DONE Ensure That CDATA Insertion Binding is Only Set for the XML Major Mode
 Date Issued: /<2022-09-02 Fri>/
 Date Completed: /.../
 
@@ -48,7 +48,14 @@ Date Completed: /.../
 Date Issued: /<2022-09-06 Tue>/
 Date Completed: /<2022-09-06 Tue>/
 
-* TODO Disable Mouse Highlighting
+* DONE Enable Mouse Highlighting
 Date Issued: /<2022-09-06 Tue>/
-Date Completed: /<2022-09-06 Tue>/
+Date Completed: /<2022-09-08 Thu>/
 
+* DONE Add XML Insertion Library Functions
+Date Issued: /<2022-09-08 Thu>/
+Date Completed: /<2022-09-08 Thu>/
+
+* DONE Customize Backup File Creation
+Date Issued: /<2022-09-09 Fri>/
+Date Completed: /<2022-09-09 Fri>/

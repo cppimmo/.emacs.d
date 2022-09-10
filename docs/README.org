@@ -1,16 +1,21 @@
-#+TITLE: My GNU Emacs Configuration
-#+AUTHOR: Brian Hoffpauir
+#+TITLE:
+#+AUTHOR:
 #+DATE:
 #+EMAIL: nil
 #+DESCRIPTION: GNU Emacs Configuration Repository README.
 #+LANGUAGE: en
+#+OPTIONS: toc:nil
 
 #+BEGIN_COMMENT
 % Prefered output format is Plain Text -> ASCII File. Place the result in the
 % root directory.
 #+END_COMMENT
 
-This repository is for versioning my GNU Emacs configuration files. I hope to
+* My GNU Emacs Configuration
+
+#+TOC: headlines
+
+This repository is for versioning my GNU Emacs configuration files.  I hope to
 keep them platform independent, so I can use them across all my machines (both
 UNIX-like and Windows).
 
@@ -21,7 +26,7 @@ configuration uses an /init.el/ that is stored in the /~\slash{}.emacs.d/
 directory.  Also ensure that when cloning this repository something resembling
 following command is used:
 #+BEGIN_SRC sh
-mv ~/.emacs.d ~/.emacs.d.bak && git clone <url> ~/.emacs.d
+mv ~/.emacs.d ~/.emacs.d.bak && mv ~/.emacs ~/.emacs.bak && git clone <url> ~/.emacs.d
 #+END_SRC
 This configuration uses custom.el as the customize options settings file.
 
@@ -33,13 +38,29 @@ This configuration uses custom.el as the customize options settings file.
 - lua-mode
 - ox-leanpub
 - markdown-mode
+- markdown-preview-eww
 - 2048-game
 - doom-themes
 
+* Libraries
+
+** cppimmo/cppimmo-xml.el
+Contains functions for working creating my blog posts and RSS feed blog post entry items.  See "Key Bindings".
+
+** cppimmo/cppimmo-count-words-mode.el
+Wraps the functionality provided by the default count-words- functions.  See "Key Bindings".
+
 * Key Bindings
 
+*Globals*
 - "C-M-y" - Toggle built-in whitespace minor mode.
-- "C-M-!" - Insert XML CDATA tag for XML documents (I use this for styling my blog).
+*cppimmo-insert-xml Library Functions (nxml-mode)*
+- "C-c M-!" - Insert XML CDATA tag for XML documents (I use this for styling my blog).
+- "C-c M-@" - Insert blog tags for XML documents (blog posts).
+- "C-c M-#" - Insert XML tags for RSS feed item (blog posts).
+*cppimmo-count-words-mode*
+- "C-c C-b" - (cppimmo-count-words-buffer)
+- "C-c C-r" - (cppimmo-count-words-region)
 
 * License
 
