@@ -14,3 +14,9 @@ eln-cache/**
 
 # Ignore byte-compiled Emacs Lisp files.
 *.elc
+
+# Ignore games directory.
+games/**
+
+# Ignore backup directory.
+backup/**
