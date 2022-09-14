@@ -29,6 +29,9 @@
 
 
 ;; BASIC STARTUP STUFF ==========================================================
+(setq user-full-name "Brian Hoffpauir"
+	  user-mail-address "bhoffpauir0424@gmail.com")
+
 (setq inhibit-startup-message t
 	  initial-scratch-message "Welcome, Brian!"
 	  cursor-type 'bar)
