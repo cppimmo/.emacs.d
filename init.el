@@ -179,17 +179,23 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
 (setq fci-rule-width 2)
 (setq fci-rule-color "red")
 
-;; Settings for the pomodoro package.
- (use-package pomodoro)
-(require 'pomodoro)
-(pomodoro-add-to-mode-line) ; Add to themes.
 
+;; Settings for the pomodoro package.
+(use-package pomodoro)
+(require 'pomodoro)
+(pomodoro-add-to-mode-line) ; Add to modeline.
+;;; Place all audio files in the repository to make things easier.
+;; Break time alert.
 (setq pomodoro-break-start-sound "~/.emacs.d/audio/bad-to-the-bone-fart.mp3")
+;; Work time alert.
 (setq pomodoro-work-start-sound "~/.emacs.d/audio/bad-to-the-bone-fart.mp3")
+
 (defun cppimmo-play-pomodoro-sound (sound)
-  "Play sound for pomodoro."
-  (play-sound-file sound))
+  "Replace the play sound function for the pomodoro package."
+  (play-sound-file (expand-file-name sound)))
+;; Properly replace the play sound function.
 (advice-add 'play-pomodoro-sound :override #'cppimmo-play-pomodoro-sound)
+
 
 ;; Settings for the php mode package.
 (use-package php-mode)
@@ -216,7 +222,6 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
 ;; Settings for the markdown preview mode
 (use-package markdown-preview-eww)
 
-
 ;; The the appropriate "markdown-command" for Microsoft Windows.
 (if (string-equal system-type "windows-nt")
 	(progn (custom-set-variables '(markdown-command "pandoc.exe"))))
@@ -242,7 +247,7 @@ The trick is to use msys2 and the MinGW hunspell and hunspell-en packages.
   (setq ispell-dictionary "en_US")) ; Set the appropriate word dictionary.
 ;; Set the ispell program name on Microsoft Windows systems.
 (if (string-equal system-type "windows-nt")
-    (progn (cppimmo-ispell-windows-nt))) ; Finally call the window-nt configuration.
+    (progn (cppimmo-ispell-windows-nt))) ; Finally call the windows-nt configuration.
 
 ;; Configuration for the CC mode.
 (setq c-default-style "bsd")
