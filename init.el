@@ -29,6 +29,9 @@
 
 
 ;; BASIC STARTUP STUFF ==========================================================
+(setq user-full-name "Brian Hoffpauir"
+	  user-mail-address "bhoffpauir0424@gmail.com")
+
 (setq inhibit-startup-message t
 	  initial-scratch-message "Welcome, Brian!"
 	  cursor-type 'bar)
@@ -182,6 +185,13 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
  (use-package pomodoro)
 (require 'pomodoro)
 (pomodoro-add-to-mode-line) ; Add to themes.
+
+(setq pomodoro-break-start-sound "~/.emacs.d/audio/bad-to-the-bone-fart.mp3")
+(setq pomodoro-work-start-sound "~/.emacs.d/audio/bad-to-the-bone-fart.mp3")
+(defun cppimmo-play-pomodoro-sound (sound)
+  "Play sound for pomodoro."
+  (play-sound-file sound))
+(advice-add 'play-pomodoro-sound :override #'cppimmo-play-pomodoro-sound)
 
 ;; Settings for the php mode package.
 (use-package php-mode)

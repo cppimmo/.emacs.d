@@ -64,14 +64,42 @@ of words in a region."
 			 (cppimmo-count--characters minp maxp)
 			 (cppimmo-count--lines minp maxp))))
 
+(defun cppimmo-count-words--read-time (wpm wc)
+  "Base read time calculation based on words per minute.
+WPM words per minute.
+WC word count."
+  (/ (float wc) (float wpm)))
+
+(defun cppimmo-count-words-region-read-time (wpm)
+  "Calculate an approximate read time for the marked region in minutes.
+wpm is the amount of words per minute that the user can read.
+WPM words per minute."
+  (interactive "nEnter words per minute: ")
+  (message "~Read time: %.2f minutes"
+		   (cppimmo-count-words--read-time wpm
+										   (cppimmo-count--words
+											(region-beginning) (region-end)))))
+
+(defun cppimmo-count-words-region-read-time-seconds (wpm)
+  "Calculate an approximate read time for the marked region in seconds.
+wpm is the amount of words per minute that the user can read.
+WPM words per minute."
+  (interactive "nEnter words per minute: ")
+  (message "~Read time: %.2f seconds"
+		   (* (cppimmo-count-words--read-time wpm
+											  (cppimmo-count--words
+											   (region-beginning) (region-end))) 60.0)))
+
 ;; cppimmo-count-words-mode-map defined automatically.
 ;; cppimmo-count-words-mode-hook defined lazily
 (define-minor-mode cppimmo-count-words-mode
   "Use to easily count words within a buffer."
   :lighter " cppimmo-CW"
   :keymap (let ((map (make-sparse-keymap)))
-			(define-key map (kbd "C-c C-b") 'cppimmo-count-words-buffer)
-			(define-key map (kbd "C-c C-r") 'cppimmo-count-words-region)
+			(define-key map (kbd "C-c C-b") #'cppimmo-count-words-buffer)
+			(define-key map (kbd "C-c C-r") #'cppimmo-count-words-region)
+			(define-key map (kbd "C-c C-t m") #'cppimmo-count-words-region-read-time)
+			(define-key map (kbd "C-c C-t s") #'cppimmo-count-words-region-read-time-seconds)
 			map)
 
   (if cppimmo-count-words-mode
