@@ -5,14 +5,14 @@
 
 # Table of Contents
 
-1.  [My GNU Emacs Configuration](#org16cc902)
-2.  [Note](#org1d8b8ac)
-3.  [Packages Used (MELPA)](#orge1050eb)
-4.  [Libraries](#org1f255ef)
-    1.  [cppimmo/cppimmo-xml.el](#org12d1fba)
-    2.  [cppimmo/cppimmo-count-words-mode.el](#orgff30cd6)
-5.  [Key Bindings](#orgf726785)
-6.  [License](#org108d952)
+1.  [My GNU Emacs Configuration](#org2474762)
+2.  [Note](#orga583019)
+3.  [Packages Used (MELPA)](#org1914df4)
+4.  [Libraries](#orgc6469b6)
+    1.  [cppimmo/cppimmo-xml.el](#orgd07c051)
+    2.  [cppimmo/cppimmo-count-words-mode.el](#org21da43c)
+5.  [Key Bindings](#org0b99c18)
+6.  [License](#org1e5cddc)
 
 This repository is for versioning my GNU Emacs configuration files.  I hope to
 keep them platform independent, so I can use them across all my machines (both
