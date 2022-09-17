@@ -38,6 +38,8 @@
 (column-number-mode 1) ; Always show line cursor position in the modeline.
 (when (version<= "28.1" emacs-version)
   (display-time-mode 1)) ; Display time in the modeline.
+(when (version<= "22" emacs-version)
+  (display-battery-mode 1))
 (when (version<= "26.0.50" emacs-version)
   (global-display-line-numbers-mode 1)) ; Enable line number bar globally.
 (when (version<= "24.4" emacs-version)
