@@ -186,12 +186,13 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
 (require 'pomodoro)
 (pomodoro-add-to-mode-line) ; Add to themes.
 
-(setq pomodoro-break-start-sound "~/.emacs.d/audio/bad-to-the-bone-fart.mp3")
-(setq pomodoro-work-start-sound "~/.emacs.d/audio/bad-to-the-bone-fart.mp3")
+(setq pomodoro-break-start-sound "~/.emacs.d/audio/bad-to-the-bone-fart.wav")
+(setq pomodoro-work-start-sound "~/.emacs.d/audio/bad-to-the-bone-fart.wav")
 (defun cppimmo-play-pomodoro-sound (sound)
   "Play sound for pomodoro."
   (play-sound-file sound))
 (advice-add 'play-pomodoro-sound :override #'cppimmo-play-pomodoro-sound)
+
 
 ;; Settings for the php mode package.
 (use-package php-mode)
