@@ -234,6 +234,10 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
   :config (load-theme 'doom-1337 t))
 
 
+;; Install and configure SLIME.
+(use-package slime)
+(setq inferior-lisp-program "sbcl")
+
 ;; BUILT-IN MODE CONFIGURATION ==================================================
 
 (defun cppimmo-ispell-windows-nt ()
