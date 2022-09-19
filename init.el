@@ -41,6 +41,8 @@
 (column-number-mode 1) ; Always show line cursor position in the modeline.
 (when (version<= "28.1" emacs-version)
   (display-time-mode 1)) ; Display time in the modeline.
+(when (version<= "22" emacs-version)
+  (display-battery-mode 1))
 (when (version<= "26.0.50" emacs-version)
   (global-display-line-numbers-mode 1)) ; Enable line number bar globally.
 (when (version<= "24.4" emacs-version)
@@ -185,11 +187,10 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
 (require 'pomodoro)
 (pomodoro-add-to-mode-line) ; Add to modeline.
 ;;; Place all audio files in the repository to make things easier.
-;; Break time alert.
-(setq pomodoro-break-start-sound "~/.emacs.d/audio/bad-to-the-bone-fart.mp3")
 ;; Work time alert.
-(setq pomodoro-work-start-sound "~/.emacs.d/audio/bad-to-the-bone-fart.mp3")
-
+(setq pomodoro-work-start-sound "~/.emacs.d/audio/bad-to-the-bone-fart.wav")
+;; Break time alert.
+(setq pomodoro-break-start-sound "~/.emacs.d/audio/bad-to-the-bone-fart.wav")
 (defun cppimmo-play-pomodoro-sound (sound)
   "Replace the play sound function for the pomodoro package."
   (play-sound-file (expand-file-name sound)))
@@ -235,6 +236,10 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
 (use-package doom-themes
   :config (load-theme 'doom-1337 t))
 
+
+;; Install and configure SLIME.
+(use-package slime)
+(setq inferior-lisp-program "sbcl")
 
 ;; BUILT-IN MODE CONFIGURATION ==================================================
 
