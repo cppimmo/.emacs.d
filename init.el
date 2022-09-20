@@ -113,6 +113,16 @@ supported the typical floating layout."
 (delete-selection-mode t)
 
 
+;; Set the menu app key to hyper.
+;; Protesilaos blog post about setting the hyper key with xmodmap:
+;; https://protesilaos.com/codelog/2019-10-10-debian-xmodmap/
+(when (string-equal system-type "gnu/linux")
+  (global-set-key (kbd "<menu>") nil))
+(when (string-equal system-type "windows-nt")
+  (setq w32-pass-apps-to-system nil)
+  (setq w32-apps-modifier 'hyper))
+
+
 ;; Set binding for whitespace-mode minor mode.
 (global-set-key (kbd "C-M-y") 'whitespace-mode)
 
