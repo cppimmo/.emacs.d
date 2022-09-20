@@ -8,6 +8,7 @@
 (setq load-path (append load-path
 						(list (concat user-emacs-directory "cppimmo"))))
 
+(load "cppimmo-dvorak")
 (load "cppimmo-xml")
 (load "cppimmo-count-words-mode")
 
