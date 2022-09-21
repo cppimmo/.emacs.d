@@ -156,7 +156,7 @@ supported the typical floating layout."
 ;; (global-auto-revert-mode 1) ; Reload buffer upon file modification.
 
 
-(defun cppimmo/backup-file-name (@file-path)
+(defun cppimmo/make-backup-file-name (@file-path)
   "This function from Xah Lee creates new directories for backups.
 It creates directories that do not exist in the backup root.
 Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
@@ -173,7 +173,7 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
 
 (setq make-backup-files t) ; Make sure backups are enabled.
 ;; Set the backup file name function
-(setq make-backup-file-name-function 'cppimmo/backup-file-name)
+(setq make-backup-file-name-function 'cppimmo/make-backup-file-name)
 
 
 ;; Preserve creation date on Windows (irrelevant on UNIX-like systems).

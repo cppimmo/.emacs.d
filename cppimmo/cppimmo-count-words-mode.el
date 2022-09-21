@@ -24,7 +24,10 @@
 
 (defvar *cppimmo/count-words-mod-count-max* 25
   "Refresh the word count every mod-count-max insertions")
-  
+
+(defvar *cppimmo/count-words-wpm* 238
+  "The default word count if the user does not supply a custom value.")
+
 (defun cppimmo/count-words-mode-post-mod-hook ()
   "Update the header line with a word count upon each insertion.
 Mod meaning modification."
@@ -71,11 +74,17 @@ of words in a region."
 @WC word count."
   (/ (float @wc) (float @wpm)))
 
+;; TODO: Use prompt to display default value.
+(defun cppimmo/count-words--read-time-prompt ()
+  "Prompt meant to be supplied to the interactive function.
+Requires a single @WPM argument."
+  (list (read-number "Enter words per minute: " *cppimmo/count-words-wpm*)))
+
 (defun cppimmo/count-words-region-read-time (@wpm)
   "Calculate an approximate read time for the marked region in minutes.
 @WPM is the amount of words per minute that the user can read.
 @WPM words per minute."
-  (interactive "nEnter words per minute: ")
+  (interactive (cppimmo/count-words--read-time-prompt))
   (message "~Read time: %.2f minutes"
 		   (cppimmo/count-words--read-time @wpm
 										   (cppimmo/count--words
@@ -85,7 +94,7 @@ of words in a region."
   "Calculate an approximate read time for the marked region in seconds.
 @WPM is the amount of words per minute that the user can read.
 @WPM words per minute."
-  (interactive "nEnter words per minute: ")
+  (interactive (cppimmo/count-words--read-time-prompt))
   (message "~Read time: %.2f seconds"
 		   (* (cppimmo/count-words--read-time @wpm
 											  (cppimmo/count--words
@@ -114,9 +123,9 @@ of words in a region."
 		   (setq header-line-format '()))))
 
 ;; Create and bind default hooks.
-(defun cppimmo/count-words-mode-default-hook () ())
-(defun cppimmo/count-words-mode-default-on-hook () ())
-(defun cppimmo/count-words-mode-default-off-hook () ())
+(defun cppimmo/count-words-mode-default-hook () nil)
+(defun cppimmo/count-words-mode-default-on-hook () nil)
+(defun cppimmo/count-words-mode-default-off-hook () nil)
 
 (add-hook 'cppimmo/count-words-mode-hook
 		  #'cppimmo/count-words-mode-default-hook)
