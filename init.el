@@ -12,7 +12,7 @@
 (load "cppimmo-xml")
 (load "cppimmo-count-words-mode")
 
-;; PACKAGE SYSTEM SETUP =========================================================
+;;; PACKAGE SYSTEM SETUP ========================================================
 ;; Try to silence annoying GPG errors, because I don't really care.
 (setq package-signature-check nil)
 
@@ -29,7 +29,7 @@
 (setq use-package-always-ensure 't)
 
 
-;; BASIC STARTUP STUFF ==========================================================
+;;; BASIC STARTUP STUFF =========================================================
 (setq user-full-name "Brian Hoffpauir"
 	  user-mail-address "bhoffpauir0424@gmail.com")
 
@@ -51,13 +51,13 @@
   (setq visual-line-fringe-indicators
 		'(left-curly-arrow right-curly-arrow))) ; Set the visual line fringe indicators.
 
-(defun cppimmo-configure-frame-size-windows-nt ()
+(defun cppimmo/configure-frame-size-windows-nt ()
   "Set the inital frame size of Microsoft Windows.
 I don't use this for Linux, because I sometimes use window managers that do not
 supported the typical floating layout."
   (when window-system (set-frame-size (selected-frame) 80 24)))
 (if (string-equal system-type "windows-nt")
-	(progn (cppimmo-configure-frame-size-windows-nt)))
+	(progn (cppimmo/configure-frame-size-windows-nt)))
 
 ;; Thank you, Xah Lee.
 ;; Set font for symbols (symbol . [8220 8704 9472])
@@ -132,11 +132,11 @@ supported the typical floating layout."
   (lambda ()
 	;; Set binding for CDATA tag insertion for XML documents.
 	;;; See cppimmo/cppimmo-xml.el
-	(define-key nxml-mode-map (kbd "C-c M-!") 'cppimmo-xml-insert-cdata)
+	(define-key nxml-mode-map (kbd "C-c M-!") 'cppimmo/xml-insert-cdata)
 	;; Set binding for blog insertion for XML documents.
-	(define-key nxml-mode-map (kbd "C-c M-@") 'cppimmo-xml-insert-blog)
+	(define-key nxml-mode-map (kbd "C-c M-@") 'cppimmo/xml-insert-blog)
 	;; Set binding for RSS feed item insertion for XML documents.
-	(define-key nxml-mode-map (kbd "C-c M-#") 'cppimmo-xml-insert-blog-rss-item)))
+	(define-key nxml-mode-map (kbd "C-c M-#") 'cppimmo/xml-insert-blog-rss-item)))
 
 ;; Set the fill column in auto fill mode.
 (add-hook 'text-mode-hook
@@ -156,24 +156,24 @@ supported the typical floating layout."
 ;; (global-auto-revert-mode 1) ; Reload buffer upon file modification.
 
 
-(defun cppimmo-backup-file-name (file-path)
+(defun cppimmo/backup-file-name (@file-path)
   "This function from Xah Lee creates new directories for backups.
 It creates directories that do not exist in the backup root.
 Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
-  (let (backup-root backup-file-path) ; let* could be used here, but it would be ugly.
-	(setq backup-root "~/.emacs.d/backup/")
+  (let ($backup-root $backup-file-path) ; let* could be used here, but it would be ugly.
+	(setq $backup-root "~/.emacs.d/backup/")
 	;; This format remove the Windows drive letter.
-	(setq backup-file-path
-		  (format "%s%s~" backup-root
-				  (replace-regexp-in-string "^[A-Za-z]:/" "" file-path)))
+	(setq $backup-file-path
+		  (format "%s%s~" $backup-root
+				  (replace-regexp-in-string "^[A-Za-z]:/" "" @file-path)))
 	(make-directory
-	 (file-name-directory backup-file-path)
-	 (file-name-directory backup-file-path))
-	backup-file-path)) ; Return backup-file-path string.
+	 (file-name-directory $backup-file-path)
+	 (file-name-directory $backup-file-path))
+	$backup-file-path)) ; Return backup-file-path string.
 
 (setq make-backup-files t) ; Make sure backups are enabled.
 ;; Set the backup file name function
-(setq make-backup-file-name-function 'cppimmo-backup-file-name)
+(setq make-backup-file-name-function 'cppimmo/backup-file-name)
 
 
 ;; Preserve creation date on Windows (irrelevant on UNIX-like systems).
@@ -183,7 +183,7 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
 (setq auto-save-default nil) ; I save impulsively, so disabling this is fine.
 
 
-;; PACKAGE CONFIGURATION ========================================================
+;;; PACKAGE CONFIGURATION =======================================================
 
 ;; Settings for fill column indicator package. Toggle with "fci-mode".
 (use-package fill-column-indicator)
@@ -202,11 +202,11 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
 (setq pomodoro-work-start-sound "~/.emacs.d/audio/bad-to-the-bone-fart.wav")
 ;; Break time alert.
 (setq pomodoro-break-start-sound "~/.emacs.d/audio/bad-to-the-bone-fart.wav")
-(defun cppimmo-play-pomodoro-sound (sound)
+(defun cppimmo/play-pomodoro-sound (@sound)
   "Replace the play sound function for the pomodoro package."
-  (play-sound-file (expand-file-name sound)))
+  (play-sound-file (expand-file-name @sound)))
 ;; Properly replace the play sound function.
-(advice-add 'play-pomodoro-sound :override #'cppimmo-play-pomodoro-sound)
+(advice-add 'play-pomodoro-sound :override #'cppimmo/play-pomodoro-sound)
 
 
 ;; Settings for the php mode package.
@@ -217,12 +217,12 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
 (use-package lua-mode)
 (setq lua-indent-level 4)
 (setq lua-indent-string-contents t)
-(defun cppimmo-lua-mode-hook ()
+(defun cppimmo/lua-mode-hook ()
   "I want tabs!"
   (setq indent-tabs-mode t) ; Enable indent tabs mode via the mode-hook.
   (abbrev-mode nil)) ; This probably isn't really relevant.
 
-(add-hook 'lua-mode-hook 'cppimmo-lua-mode-hook)
+(add-hook 'lua-mode-hook 'cppimmo/lua-mode-hook)
 
 
 ;; Settings for the ox-leanpub package.
@@ -252,9 +252,9 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
 (use-package slime)
 (setq inferior-lisp-program "sbcl")
 
-;; BUILT-IN MODE CONFIGURATION ==================================================
+;;; BUILT-IN MODE CONFIGURATION =================================================
 
-(defun cppimmo-ispell-windows-nt ()
+(defun cppimmo/ispell-windows-nt ()
   "Configuration for the ispell functionality on Windows.
 The trick is to use msys2 and the MinGW hunspell and hunspell-en packages.
  URL `https://www.reddit.com/r/emacs/comments/8by3az/how_to_set_up_sell_check_for_emacs_in_windows/'
@@ -263,7 +263,7 @@ The trick is to use msys2 and the MinGW hunspell and hunspell-en packages.
   (setq ispell-dictionary "en_US")) ; Set the appropriate word dictionary.
 ;; Set the ispell program name on Microsoft Windows systems.
 (if (string-equal system-type "windows-nt")
-    (progn (cppimmo-ispell-windows-nt))) ; Finally call the windows-nt configuration.
+    (progn (cppimmo/ispell-windows-nt))) ; Finally call the windows-nt configuration.
 
 ;; Configuration for the CC mode.
 (setq c-default-style "bsd")

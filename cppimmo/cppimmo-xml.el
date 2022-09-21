@@ -1,19 +1,19 @@
 
-(defun cppimmo-xml-time-string ()
+(defun cppimmo/xml-time-string ()
   "Return formatted time string."
   (format-time-string "%m/%d/%y"))
 
-(defun cppimmo-xml-insert-cdata ()
+(defun cppimmo/xml-insert-cdata ()
   "Insert CDATA tags for XML documents.
 Moves the point back 3 characters for immediate editing."
   (interactive)
   (insert "<![CDATA[]]>")
-  (let ((index 0))
-	(while (< index 3)
+  (let (($index 0))
+	(while (< $index 3)
 	  (backward-char)
-	  (setq index (+ index 1)))))
+	  (setq $index (+ $index 1)))))
 
-(defun cppimmo-xml-insert-blog ()
+(defun cppimmo/xml-insert-blog ()
   "Insert XML tags that I use for my website's blog."
   (interactive)
   (insert "<?xml version=\"1.0\"?>\n")
@@ -21,10 +21,10 @@ Moves the point back 3 characters for immediate editing."
   (insert "  <title></title>\n")
   (insert "  <link></link>\n")
   (insert "  <description></description>\n")
-  (insert (concat "  <pubDate>" (cppimmo-xml-time-string) "</pubDate>\n"))
+  (insert (concat "  <pubDate>" (cppimmo/xml-time-string) "</pubDate>\n"))
   (insert "</post>\n"))
 
-(defun cppimmo-xml-insert-blog-rss-item ()
+(defun cppimmo/xml-insert-blog-rss-item ()
   "Insert XML blog RSS feed entry item.
 Use for inserting relevant tags into the <channel> tag of an existing XML
 document."
@@ -34,5 +34,5 @@ document."
   (insert "  <link></link>\n")
   (insert "  <filename>.xml</filename>\n")
   (insert "  <description><description>\n")
-  (insert (concat "  <pubDate>" (cppimmo-xml-time-string) "</pubDate>\n"))
+  (insert (concat "  <pubDate>" (cppimmo/xml-time-string) "</pubDate>\n"))
   (insert "</item>"))
