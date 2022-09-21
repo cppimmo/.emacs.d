@@ -22,6 +22,7 @@ Moves the point back 3 characters for immediate editing."
   (insert "  <link></link>\n")
   (insert "  <description></description>\n")
   (insert (concat "  <pubDate>" (cppimmo/xml-time-string) "</pubDate>\n"))
+  (insert "  <readTime></readTime>\n")
   (insert "</post>\n"))
 
 (defun cppimmo/xml-insert-blog-rss-item ()
@@ -35,4 +36,5 @@ document."
   (insert "  <filename>.xml</filename>\n")
   (insert "  <description><description>\n")
   (insert (concat "  <pubDate>" (cppimmo/xml-time-string) "</pubDate>\n"))
+  (insert "  <readTime></readTime>\n")
   (insert "</item>"))
