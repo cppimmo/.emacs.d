@@ -183,6 +183,11 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
 (setq auto-save-default nil) ; I save impulsively, so disabling this is fine.
 
 
+;;; Enable disabled features.
+(put 'upcase-region 'disabled nil) ; Upcase region C-x C-u
+(put 'downcase-region 'disabled nil) ; Downcase region C-x C-l
+
+
 ;;; PACKAGE CONFIGURATION =======================================================
 
 ;; Settings for fill column indicator package. Toggle with "fci-mode".
@@ -270,4 +275,3 @@ The trick is to use msys2 and the MinGW hunspell and hunspell-en packages.
 (setq-default c-basic-offset 4
 	      tab-width 4
 	      indent-tabs-mode t)
-
