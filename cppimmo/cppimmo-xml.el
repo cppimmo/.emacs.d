@@ -34,7 +34,7 @@ document."
   (insert "  <title></title>\n")
   (insert "  <link></link>\n")
   (insert "  <filename>.xml</filename>\n")
-  (insert "  <description><description>\n")
+  (insert "  <description></description>\n")
   (insert (concat "  <pubDate>" (cppimmo/xml-time-string) "</pubDate>\n"))
   (insert "  <readTime></readTime>\n")
   (insert "</item>"))
