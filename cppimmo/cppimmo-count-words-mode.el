@@ -1,12 +1,12 @@
 
 (defun cppimmo/count--lines (@minp @maxp)
-  "Count the number of lines inclusively between @minp and @maxp."
+  "Count the number of lines inclusively between @MINP and @MAXP."
   (interactive)
   (count-lines @minp @maxp))
 
 ;; TODO: Ensure that this count is accurate and not affected by punctuations.
 (defun cppimmo/count--words (@minp @maxp)
-  "Count the number of words between @minp and @maxp"
+  "Count the number of words between @MINP and @MAXP"
   (interactive)
   (catch 'count--words
   (save-excursion
@@ -42,31 +42,51 @@ Mod meaning modification."
 			 (setq *cppimmo/count-words-mod-count* 0))))
 
 (defun cppimmo/count--characters (@minp @maxp)
-  "Count the number of characters between @minp and @maxp."
+  "Count the number of characters between @MINP and @MAXP."
   (interactive)
   (- @maxp @minp))
 
+(defun cppimmo/count--message (@minp @maxp)
+  "Generate a message for @MINP and @MAXP."
+  (message "Words(%s): %d, Characters: %d, Lines: %d"
+			 (buffer-name)
+			 (cppimmo/count--words @minp @maxp)
+			 (cppimmo/count--characters @minp @maxp)
+			 (cppimmo/count--lines @minp @maxp)))
+
 (defun cppimmo/count-words-buffer ()
-  "Use the built-in count-words function to count the number of
-words in a buffer."
+  "Count the number of words in a buffer."
   (interactive)
   (let (($minp (point-min)) ($maxp (point-max)))
-	(message "Words(%s): %d, Characters: %d, Lines: %d"
-			 (buffer-name)
-			 (cppimmo/count--words $minp $maxp)
-			 (cppimmo/count--characters $minp $maxp)
-			 (cppimmo/count--lines $minp $maxp))))
+	(cppimmo/count--message $minp $maxp))) ; Show message.
 
 (defun cppimmo/count-words-region ()
-  "Use the built-in count-words-region function to count the number
-of words in a region."
+  "Count the number of words in a region."
   (interactive)
   (let (($minp (region-beginning)) ($maxp (region-end)))
-	(message "Words(%s): %d, Characters: %d, Lines: %d"
-			 (buffer-name)
-			 (cppimmo/count--words $minp $maxp)
-			 (cppimmo/count--characters $minp $maxp)
-			 (cppimmo/count--lines $minp $maxp))))
+	(cppimmo/count--message $minp $maxp))) ; Show message.
+
+(defun cppimmo/count-words-paragraph ()
+  "Count the number of words in the paragraph under the point."
+  (interactive)
+  (let ($minp $maxp)
+	(save-excursion ; Save point positions.
+	  (backward-paragraph) ; Move backwards in current paragraph.
+	  (setq $minp (point)) ; Save start of paragraph.
+	  (forward-paragraph) ; Move forwards in current paragraph.
+	  (setq $maxp (point))) ; Save end of paragraph.
+	(cppimmo/count--message $minp $maxp))) ; Show message.
+
+(defun cppimmo/count-words-line ()
+  "Count the number of words in the current line under the point."
+  (interactive)
+  (let ($minp $maxp)
+	(save-excursion ; Save point positions.
+	  (beginning-of-visual-line) ; Move to the beginning of the current line.
+	  (setq $minp (point)) ; Save the beginning of the line.
+	  (end-of-visual-line) ; Move to the end of the current line.
+	  (setq $maxp (point))) ; Save end of line.
+	(cppimmo/count--message $minp $maxp))) ; Show message.
 
 (defun cppimmo/count-words--read-time (@wpm @wc)
   "Base read time calculation based on words per minute.
@@ -108,6 +128,8 @@ Requires a single @WPM argument."
   :keymap (let (($map (make-sparse-keymap)))
 			(define-key $map (kbd "C-c C-b") #'cppimmo/count-words-buffer)
 			(define-key $map (kbd "C-c C-r") #'cppimmo/count-words-region)
+			(define-key $map (kbd "C-c C-s p") #'cppimmo/count-words-paragraph)
+			(define-key $map (kbd "C-c C-s l") #'cppimmo/count-words-line)
 			(define-key $map (kbd "C-c C-t m") #'cppimmo/count-words-region-read-time)
 			(define-key $map (kbd "C-c C-t s") #'cppimmo/count-words-region-read-time-seconds)
 			$map)
