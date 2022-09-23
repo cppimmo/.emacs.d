@@ -45,7 +45,7 @@
   (if (string-equal system-type "windows-nt")
 	  (setq user-full-name (getenv "USERNAME")))
   (if (string-equal system-type "gnu/linux")
-	  (progn (shell-command "export EMACS_USER_FULL_NAME=` finger -s brian \
+	  (progn (shell-command "export EMACS_USER_FULL_NAME=` finger -s $USER \
 | tr -s ' ' | cut -d ' ' -f 2,3 | tail -1`")
 		(setq user-full-name (getenv "EMACS_USER_FULL_NAME"))))
   (setq user-mail-address
