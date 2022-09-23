@@ -13,21 +13,19 @@
 (load "cppimmo-count-words-mode")
 
 ;;; PACKAGE SYSTEM SETUP ========================================================
-;; Try to silence annoying GPG errors, because I don't really care.
-(setq package-signature-check nil)
+;; Try to silence GPG errors on Windows.
+(when (string-equal system-type "windows-nt")
+  (setq package-check-signature nil))
 
 (defun cppimmo/add-to-package-archives (@name @link)
   (add-to-list 'package-archives '(@name . @link) t))
 
-;; (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
+
 
 ;; Define and initialise package repositories.
 (require 'package)
-(setq package-archives '())
-;; (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/") t)
-;; (add-to-list 'package-archives '("nongnu" . "http://elpa.nongnu.org/nongnu/") t)
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
-;; (cppimmo/add-to-package-archives "melpa-stable" "http://stable.melpa.org/packages/")
+;; (add-to-list 'package-archives '("melpa-stable" .  "http://stable.melpa.org/packages/") t)
 (package-initialize)
 
 
@@ -36,6 +34,9 @@
   (package-install 'use-package))
 (require 'use-package)
 (setq use-package-always-ensure 't)
+
+
+(use-package gnu-elpa-keyring-update)
 
 
 ;;; BASIC STARTUP STUFF =========================================================

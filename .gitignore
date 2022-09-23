@@ -24,3 +24,8 @@ backup/**
 # Ignore eshell directory.
 eshell/**
 
+# Ignore whatever the transient directory is.
+transient/**
+
+# Something to do with magit.
+server/**
