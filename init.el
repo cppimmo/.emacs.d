@@ -16,9 +16,18 @@
 ;; Try to silence annoying GPG errors, because I don't really care.
 (setq package-signature-check nil)
 
+(defun cppimmo/add-to-package-archives (@name @link)
+  (add-to-list 'package-archives '(@name . @link) t))
+
+;; (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
+
 ;; Define and initialise package repositories.
 (require 'package)
-(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+(setq package-archives '())
+;; (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/") t)
+;; (add-to-list 'package-archives '("nongnu" . "http://elpa.nongnu.org/nongnu/") t)
+(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
+;; (cppimmo/add-to-package-archives "melpa-stable" "http://stable.melpa.org/packages/")
 (package-initialize)
 
 
@@ -256,6 +265,11 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
 ;; Install and configure SLIME.
 (use-package slime)
 (setq inferior-lisp-program "sbcl")
+
+
+;; Install and configure magit.
+(use-package magit)
+
 
 ;;; BUILT-IN MODE CONFIGURATION =================================================
 
