@@ -40,12 +40,22 @@
 
 
 ;;; BASIC STARTUP STUFF =========================================================
-(setq user-full-name "Brian Hoffpauir"
-	  user-mail-address "bhoffpauir0424@gmail.com")
-
-(setq inhibit-startup-message t
-	  initial-scratch-message "Welcome, Brian!"
-	  cursor-type 'bar)
+(progn
+  (require 'subr-x)
+  (if (string-equal system-type "windows-nt")
+	  (setq user-full-name (getenv "USERNAME")))
+  (if (string-equal system-type "gnu/linux")
+	  (progn (shell-command "export EMACS_USER_FULL_NAME=` finger -s brian \
+| tr -s ' ' | cut -d ' ' -f 2,3 | tail -1`")
+		(setq user-full-name (getenv "EMACS_USER_FULL_NAME"))))
+  (setq user-mail-address
+		(replace-regexp-in-string " dot " "."
+								  (replace-regexp-in-string " at " "@"
+															(concat (string-reverse "4240riuapffohb")
+																	" at gmail dot com"))))
+  (setq inhibit-startup-message t
+		initial-scratch-message (concat "Welcome, " (capitalize user-login-name) "!")
+		cursor-type 'bar))
 
 ;; User Iterface
 (tool-bar-mode -1) ; Disable icon tool bar.
