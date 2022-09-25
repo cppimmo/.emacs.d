@@ -57,58 +57,36 @@
 		initial-scratch-message (concat "Welcome, " (capitalize user-login-name) "!")
 		cursor-type 'bar))
 
-;; User Iterface
-(tool-bar-mode -1) ; Disable icon tool bar.
-(column-number-mode 1) ; Always show line cursor position in the modeline.
-(when (version<= "28.1" emacs-version)
-  (display-time-mode 1)) ; Display time in the modeline.
-(when (version<= "22" emacs-version)
-  (display-battery-mode 1))
-(when (version<= "26.0.50" emacs-version)
-  (global-display-line-numbers-mode 1)) ; Enable line number bar globally.
-(when (version<= "24.4" emacs-version)
-  (global-visual-line-mode t) ; Enable visual line mode globally.
-  (setq visual-line-fringe-indicators
-		'(left-curly-arrow right-curly-arrow))) ; Set the visual line fringe indicators.
-
-(defun cppimmo/configure-frame-size-windows-nt ()
-  "Set the inital frame size of Microsoft Windows.
-I don't use this for Linux, because I sometimes use window managers that do not
-supported the typical floating layout."
-  (when window-system (set-frame-size (selected-frame) 80 24)))
-(if (string-equal system-type "windows-nt")
-	(progn (cppimmo/configure-frame-size-windows-nt)))
-
-;; Thank you, Xah Lee.
-;; Set font for symbols (symbol . [8220 8704 9472])
-(set-fontset-font
- t
- 'symbol
- (cond
-  ((string-equal system-type "windows-nt")
-   (cond
-    ((member "Segoe UI Symbol" (font-family-list)) "Segoe UI Symbol")))
-  ((string-equal system-type "darwin")
-   (cond
-    ((member "Apple Symbols" (font-family-list)) "Apple Symbols")))
-  ((string-equal system-type "gnu/linux")
-   (cond
-    ((member "Symbola" (font-family-list)) "Symbola")))))
+;;; User Iterface
+(defun cppimmo/configure-frame-size (@width @height)
+  "Set the initial frame size for floating window managers.
+@WIDTH the desired character width of the frame.
+@HEIGHT the desired character height of the frame."
+  (when window-system (set-frame-size (selected-frame) @width @height)))
 
 (progn
-  ;; Set font for emoji (if before emacs 28, should come after setting symbols. emacs 28 now has 'emoji . before, emoji is part of 'symbol)
-  (set-fontset-font
-   t
-   (if (version< emacs-version "28.1")
-       '(#x1f300 . #x1fad0)
-     'emoji
-     )
-   (cond
-    ((member "Apple Color Emoji" (font-family-list)) "Apple Color Emoji")
-    ((member "Noto Color Emoji" (font-family-list)) "Noto Color Emoji")
-    ((member "Noto Emoji" (font-family-list)) "Noto Emoji")
-    ((member "Segoe UI Emoji" (font-family-list)) "Segoe UI Emoji")
-    ((member "Symbola" (font-family-list)) "Symbola"))))
+  (add-to-list 'custom-theme-load-path "~/.emacs.d/cppimmo-themes/") ; Set theme load path.
+  ;; Set the theme (if custom).
+  ;; (load-theme 'cppimmo-vibrant-ink t)
+
+  (setq frame-title-format ; Set the frame title format.
+		'("GNU Emacs - %b | " user-login-name "@" system-name))
+  (setq tool-bar-mode nil) ; Disable icon tool bar.
+  (setq column-number-mode t) ; Always show line cursor position in the modeline.
+  (when (version<= "28.1" emacs-version)
+	(setq display-time-mode t)) ; Display time in the modeline.
+  (when (version<= "22" emacs-version)
+	(setq display-battery-mode t))
+  (when (version<= "26.0.50" emacs-version)
+	(setq global-display-line-numbers-mode t)) ; Enable line number bar globally.
+  (when (version<= "24.4" emacs-version)
+	(setq global-visual-line-mode t) ; Enable visual line mode globally.
+	(setq visual-line-fringe-indicators
+		  '(left-curly-arrow right-curly-arrow))) ; Set the visual line fringe indicators.
+  (if (string-equal system-type "windows-nt")
+	  (progn (cppimmo/configure-frame-size 128 48)))
+  ) ;; End of user interface settings.
+
 
 ;; Confirmation input settings.
 (if (version< emacs-version "28.1")
@@ -146,6 +124,9 @@ supported the typical floating layout."
 ;; Set binding for whitespace-mode minor mode.
 (global-set-key (kbd "C-M-y") 'whitespace-mode)
 
+;; Set binding for hl-line-mode.
+(global-set-key (kbd "H-l b") 'hl-line-mode) ; locally.
+(global-set-key (kbd "H-l g") 'global-hl-line-mode) ; Globally.
 
 ;; Set special bindings for the default nxml-mode.
 (eval-after-load 'nxml-mode
@@ -269,8 +250,8 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
 
 
 ;; Install the doom-themes packages and set the theme.
-(use-package doom-themes
-  :config (load-theme 'doom-1337 t))
+(use-package doom-themes)
+;;  :config (load-theme 'doom-1337 t))
 
 
 ;; Install and configure SLIME.
