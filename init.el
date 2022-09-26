@@ -21,7 +21,6 @@
   (add-to-list 'package-archives '(@name . @link) t))
 
 
-
 ;; Define and initialise package repositories.
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
@@ -67,8 +66,17 @@
 (progn
   (add-to-list 'custom-theme-load-path "~/.emacs.d/cppimmo-themes/") ; Set theme load path.
   ;; Set the theme (if custom).
-  ;; (load-theme 'cppimmo-vibrant-ink t)
+  (load-theme 'cppimmo-bright-ink t)
 
+  ;; Extra highlighting for programming modes.
+  (add-hook 'prog-mode-hook #'highlight-numbers-mode)
+  (add-hook 'prog-mode-hook #'highlight-parentheses-mode)
+  (add-hook 'prog-mode-hook #'show-paren-mode)
+  (add-hook 'minibuffer-setup-hook #'highlight-parentheses-minibuffer-setup)
+
+  (global-font-lock-mode t) ; Ensure syntax highlighting is always enabled.
+  (setq font-lock-maximum-decoration t) ; Max font decor.
+  
   (setq frame-title-format ; Set the frame title format.
 		'("GNU Emacs - %b | " user-login-name "@" system-name))
   (setq tool-bar-mode nil) ; Disable icon tool bar.
@@ -84,7 +92,7 @@
 	(setq visual-line-fringe-indicators
 		  '(left-curly-arrow right-curly-arrow))) ; Set the visual line fringe indicators.
   (if (string-equal system-type "windows-nt")
-	  (progn (cppimmo/configure-frame-size 128 48)))
+	  (progn (cppimmo/configure-frame-size 90 34)))
   ) ;; End of user interface settings.
 
 
@@ -112,6 +120,7 @@
 
 
 ;; Set the menu app key to hyper.
+;; Use Shift+F10 or Ctrl+Shift+F10 instead for application/context menu.
 ;; Protesilaos blog post about setting the hyper key with xmodmap:
 ;; https://protesilaos.com/codelog/2019-10-10-debian-xmodmap/
 (when (string-equal system-type "gnu/linux")
@@ -261,6 +270,14 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
 
 ;; Install and configure magit.
 (use-package magit)
+
+
+;; Install and configure highlight numbers.
+(use-package highlight-numbers)
+
+
+;; Install and configure highlight parentheses.
+(use-package highlight-parentheses)
 
 
 ;;; BUILT-IN MODE CONFIGURATION =================================================
