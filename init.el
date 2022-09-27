@@ -46,12 +46,12 @@
 ;;  (if (string-equal system-type "gnu/linux")
 ;;	  (progn (shell-command "export EMACS_USER_FULL_NAME=` finger -s $USER \
 ;; | tr -s ' ' | cut -d ' ' -f 2,3 | tail -1`")
-;;		(setq user-full-name (getenv "EMACS_USER_FULL_NAME"))))
-  (setq user-mail-address
-		(replace-regexp-in-string " dot " "."
-								  (replace-regexp-in-string " at " "@"
-															(concat (string-reverse "4240riuapffohb")
-																	" at gmail dot com"))))
+  ;;		(setq user-full-name (getenv "EMACS_USER_FULL_NAME"))))
+  (let (($str))
+	(setq $str (concat (string-reverse "4240riuapffohb")
+					     (replace-regexp-in-string " at " "@"
+					       (replace-regexp-in-string " dot " "."" at gmail dot com"))))
+	(setq user-mail-address $str))
   (setq inhibit-startup-message t
 		initial-scratch-message (concat "Welcome, " (capitalize user-login-name) "!")
 		cursor-type 'bar))
@@ -62,6 +62,30 @@
 @WIDTH the desired character width of the frame.
 @HEIGHT the desired character height of the frame."
   (when window-system (set-frame-size (selected-frame) @width @height)))
+
+(defun cppimmo/cycle-custom-themes ()
+  "This function cycles"
+  (interactive)
+  (let (($enabled-theme (car custom-enabled-themes))($index)($theme-at-index))
+	(setq $index (cl-position $enabled-theme custom-known-themes))
+	(message "Initial index: %d" $index)
+	(catch 'cppimmo/cycle-custom-themes-break
+	  (while (and (< $index (length custom-known-themes))
+					 (or (eq $theme-at-index 'use-package)
+						 (eq $theme-at-index 'user)
+						 (eq $theme-at-index 'changed)))
+		(setq $theme-at-index (nth $index custom-known-themes))
+		(message "Index: %d, Theme: %s" $index (symbol-name $theme-at-index))
+		;; Note: custom-theme-p returns the remainder of a list.
+		;;	  (when (eq (custom-theme-p (nth $index custom-known-themes)) t)
+		;;		(message "I'm not a theme!"))
+;;		(when (or (eq $theme-at-index 'use-package)
+;;				  (eq $theme-at-index 'user)
+;;				  (eq $theme-at-index 'changed))
+;;		  (setq $index (1+ $index))
+;;		  (throw 'cppimmo/cycle-custom-themes-break t))
+		(setq $index (1+ $index))))
+	(load-theme (nth $index custom-known-themes) t)))
 
 (progn
   (add-to-list 'custom-theme-load-path "~/.emacs.d/cppimmo-themes/") ; Set theme load path.
@@ -96,76 +120,7 @@
   ) ;; End of user interface settings.
 
 
-;; Confirmation input settings.
-(if (version< emacs-version "28.1")
-	(defalias 'yes-or-no-p 'y-or-n-p-)
-  (setq use-short-answers t)) ; I don't want to type yes or no each time.
-;; Set the default directory (for find-file, etc.).
-(setq default-directory user-emacs-directory)
-
-(setq mouse-highlight t) ; The highlighting can white-out text on darker themes, enable it however.
-(setq shift-select-mode t) ; I want to have select with shift + movement keys.
-(setq line-move-visual t)
-
-;; Remember the cursor position in previously visited files.
-(if (version< emacs-version "25.0")
-	(progn
-	  (require 'saveplace)
-	  (setq-default save-place t))
-  (save-place-mode 1))
-
-
-;; Enable overwriting of marked region.
-(delete-selection-mode t)
-
-
-;; Set the menu app key to hyper.
-;; Use Shift+F10 or Ctrl+Shift+F10 instead for application/context menu.
-;; Protesilaos blog post about setting the hyper key with xmodmap:
-;; https://protesilaos.com/codelog/2019-10-10-debian-xmodmap/
-(when (string-equal system-type "gnu/linux")
-  (global-set-key (kbd "<menu>") nil))
-(when (string-equal system-type "windows-nt")
-  (setq w32-pass-apps-to-system nil)
-  (setq w32-apps-modifier 'hyper))
-
-
-;; Set binding for whitespace-mode minor mode.
-(global-set-key (kbd "C-M-y") 'whitespace-mode)
-
-;; Set binding for hl-line-mode.
-(global-set-key (kbd "H-l b") 'hl-line-mode) ; locally.
-(global-set-key (kbd "H-l g") 'global-hl-line-mode) ; Globally.
-
-;; Set special bindings for the default nxml-mode.
-(eval-after-load 'nxml-mode
-  (lambda ()
-	;; Set binding for CDATA tag insertion for XML documents.
-	;;; See cppimmo/cppimmo-xml.el
-	(define-key nxml-mode-map (kbd "C-c M-!") 'cppimmo/xml-insert-cdata)
-	;; Set binding for blog insertion for XML documents.
-	(define-key nxml-mode-map (kbd "C-c M-@") 'cppimmo/xml-insert-blog)
-	;; Set binding for RSS feed item insertion for XML documents.
-	(define-key nxml-mode-map (kbd "C-c M-#") 'cppimmo/xml-insert-blog-rss-item)))
-
-;; Set the fill column in auto fill mode.
-(add-hook 'text-mode-hook
-		  (lambda ()
-			;; (turn-on-auto-fill) ; Keep as reference.
-			(set-fill-column 80)))
-
-
-(setq set-mark-command-repeat-pop nil) ; Disable mark popping (ex: C-u C-SPC).
-(setq mark-ring-max 10) ; 10 yanks limit.
-(setq global-mark-ring-max 10) ; 10 yanks limit.
-
-;; I'm unsure if I should use this option, due to my use of cloud syncing clients
-;; such as MEGA.  The file may be modified by MEGA and I could lose my work.
-;; Although, this may be a moot concern.  Nevertheless, I will leave it incase I
-;; believe I can use it in the future.
-;; (global-auto-revert-mode 1) ; Reload buffer upon file modification.
-
-
+;;; Backup configuration.
 (defun cppimmo/make-backup-file-name (@file-path)
   "This function from Xah Lee creates new directories for backups.
 It creates directories that do not exist in the backup root.
@@ -181,22 +136,62 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
 	 (file-name-directory $backup-file-path))
 	$backup-file-path)) ; Return backup-file-path string.
 
-(setq make-backup-files t) ; Make sure backups are enabled.
-;; Set the backup file name function
-(setq make-backup-file-name-function 'cppimmo/make-backup-file-name)
+(progn
+  (setq make-backup-files t) ; Make sure backups are enabled.
+  ;; Set the backup file name function
+  (setq make-backup-file-name-function 'cppimmo/make-backup-file-name)
+  )
 
+;;; Miscellaneous
+(progn
+  ;; Confirmation input settings.
+  (if (version< emacs-version "28.1")
+	  (defalias 'yes-or-no-p 'y-or-n-p-)
+	(setq use-short-answers t)) ; I don't want to type yes or no each time.
+  ;; Set the default directory (for find-file, etc.).
+  (setq default-directory user-emacs-directory)
+  
+  (setq mouse-highlight t) ; The highlighting can white-out text on darker themes, enable it however.
+  (setq shift-select-mode t) ; I want to have select with shift + movement keys.
+  (setq line-move-visual t)
+  
+  ;; Remember the cursor position in previously visited files.
+  (if (version< emacs-version "25.0")
+	  (progn
+		(require 'saveplace)
+		(setq-default save-place t))
+	(save-place-mode 1))
+  
+  ;; Set the fill column in auto fill mode.
+  (add-hook 'text-mode-hook
+			(lambda ()
+			  ;; (turn-on-auto-fill) ; Keep as reference.
+			  (set-fill-column 80)))
+  
+  (delete-selection-mode t) ; Enable overwriting of marked region.
+  ;; (global-superword-mode t) ; Treat snake_case, etc. as a single word.
+  (setq set-mark-command-repeat-pop nil) ; Disable mark popping (ex: C-u C-SPC).
+  (setq mark-ring-max 10) ; 10 yanks limit.
+  (setq global-mark-ring-max 10) ; 10 yanks limit.
+  
+  ;; Preserve creation date on Windows (irrelevant on UNIX-like systems).
+  (if (string-equal system-type "windows-nt")
+	  (progn (setq backup-by-copying t)))
+  ;; (setq create-lockfiles nil)
+  (setq auto-save-default nil) ; I save impulsively, so disabling this is fine.
 
-;; Preserve creation date on Windows (irrelevant on UNIX-like systems).
-(if (string-equal system-type "windows-nt")
-	(progn (setq backup-by-copying t)))
-;; (setq create-lockfiles nil)
-(setq auto-save-default nil) ; I save impulsively, so disabling this is fine.
-
-
-;;; Enable disabled features.
-(put 'upcase-region 'disabled nil) ; Upcase region C-x C-u
-(put 'downcase-region 'disabled nil) ; Downcase region C-x C-l
-
+  ;; I'm unsure if I should use this option, due to my use of cloud syncing clients
+  ;; such as MEGA.  The file may be modified by MEGA and I could lose my work.
+  ;; Although, this may be a moot concern.  Nevertheless, I will leave it incase I
+  ;; believe I can use it in the future.
+  ;; (global-auto-revert-mode 1) ; Reload buffer upon file modification.
+  
+  ;; Enable disabled features.
+  (progn
+	(put 'upcase-region 'disabled nil) ; Upcase region C-x C-u
+	(put 'downcase-region 'disabled nil) ; Downcase region C-x C-l
+	) ; End of enabling disabled features.
+  ) ; End of miscellaneous.
 
 ;;; PACKAGE CONFIGURATION =======================================================
 
@@ -298,3 +293,9 @@ The trick is to use msys2 and the MinGW hunspell and hunspell-en packages.
 (setq-default c-basic-offset 4
 	      tab-width 4
 	      indent-tabs-mode t)
+
+
+;;; LOAD KEYBINDINGS ============================================================
+(load "cppimmo-keybindings")
+(cppimmo/bind-keys-g)
+(cppimmo/bind-keys-m)
