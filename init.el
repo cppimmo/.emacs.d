@@ -1,4 +1,5 @@
-
+;;; init.el
+;;
 ;; Define the customize options file. System & configuration dependent.
 (setq  custom-file (expand-file-name "custom.el" user-emacs-directory))
 (when (file-exists-p custom-file)
@@ -20,13 +21,11 @@
 (defun cppimmo/add-to-package-archives (@name @link)
   (add-to-list 'package-archives '(@name . @link) t))
 
-
 ;; Define and initialise package repositories.
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
 ;; (add-to-list 'package-archives '("melpa-stable" .  "http://stable.melpa.org/packages/") t)
 (package-initialize)
-
 
 ;; Install use-package to simplify the configuration file.
 (when (not (package-installed-p 'use-package))
@@ -34,27 +33,22 @@
 (require 'use-package)
 (setq use-package-always-ensure 't)
 
-
 (use-package gnu-elpa-keyring-update)
-
 
 ;;; BASIC STARTUP STUFF =========================================================
 (progn
   (require 'subr-x)
   (if (string-equal system-type "windows-nt")
 	  (setq user-full-name (getenv "USERNAME")))
-;;  (if (string-equal system-type "gnu/linux")
-;;	  (progn (shell-command "export EMACS_USER_FULL_NAME=` finger -s $USER \
-;; | tr -s ' ' | cut -d ' ' -f 2,3 | tail -1`")
+  ;;  (if (string-equal system-type "gnu/linux")
+  ;;	  (progn (shell-command "export EMACS_USER_FULL_NAME=` finger -s $USER \
+  ;; | tr -s ' ' | cut -d ' ' -f 2,3 | tail -1`")
   ;;		(setq user-full-name (getenv "EMACS_USER_FULL_NAME"))))
   (let (($str))
 	(setq $str (concat (string-reverse "4240riuapffohb")
 					     (replace-regexp-in-string " at " "@"
 					       (replace-regexp-in-string " dot " "."" at gmail dot com"))))
-	(setq user-mail-address $str))
-  (setq inhibit-startup-message t
-		initial-scratch-message (concat "Welcome, " (capitalize user-login-name) "!")
-		cursor-type 'bar))
+	(setq user-mail-address $str)))
 
 ;;; User Iterface
 (defun cppimmo/configure-frame-size (@width @height)
@@ -64,7 +58,7 @@
   (when window-system (set-frame-size (selected-frame) @width @height)))
 
 (defun cppimmo/cycle-custom-themes ()
-  "This function cycles"
+  "Cycle through the known custom themes."
   (interactive)
   (let (($enabled-theme (car custom-enabled-themes))($index)($theme-at-index))
 	(setq $index (cl-position $enabled-theme custom-known-themes))
@@ -79,15 +73,18 @@
 		;; Note: custom-theme-p returns the remainder of a list.
 		;;	  (when (eq (custom-theme-p (nth $index custom-known-themes)) t)
 		;;		(message "I'm not a theme!"))
-;;		(when (or (eq $theme-at-index 'use-package)
-;;				  (eq $theme-at-index 'user)
-;;				  (eq $theme-at-index 'changed))
-;;		  (setq $index (1+ $index))
-;;		  (throw 'cppimmo/cycle-custom-themes-break t))
+		;;		(when (or (eq $theme-at-index 'use-package)
+		;;				  (eq $theme-at-index 'user)
+		;;				  (eq $theme-at-index 'changed))
+		;;		  (setq $index (1+ $index))
+		;;		  (throw 'cppimmo/cycle-custom-themes-break t))
 		(setq $index (1+ $index))))
 	(load-theme (nth $index custom-known-themes) t)))
 
 (progn
+  (setq inhibit-startup-message t
+		initial-scratch-message (concat "Welcome, " (capitalize user-login-name) "!"))
+  
   (add-to-list 'custom-theme-load-path "~/.emacs.d/cppimmo-themes/") ; Set theme load path.
   ;; Set the theme (if custom).
   (load-theme 'cppimmo-bright-ink t)
@@ -98,21 +95,23 @@
   (add-hook 'prog-mode-hook #'show-paren-mode)
   (add-hook 'minibuffer-setup-hook #'highlight-parentheses-minibuffer-setup)
 
+  (setq cursor-type 'bar) ; Set the cursor type.
+  
   (global-font-lock-mode t) ; Ensure syntax highlighting is always enabled.
   (setq font-lock-maximum-decoration t) ; Max font decor.
   
   (setq frame-title-format ; Set the frame title format.
 		'("GNU Emacs - %b | " user-login-name "@" system-name))
-  (setq tool-bar-mode nil) ; Disable icon tool bar.
-  (setq column-number-mode t) ; Always show line cursor position in the modeline.
+  (tool-bar-mode nil) ; Disable icon tool bar.
+  (column-number-mode t) ; Always show line cursor position in the modeline.
   (when (version<= "28.1" emacs-version)
-	(setq display-time-mode t)) ; Display time in the modeline.
+	(display-time-mode t)) ; Display time in the modeline.
   (when (version<= "22" emacs-version)
-	(setq display-battery-mode t))
+	(display-battery-mode t))
   (when (version<= "26.0.50" emacs-version)
-	(setq global-display-line-numbers-mode t)) ; Enable line number bar globally.
+	(global-display-line-numbers-mode t)) ; Enable line number bar globally.
   (when (version<= "24.4" emacs-version)
-	(setq global-visual-line-mode t) ; Enable visual line mode globally.
+	(global-visual-line-mode t) ; Enable visual line mode globally.
 	(setq visual-line-fringe-indicators
 		  '(left-curly-arrow right-curly-arrow))) ; Set the visual line fringe indicators.
   (if (string-equal system-type "windows-nt")
