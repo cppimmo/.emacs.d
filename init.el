@@ -102,7 +102,7 @@
   
   (setq frame-title-format ; Set the frame title format.
 		'("GNU Emacs - %b | " user-login-name "@" system-name))
-  (tool-bar-mode nil) ; Disable icon tool bar.
+  (tool-bar-mode -1) ; Disable icon tool bar.
   (column-number-mode t) ; Always show line cursor position in the modeline.
   (when (version<= "28.1" emacs-version)
 	(display-time-mode t)) ; Display time in the modeline.
