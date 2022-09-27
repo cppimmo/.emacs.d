@@ -106,7 +106,10 @@
   (column-number-mode t) ; Always show line cursor position in the modeline.
   (when (version<= "28.1" emacs-version)
 	(display-time-mode t)) ; Display time in the modeline.
-  (when (version<= "22" emacs-version)
+  ;; Enable display-battery-mode if a battery exists.
+  (when (and (version<= "22" emacs-version)
+			 (not (string-match "N/A" (battery))))
+	;; Example of battery output: "Power on-line, battery N/A (N/A% load, remaining time N/A)"
 	(display-battery-mode t))
   (when (version<= "26.0.50" emacs-version)
 	(global-display-line-numbers-mode t)) ; Enable line number bar globally.
