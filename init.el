@@ -313,6 +313,11 @@ The trick is to use msys2 and the MinGW hunspell and hunspell-en packages.
   (cppimmo/dired-sort))
 
 
+;; ERC.
+;; Set the ERC log directory. (C-c C-l)
+(setq erc-log-channels-directory "~/.emacs.d/erc-log")
+
+
 ;;; LOAD KEYBINDINGS ============================================================
 (load "cppimmo-keybindings")
 (cppimmo/bind-keys-g)

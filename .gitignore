@@ -29,3 +29,6 @@ transient/**
 
 # Something to do with magit.
 server/**
+
+# Ignore the erc-log directory.
+erc-log/**
