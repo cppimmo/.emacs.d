@@ -22,6 +22,11 @@
   (global-set-key (kbd "H-l g") 'global-hl-line-mode) ; Globally.
   ;; Cycle themes.
   (global-set-key (kbd "H-t") #'cppimmo/cycle-custom-themes)
+  ;; Set bindings for windmove.
+  (global-set-key (kbd "H-w l") 'windmove-swap-states-left)
+  (global-set-key (kbd "H-w r") 'windmove-swap-states-right)
+  (global-set-key (kbd "H-w u") 'windmove-swap-states-up)
+  (global-set-key (kbd "H-w d") 'windmove-swap-states-down)
   ) ; End of cppimmo/bind-keys-global.
 
 (defun cppimmo/bind-keys-m ()

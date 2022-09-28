@@ -297,6 +297,22 @@ The trick is to use msys2 and the MinGW hunspell and hunspell-en packages.
 	      indent-tabs-mode t)
 
 
+;; Dired.
+;; From: https://www.emacswiki.org/emacs/DiredSortDirectoriesFirst
+(defun cppimmo/dired-sort ()
+  "Make dired listings sort and display directories first."
+  (save-excursion
+	(let (buffer-read-only)
+	  (forward-line 2) ;; Move beyond directory heading.
+	  (sort-regexp-fields t "^.*$" "[ ]*." (point) (point-max)))
+	(set-buffer-modified-p nil)))
+
+(defadvice dired-readin
+	(after dired-after-updating-hook first () activate)
+  "Make dired sort listings with directories first before adding marks."
+  (cppimmo/dired-sort))
+
+
 ;;; LOAD KEYBINDINGS ============================================================
 (load "cppimmo-keybindings")
 (cppimmo/bind-keys-g)
