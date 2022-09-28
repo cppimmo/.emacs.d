@@ -27,6 +27,9 @@
   (global-set-key (kbd "H-w r") 'windmove-swap-states-right)
   (global-set-key (kbd "H-w u") 'windmove-swap-states-up)
   (global-set-key (kbd "H-w d") 'windmove-swap-states-down)
+  ;; Set bindings for ERC.
+  (global-set-key (kbd "H-e r c") #'cppimmo/launch-erc)
+  
   ) ; End of cppimmo/bind-keys-global.
 
 (defun cppimmo/bind-keys-m ()
