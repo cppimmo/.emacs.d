@@ -105,6 +105,8 @@
   (tool-bar-mode -1) ; Disable icon tool bar.
   (column-number-mode t) ; Always show line cursor position in the modeline.
   (when (version<= "28.1" emacs-version)
+	(setq display-time-24hr-format nil
+		  display-time-default-load-average nil)
 	(display-time-mode t)) ; Display time in the modeline.
   ;; Enable display-battery-mode if a battery exists.
   (when (and (version<= "22" emacs-version)
