@@ -281,25 +281,11 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
 
 ;; Install and configure elfeed.
 (use-package elfeed)
-(setq elfeed-feeds
-	  ;; The extra symbols are relevant tags.
-	  '(("https://www.slackware.com/~alien/multilib/ChangeLog.rss" slackware)
-		("https://mirrors.slackware.com/feeds/slackware64-current.rss" slackware)
-		("https://docs.slackware.com/feed.php" slackware docs)
-		("https://slackbuilds.org/rss/ChangeLog.rss" slackware)
-		("http://marav8.free.fr/slackware64-15.0.rss" slackware)
-		("https://www.reddit.com/r/slackware.rss" slackware reddit)
-		("https://www.reddit.com/r/emacs.rss" emacs reddit)
-		("https://www.reddit.com/r/lisp.rss" code reddit)
-		("https://www.reddit.com/r/cpp.rss" code reddit)
-		("http://xahlee.info/emacs/emacs/blog.xml" blog)
-		("http://xahlee.info/comp/blog.xml" blog)
-		("http://xahlee.info/kbd/keyboard_blog.xml" blog)
-		("https://www.yahoo.com/news/rss" news tech)
-		("https://news.ycombinator.com/rss" news tech)
-		("http://rss.slashdot.org/Slashdot/slashdotMain" news tech)
-		("http://feeds.feedburner.com/linuxquestions/latest" forum tech)
-		("http://feeds.feedburner.com/linuxquestions/lqnews" tech news forum)))
+(load "~/.emacs.d/cppimmo/cppimmo-feeds-pub.el")
+;; Load private feed file if it exists and append items to list.
+(let (($feed-file-priv "~/.emacs.d/cppimmo/cppimmo-feeds-priv.el"))
+  (when (file-exists-p $feed-file-priv)
+	(load $feed-file-priv)))
 
 
 ;;; BUILT-IN MODE CONFIGURATION =================================================
