@@ -32,3 +32,9 @@ server/**
 
 # Ignore the erc-log directory.
 erc-log/**
+
+# Ignore the bookmarks file.
+/bookmarks
+
+# Ignore the abbrev_defs file.
+/abbrev_defs

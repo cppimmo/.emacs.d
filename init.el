@@ -354,6 +354,17 @@ The trick is to use msys2 and the MinGW hunspell and hunspell-en packages.
   (interactive)
   (erc-tls :port 6697))
 
+
+;; Load abbreviations (abbrev-mode).
+(load "~/.emacs.d/cppimmo/cppimmo-abbrev.el")
+
+
+;; Bookmarks
+(setq bookmark-save-flag 1 ; Save bookmark file after one modification.
+	  ;; Ensure bookmark file default doesn't change.
+	  bookmark-default-file "~/.emacs.d/bookmarks")
+
+
 ;;; LOAD KEYBINDINGS ============================================================
 (load "cppimmo-keybindings")
 (cppimmo/bind-keys-g)
