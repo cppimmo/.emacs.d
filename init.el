@@ -288,6 +288,10 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
 	(load $feed-file-priv)))
 
 
+;; Install and configure ement.
+;; (use-package ement)
+
+
 ;;; BUILT-IN MODE CONFIGURATION =================================================
 
 (defun cppimmo/ispell-windows-nt ()
@@ -323,6 +327,21 @@ The trick is to use msys2 and the MinGW hunspell and hunspell-en packages.
   "Make dired sort listings with directories first before adding marks."
   (cppimmo/dired-sort))
 
+(defun cppimmo/dired-open-in-new-frame ()
+  "Open a file/directory in a new frame."
+  (interactive)
+  (find-file-other-frame (dired-get-file-for-visit)))
+
+(defun cppimmo/dired-jump-to-parent ()
+  "Jump in the parent of the working directory."
+  (interactive)
+  (goto-char (point-min))
+  (search-forward "..")
+  (dired-jump))
+
+(eval-after-load "dired"
+  '(define-key dired-mode-map "F" 'cppimmo/dired-open-in-new-frame))
+  ;; '(define-key dired-mode-map "" 'cppimmo/dired-jump-to-parent)
 
 ;; ERC.
 ;; Set the ERC log directory. (C-c C-l)

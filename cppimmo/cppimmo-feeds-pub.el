@@ -24,4 +24,5 @@
 		("https://emacsforosx.com/atom/daily" news emacs)
 		("https://planet.emacslife.com/atom.xml" news blog emacs)
 		("https://www.reddit.com/r/orgmode.rss" emacs reddit)
-		("https://oneofus.la/have-emacs-will-hack/feed.xml" emacs)))
+		("https://oneofus.la/have-emacs-will-hack/feed.xml" emacs)
+		("https://thetech.com/feed" news)))
