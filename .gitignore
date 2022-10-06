@@ -38,3 +38,9 @@ erc-log/**
 
 # Ignore the abbrev_defs file.
 /abbrev_defs
+
+# Ignore the urls directory.
+url/**
+
+# Ignore the private RSS feed elisp file.
+/cppimmo/cppimmo-feeds-priv.el
