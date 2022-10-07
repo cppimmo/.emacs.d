@@ -316,6 +316,12 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
 (add-hook 'css-mode-hook 'turn-on-css-eldoc)
 (add-hook 'scss-mode-hook 'turn-on-css-eldoc)
 
+
+;; Install and configure helpful.
+(use-package helpful)
+;; helpful-callabe, -function, -macro, -command, -key, -variable, -at-point
+
+
 ;;; BUILT-IN MODE CONFIGURATION =================================================
 
 (defun cppimmo/ispell-windows-nt ()

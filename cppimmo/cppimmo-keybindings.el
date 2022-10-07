@@ -29,19 +29,27 @@
   (global-set-key (kbd "H-w d") 'windmove-swap-states-down)
   ;; Set bindings for ERC.
   (global-set-key (kbd "H-e r c") #'cppimmo/launch-erc)
-  
+  ;; Bind keys for Helpful.
+  (global-set-key (kbd "C-h f") #'helpful-callable)
+  (global-set-key (kbd "C-h F") #'helpful-function) ; Replace default: info-goto-emacs-command-node.
+  (global-set-key (kbd "C-h v") #'helpful-variable)
+  (global-set-key (kbd "C-h k") #'helpful-key)
+  (global-set-key (kbd "C-h C") #'helpful-command) ; Replace default: describe-coding-system.
   ) ; End of cppimmo/bind-keys-global.
 
 (defun cppimmo/bind-keys-m ()
   "Set keys for certain modes."
   ;; Set special bindings for the default nxml-mode.
   (eval-after-load 'nxml-mode
-	(lambda ()
-	  ;; Set binding for CDATA tag insertion for XML documents.
+    (lambda ()
+      ;; Set binding for CDATA tag insertion for XML documents.
 	;;; See cppimmo/cppimmo-xml.el
-	  (define-key nxml-mode-map (kbd "C-c M-!") 'cppimmo/xml-insert-cdata)
-	  ;; Set binding for blog insertion for XML documents.
-	  (define-key nxml-mode-map (kbd "C-c M-@") 'cppimmo/xml-insert-blog)
-	  ;; Set binding for RSS feed item insertion for XML documents.
-	  (define-key nxml-mode-map (kbd "C-c M-#") 'cppimmo/xml-insert-blog-rss-item)))
+      (define-key nxml-mode-map (kbd "C-c M-!") 'cppimmo/xml-insert-cdata)
+      ;; Set binding for blog insertion for XML documents.
+      (define-key nxml-mode-map (kbd "C-c M-@") 'cppimmo/xml-insert-blog)
+      ;; Set binding for RSS feed item insertion for XML documents.
+      (define-key nxml-mode-map (kbd "C-c M-#") 'cppimmo/xml-insert-blog-rss-item)))
+  (eval-after-load 'emacs-lisp-mode
+    (lambda ()
+      (define-key emacs-lisp-mode-map (kbd "C-c C-d") #'helpful-at-point)))
   ) ; End of cppimmo/bind-keys-mode.
