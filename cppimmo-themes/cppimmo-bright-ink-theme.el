@@ -58,8 +58,8 @@ Consider installing highlight-numbers and highlight-parentheses.")
  '(link ((t (:foreground "#1f88ff" :underline t))))
  '(link-visited ((t (:foreground "#aaccff" :underline t))))
  '(button ((t (:background "#bfbfbf" :underline t))))
- '(header-line ((t (:background "#e5e5e5" :foreground "#333333"))))
- '(line-number ((t (:background "#c5c5c5" :foreground "#111111"))))
+ '(header-line ((t (:background "#bfbfbf" :foreground "#000000" :box t))))
+ '(line-number ((t (:background "#c5c5c5" :foreground "#111111")))) ; :box t
  '(hl-line ((t (:background "#ffe900" :weight bold))))
  '(highlight-numbers-number ((t (:foreground "#f213f3")))) ; highlight-numbers
  ;; '(highlight-parentheses- ) ; hightlight-parentheses
