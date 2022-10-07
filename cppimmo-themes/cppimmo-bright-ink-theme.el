@@ -38,7 +38,7 @@ Consider installing highlight-numbers and highlight-parentheses.")
  ;; Alternatively try:   :box '(:line-width 2 :color "#000000" :style bold)
  '(mode-line ((t (:background "#bfbfbf" :foreground "#000000" :box t))))
  '(mode-line-inactive ((t (:background "#e5e5e5" :foreground "#333333" :box t))))
- '(fringe ((t (:background "#000000"))))
+ '(fringe ((t (:background "#bfbfbf"))))
  '(minibuffer-prompt ((t (:foreground "#ff2e00")))) ; :background "ffe900"
  '(font-lock-builtin-face ((t (:foreground "#3305A0"))))
  '(font-lock-comment-face ((t (:slant italic :foreground "#17A536"))))
