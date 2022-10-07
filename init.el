@@ -292,6 +292,30 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
 ;; (use-package ement)
 
 
+;; Install and configure web-mode.
+;; https://web-mode.org/
+(use-package web-mode)
+;; TODO: Style left padding.
+(defun cppimmo/web-mode-hook ()
+  "cppimmmo hook for web mode."
+  (setq web-mode-markup-indent-offset 2 ; HTML indentation.
+		web-mode-css-indent-offset    2 ; CSS indentation.
+		web-mode-code-indent-offset   4 ; Code tags indentation.
+		web-mode-style-padding        1 ; Left padding relative to element.
+		web-mode-script-padding       1
+		web-mode-block-padding        1)
+  (add-to-list 'web-mode-indentation-params '("lineup-args" . nil))
+  (add-to-list 'web-mode-indentation-params '("lineup-calls" . nil))
+  (add-to-list 'web-mode-indentation-params '("lineup-concats" . nil))
+  (add-to-list 'web-mode-indentation-params '("lineup-ternary" . nil)))
+(add-hook 'web-mode-hook #'cppimmo/web-mode-hook)
+
+
+;; Install and confiure css-eldoc.
+(use-package css-eldoc)
+(add-hook 'css-mode-hook 'turn-on-css-eldoc)
+(add-hook 'scss-mode-hook 'turn-on-css-eldoc)
+
 ;;; BUILT-IN MODE CONFIGURATION =================================================
 
 (defun cppimmo/ispell-windows-nt ()
@@ -369,6 +393,10 @@ The trick is to use msys2 and the MinGW hunspell and hunspell-en packages.
 	  ;; Ensure bookmark file default doesn't change.
 	  bookmark-default-file "~/.emacs.d/bookmarks")
 
+;; css-mode
+(defun cppimmo/css-mode-hook ()
+  (setq-local css-indent-offset 2))
+(add-hook 'css-mode-hook #'cppimmo/css-mode-hook)
 
 ;;; LOAD KEYBINDINGS ============================================================
 (load "cppimmo-keybindings")
