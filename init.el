@@ -323,6 +323,10 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
 ;; helpful-callabe, -function, -macro, -command, -key, -variable, -at-point
 
 
+;; Install and configure powershell.
+(use-package powershell)
+
+
 ;;; BUILT-IN MODE CONFIGURATION =================================================
 
 (defun cppimmo/ispell-windows-nt ()
