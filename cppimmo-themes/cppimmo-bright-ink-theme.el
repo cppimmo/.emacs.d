@@ -64,6 +64,7 @@ Consider installing highlight-numbers and highlight-parentheses.")
  '(highlight-numbers-number ((t (:foreground "#f213f3")))) ; highlight-numbers
  ;; '(highlight-parentheses- ) ; hightlight-parentheses
  '(cppimmo/font-lock-operator-face ((t (:foreground "#ff1210"))))
+ '(dired-directory ((t (:foreground "#3305a0"))))
  )
 
 (provide-theme 'cppimmo-bright-ink)

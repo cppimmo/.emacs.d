@@ -304,6 +304,7 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
 		web-mode-style-padding        1 ; Left padding relative to element.
 		web-mode-script-padding       1
 		web-mode-block-padding        1)
+  (indent-tabs-mode -1) ; Turn off tab indentation.
   (add-to-list 'web-mode-indentation-params '("lineup-args" . nil))
   (add-to-list 'web-mode-indentation-params '("lineup-calls" . nil))
   (add-to-list 'web-mode-indentation-params '("lineup-concats" . nil))
@@ -324,6 +325,14 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
 
 ;; Install and configure auctex.
 ;; (use-package auctex)
+
+
+;; Install and configure powershell.
+(use-package powershell)
+
+
+;; Install and configure olivetti
+(use-package olivetti)
 
 
 ;;; BUILT-IN MODE CONFIGURATION =================================================

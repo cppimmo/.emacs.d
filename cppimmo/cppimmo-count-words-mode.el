@@ -157,3 +157,14 @@ Requires a single @WPM argument."
 
 (add-hook 'cppimmo/count-words-mode-off-hook
 		  #'cppimmo/count-words-mode-default-off-hook)
+
+(easy-menu-define cppimmo/count-words-menu cppimmo/count-words-mode-map
+  "Menu for cppimmo/count-words-mode."
+  '("Count Words"
+	["Count Words in Buffer" cppimmo/count-words-buffer t]
+	["Count Words in Region" cppimmo/count-words-region t]
+	["Count Words in Paragraph" cppimmo/count-words-paragraph t]
+	["Count Words in Line" cppimmo/count-words-line t]
+	"---"
+	["Calculate Region Read Time (Minutes)" cppimmo/count-words-region-read-time t]
+	["Calculate Region Read Time (Seconds)" cppimmo/count-words-region-read-time-seconds t]))
