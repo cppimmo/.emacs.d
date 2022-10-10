@@ -322,6 +322,10 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
 ;; helpful-callabe, -function, -macro, -command, -key, -variable, -at-point
 
 
+;; Install and configure auctex.
+;; (use-package auctex)
+
+
 ;;; BUILT-IN MODE CONFIGURATION =================================================
 
 (defun cppimmo/ispell-windows-nt ()
@@ -376,13 +380,13 @@ The trick is to use msys2 and the MinGW hunspell and hunspell-en packages.
 ;; ERC.
 ;; Set the ERC log directory. (C-c C-l)
 (setq erc-server "irc.libera.chat"
-	  erc-nick "cppimmo"
-	  erc-user-full-name ""
-	  erc-track-shorten-start 8
-	  erc-autojoin-channels-alist '(("irc.libera.chat" "##slackware"))
-	  erc-kill-buffer-on-part t
-	  erc-auto-query 'bury
-	  erc-log-channels-directory "~/.emacs.d/erc-log")
+      erc-nick "cppimmo"
+      erc-user-full-name ""
+      erc-track-shorten-start 8
+      erc-autojoin-channels-alist '(("irc.libera.chat" "##slackware"))
+      erc-kill-buffer-on-part t
+      erc-auto-query 'bury
+      erc-log-channels-directory "~/.emacs.d/erc-log")
 
 (defun cppimmo/launch-erc ()
   ""
