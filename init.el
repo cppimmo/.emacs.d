@@ -414,8 +414,17 @@ The trick is to use msys2 and the MinGW hunspell and hunspell-en packages.
 
 ;; css-mode
 (defun cppimmo/css-mode-hook ()
+  "My css-mode hook."
   (setq-local css-indent-offset 2))
 (add-hook 'css-mode-hook #'cppimmo/css-mode-hook)
+
+
+;; rst-mode
+(defun cppimmo/rst-mode-hook ()
+  "My rst-mode hook."
+  (setq-local fill-column 80)
+  (auto-fill-mode t))
+(add-hook 'rst-mode-hook #'cppimmo/rst-mode-hook)
 
 ;;; LOAD KEYBINDINGS ============================================================
 (load "cppimmo-keybindings")
