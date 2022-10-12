@@ -331,8 +331,16 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
 (use-package powershell)
 
 
-;; Install and configure olivetti
+;; Install and configure olivetti.
 (use-package olivetti)
+
+
+;; Install and configure pdf-tools.
+;; (use-package pdf-tools)
+
+;; Install and configure cursory.
+(use-package cursory)
+(cursory-set-preset (or (cursory-restore-latest-preset) 'box))
 
 
 ;;; BUILT-IN MODE CONFIGURATION =================================================
