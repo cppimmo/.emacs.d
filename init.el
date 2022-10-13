@@ -5,10 +5,25 @@
 (when (file-exists-p custom-file)
   (load custom-file))
 
-;; Append my own Emacs Lisp library directory to the load-path variable.
-(setq load-path (append load-path
-						(list (concat user-emacs-directory "cppimmo"))))
-
+(defun cppimmo/append-to-load-path (@path &optional @use-dot-emacs)
+  "Append @PATH string to the load-path variable.
+@PATH Path string to append.
+@USE-DOT-EMACS Prefix @PATH with user-emacs-directory when true."
+  (when (not (stringp @path)) ; Ensure @PATH is a string.
+	(error "Argument @PATH is not of type"))
+  (setq load-path
+		(append load-path
+				(list
+				 (if (equal @use-dot-emacs t)
+					 ;; Prefix @PATH with user-emacs-directory.
+					 (concat user-emacs-directory @path)
+				   ;; No user-emacs-directory prefix.
+				   @path)))))
+;; Append my own Emacs Lisp library directories to the load-path variable.
+(mapcar (lambda (@path) ; Prefix @PATH with user-emacs-directory.
+		  (funcall #'cppimmo/append-to-load-path @path t))
+		(list "cppimmo" "addons"))
+;; Load library files.
 (load "cppimmo-dvorak")
 (load "cppimmo-xml")
 (load "cppimmo-count-words-mode")

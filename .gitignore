@@ -44,3 +44,6 @@ url/**
 
 # Ignore the private RSS feed elisp file.
 /cppimmo/cppimmo-feeds-priv.el
+
+# Ignore the addons directory.
+addons/**
