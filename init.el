@@ -5,13 +5,14 @@
 (when (file-exists-p custom-file)
   (load custom-file))
 
-;; Append my own Emacs Lisp library to the load-path variable.
+;; Append my own Emacs Lisp library directory to the load-path variable.
 (setq load-path (append load-path
 						(list (concat user-emacs-directory "cppimmo"))))
 
 (load "cppimmo-dvorak")
 (load "cppimmo-xml")
 (load "cppimmo-count-words-mode")
+(load "cppimmo-commands")
 
 ;;; PACKAGE SYSTEM SETUP ========================================================
 ;; Try to silence GPG errors on Windows.
