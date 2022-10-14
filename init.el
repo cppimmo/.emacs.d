@@ -359,6 +359,16 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
 (cursory-set-preset (or (cursory-restore-latest-preset) 'box))
 
 
+;; Install and configure cmake-mode.
+(use-package cmake-mode)
+;; Install and configure cmake-font-lock.
+(use-package cmake-font-lock)
+;; Install and configure cmake-ide.
+(use-package cmake-ide)
+;; Install and configure cmake-project.
+(use-package cmake-project)
+
+
 ;;; BUILT-IN MODE CONFIGURATION =================================================
 
 (defun cppimmo/ispell-windows-nt ()
