@@ -409,16 +409,6 @@ The trick is to use msys2 and the MinGW hunspell and hunspell-en packages.
   (interactive)
   (find-file-other-frame (dired-get-file-for-visit)))
 
-(defun cppimmo/dired-jump-to-parent ()
-  "Jump in the parent of the working directory."
-  (interactive)
-  (goto-char (point-min))
-  (search-forward "..")
-  (dired-jump))
-
-(eval-after-load "dired"
-  '(define-key dired-mode-map "F" 'cppimmo/dired-open-in-new-frame))
-  ;; '(define-key dired-mode-map "" 'cppimmo/dired-jump-to-parent)
 
 ;; ERC.
 ;; Set the ERC log directory. (C-c C-l)
