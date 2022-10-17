@@ -75,6 +75,21 @@
 @HEIGHT the desired character height of the frame."
   (when window-system (set-frame-size (selected-frame) @width @height)))
 
+(defun cppimmo/initialize-font ()
+  "Setup font."
+  ;; Font stuff.
+  (set-fontset-font
+   t
+   (if (version< emacs-version "28.1")
+	   '(#x1f300 . #x1fad0) ; Then
+	 'emoji) ; Else
+   (cond
+	((member "Apple Color Emoji" (font-family-list)) "Apple Color Emoji")
+    ((member "Noto Color Emoji" (font-family-list)) "Noto Color Emoji")
+    ((member "Noto Emoji" (font-family-list)) "Noto Emoji")
+    ((member "Segoe UI Emoji" (font-family-list)) "Segoe UI Emoji")
+    ((member "Symbola" (font-family-list)) "Symbola"))))
+
 (defun cppimmo/cycle-custom-themes ()
   "Cycle through the known custom themes."
   (interactive)
@@ -139,19 +154,8 @@
 		  '(left-curly-arrow right-curly-arrow))) ; Set the visual line fringe indicators.
   (if (string-equal system-type "windows-nt")
 	  (progn (cppimmo/configure-frame-size 90 34)))
-  
-  ;; Font stuff.
-  (set-fontset-font
-   t
-   (if (version< emacs-version "28.1")
-	   '(#x1f300 . #x1fad0) ; Then
-	 'emoji) ; Else
-   (cond
-	((member "Apple Color Emoji" (font-family-list)) "Apple Color Emoji")
-    ((member "Noto Color Emoji" (font-family-list)) "Noto Color Emoji")
-    ((member "Noto Emoji" (font-family-list)) "Noto Emoji")
-    ((member "Segoe UI Emoji" (font-family-list)) "Segoe UI Emoji")
-    ((member "Symbola" (font-family-list)) "Symbola")))
+  ;; Call font setup.
+  (cppimmo/initialize-font)
   ) ;; End of user interface settings.
 
 
