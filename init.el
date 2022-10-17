@@ -19,6 +19,8 @@
 					 (concat user-emacs-directory @path)
 				   ;; No user-emacs-directory prefix.
 				   @path)))))
+
+(cppimmo/append-to-load-path "~/.emacs.d")
 ;; Append my own Emacs Lisp library directories to the load-path variable.
 (mapcar (lambda (@path) ; Prefix @PATH with user-emacs-directory.
 		  (funcall #'cppimmo/append-to-load-path @path t))
@@ -213,8 +215,14 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
 	) ; End of enabling disabled features.
   ) ; End of miscellaneous.
 
-;;; PACKAGE CONFIGURATION =======================================================
+;;; PACKAGE CONFIGURATION - NON-REPOS =======================================================
+;; Install and configure glsl-mode.
+(autoload 'glsl-mode "glsl-mode" nil t)
+(add-to-list 'auto-mode-alist '("\\.vert\\'" . glsl-mode))
+(add-to-list 'auto-mode-alist '("\\.frag\\'" . glsl-mode))
 
+
+;;; PACKAGE CONFIGURATION - REPOS =======================================================
 ;; Settings for fill column indicator package. Toggle with "fci-mode".
 (use-package fill-column-indicator)
 (require 'fill-column-indicator)
