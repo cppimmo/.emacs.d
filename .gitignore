@@ -47,3 +47,6 @@ url/**
 
 # Ignore the addons directory.
 addons/**
+
+# Ignore the org-journal directory.
+org-journal/**

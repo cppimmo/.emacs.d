@@ -241,57 +241,60 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
 
 ;;; PACKAGE CONFIGURATION - REPOS =======================================================
 ;; Settings for fill column indicator package. Toggle with "fci-mode".
-(use-package fill-column-indicator)
-(require 'fill-column-indicator)
-(setq fci-rule-column 80)
-(setq fci-rule-width 2)
-(setq fci-rule-color "red")
+(use-package fill-column-indicator
+  :config
+  (progn
+	(setq fci-rule-column 80
+		  fci-rule-width  2
+		  fci-rule-color  "red")))
 
 
 ;; Settings for the pomodoro package.
-(use-package pomodoro)
-(require 'pomodoro)
-(pomodoro-add-to-mode-line) ; Add to modeline.
-;;; Place all audio files in the repository to make things easier.
-;; Work time alert.
-(setq pomodoro-work-start-sound "~/.emacs.d/audio/bad-to-the-bone-fart.wav")
-;; Break time alert.
-(setq pomodoro-break-start-sound "~/.emacs.d/audio/bad-to-the-bone-fart.wav")
-(defun cppimmo/play-pomodoro-sound (@sound)
-  "Replace the play sound function for the pomodoro package."
-  (play-sound-file (expand-file-name @sound)))
-;; Properly replace the play sound function.
-(advice-add 'play-pomodoro-sound :override #'cppimmo/play-pomodoro-sound)
+(use-package pomodoro
+  :config
+  (progn
+	(pomodoro-add-to-mode-line) ; Add to modeline.
+	;; Place all audio files in the repository to make things easier.
+	(setq pomodoro-work-start-sound
+		  "~/.emacs.d/audio/bad-to-the-bone-fart.wav") ; Work time alert.
+	(setq pomodoro-break-start-sound
+		  "~/.emacs.d/audio/bad-to-the-bone-fart.wav") ; Break time alert.
+	(defun cppimmo/play-pomodoro-sound (@sound)
+	  "Replace the play sound function for the pomodoro package."
+	  (play-sound-file (expand-file-name @sound)))
+	;; Properly replace the play sound function.
+	(advice-add 'play-pomodoro-sound :override #'cppimmo/play-pomodoro-sound)))
 
 
-;; Settings for the php mode package.
+;; Install and configure php-mode
 (use-package php-mode)
 
 
-;; Settings for the lua mode package.
-(use-package lua-mode)
-(setq lua-indent-level 4)
-(setq lua-indent-string-contents t)
-(defun cppimmo/lua-mode-hook ()
-  "I want tabs!"
-  (setq indent-tabs-mode t) ; Enable indent tabs mode via the mode-hook.
-  (abbrev-mode nil)) ; This probably isn't really relevant.
+;; Install and configure lua-mode
+(use-package lua-mode
+  :config
+  (progn
+  (setq lua-indent-level 4)
+  (setq lua-indent-string-contents t)
+  (defun cppimmo/lua-mode-hook ()
+	"I want tabs!"
+	(setq indent-tabs-mode t) ; Enable indent tabs mode via the mode-hook.
+	(abbrev-mode nil)) ; This probably isn't really relevant.
+  (add-hook 'lua-mode-hook 'cppimmo/lua-mode-hook)))
 
-(add-hook 'lua-mode-hook 'cppimmo/lua-mode-hook)
 
-
-;; Settings for the ox-leanpub package.
+;; Install and configure ox-leanpub
 (use-package ox-leanpub)
 
 
-;; Settings for the markdown mode package.
-(use-package markdown-mode)
-;; Settings for the markdown preview mode
+;; Install and configure markdown-mode.
+(use-package markdown-mode
+  :config
+  ;; The the appropriate "markdown-command" for Microsoft Windows.
+  (if (string-equal system-type "windows-nt")
+	  (progn (custom-set-variables '(markdown-command "pandoc.exe")))))
+;; Install and configure markdown-preview-eww.
 (use-package markdown-preview-eww)
-
-;; The the appropriate "markdown-command" for Microsoft Windows.
-(if (string-equal system-type "windows-nt")
-	(progn (custom-set-variables '(markdown-command "pandoc.exe"))))
 
 
 ;; Install the 2048-game package.
@@ -304,8 +307,10 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
 
 
 ;; Install and configure SLIME.
-(use-package slime)
-(setq inferior-lisp-program "sbcl")
+(use-package slime
+  :config
+  (progn
+	(setq inferior-lisp-program "sbcl")))
 
 
 ;; Install and configure magit.
@@ -321,12 +326,14 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
 
 
 ;; Install and configure elfeed.
-(use-package elfeed)
-(load "~/.emacs.d/cppimmo/cppimmo-feeds-pub.el")
-;; Load private feed file if it exists and append items to list.
-(let (($feed-file-priv "~/.emacs.d/cppimmo/cppimmo-feeds-priv.el"))
-  (when (file-exists-p $feed-file-priv)
-	(load $feed-file-priv)))
+(use-package elfeed
+  :config
+  (progn
+	(load "~/.emacs.d/cppimmo/cppimmo-feeds-pub.el")
+	;; Load private feed file if it exists and append items to list.
+	(let (($feed-file-priv "~/.emacs.d/cppimmo/cppimmo-feeds-priv.el"))
+	  (when (file-exists-p $feed-file-priv)
+		(load $feed-file-priv)))))
 
 
 ;; Install and configure ement.
@@ -335,28 +342,30 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
 
 ;; Install and configure web-mode.
 ;; https://web-mode.org/
-(use-package web-mode)
-;; TODO: Style left padding.
-(defun cppimmo/web-mode-hook ()
-  "cppimmmo hook for web mode."
-  (setq web-mode-markup-indent-offset 2 ; HTML indentation.
-		web-mode-css-indent-offset    2 ; CSS indentation.
-		web-mode-code-indent-offset   4 ; Code tags indentation.
-		web-mode-style-padding        1 ; Left padding relative to element.
-		web-mode-script-padding       1
-		web-mode-block-padding        1)
-  (indent-tabs-mode -1) ; Turn off tab indentation.
-  (add-to-list 'web-mode-indentation-params '("lineup-args" . nil))
-  (add-to-list 'web-mode-indentation-params '("lineup-calls" . nil))
-  (add-to-list 'web-mode-indentation-params '("lineup-concats" . nil))
-  (add-to-list 'web-mode-indentation-params '("lineup-ternary" . nil)))
-(add-hook 'web-mode-hook #'cppimmo/web-mode-hook)
+(use-package web-mode
+  :config
+  ;; TODO: Style left padding.
+  (defun cppimmo/web-mode-hook ()
+	"cppimmmo hook for web mode."
+	(setq web-mode-markup-indent-offset 2 ; HTML indentation.
+		  web-mode-css-indent-offset    2 ; CSS indentation.
+		  web-mode-code-indent-offset   4 ; Code tags indentation.
+		  web-mode-style-padding        1 ; Left padding relative to element.
+		  web-mode-script-padding       1
+		  web-mode-block-padding        1)
+	(indent-tabs-mode -1) ; Turn off tab indentation.
+	(add-to-list 'web-mode-indentation-params '("lineup-args" . nil))
+	(add-to-list 'web-mode-indentation-params '("lineup-calls" . nil))
+	(add-to-list 'web-mode-indentation-params '("lineup-concats" . nil))
+	(add-to-list 'web-mode-indentation-params '("lineup-ternary" . nil)))
+  (add-hook 'web-mode-hook #'cppimmo/web-mode-hook))
 
 
 ;; Install and confiure css-eldoc.
-(use-package css-eldoc)
-(add-hook 'css-mode-hook 'turn-on-css-eldoc)
-(add-hook 'scss-mode-hook 'turn-on-css-eldoc)
+(use-package css-eldoc
+  :config
+  (add-hook 'css-mode-hook 'turn-on-css-eldoc)
+  (add-hook 'scss-mode-hook 'turn-on-css-eldoc))
 
 
 ;; Install and configure helpful.
@@ -380,8 +389,9 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
 ;; (use-package pdf-tools)
 
 ;; Install and configure cursory.
-(use-package cursory)
-(cursory-set-preset (or (cursory-restore-latest-preset) 'box))
+(use-package cursory
+  :config (cursory-set-preset
+		   (or (cursory-restore-latest-preset) 'box)))
 
 
 ;; Install and configure cmake-mode.
@@ -392,6 +402,11 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
 (use-package cmake-ide)
 ;; Install and configure cmake-project.
 (use-package cmake-project)
+
+
+;; Install and configure org-journal.
+(use-package org-journal
+  :config (setq org-journal-dir "~/.emacs.d/org-journal"))
 
 
 ;;; BUILT-IN MODE CONFIGURATION =================================================
@@ -474,6 +489,11 @@ The trick is to use msys2 and the MinGW hunspell and hunspell-en packages.
   (setq-local fill-column 80)
   (auto-fill-mode t))
 (add-hook 'rst-mode-hook #'cppimmo/rst-mode-hook)
+
+
+;; Dairy.
+(setq european-calendar-style nil)
+
 
 ;;; LOAD KEYBINDINGS ============================================================
 (load "cppimmo-keybindings")
