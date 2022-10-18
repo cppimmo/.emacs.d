@@ -1,3 +1,17 @@
+;;; Count Words Mode
+;;
+(defvar *cppimmo/count-words-use-header-line* t
+  "Enable/disable the word count for the buffer in the header line.")
+
+(make-variable-buffer-local
+ (defvar *cppimmo/count-words-mod-count* 0 ; Mod meaning modification.
+   "Count the per buffer insertions to reduce word count frequency."))
+
+(defvar *cppimmo/count-words-mod-count-max* 25
+  "Refresh the word count every mod-count-max insertions")
+
+(defvar *cppimmo/count-words-wpm* 238
+  "The default word count if the user does not supply a custom value.")
 
 (defun cppimmo/count--lines (@minp @maxp)
   "Count the number of lines inclusively between @MINP and @MAXP."
@@ -18,29 +32,22 @@
 	  ;; Use catch/throw to return the local word-count from the function.
 	  (throw 'count--words $word-count)))))
 
-(make-variable-buffer-local
- (defvar *cppimmo/count-words-mod-count* 0 ; Mod meaning modification.
-   "Count the per buffer insertions to reduce word count frequency."))
-
-(defvar *cppimmo/count-words-mod-count-max* 25
-  "Refresh the word count every mod-count-max insertions")
-
-(defvar *cppimmo/count-words-wpm* 238
-  "The default word count if the user does not supply a custom value.")
-
 (defun cppimmo/count-words-mode-post-mod-hook ()
   "Update the header line with a word count upon each insertion.
 Mod meaning modification."
-  (setq *cppimmo/count-words-mod-count* (1+ *cppimmo/count-words-mod-count*))
-  ;; Only generate a new word count after mod-count-max modifications.
-  (if (> *cppimmo/count-words-mod-count*
-		 *cppimmo/count-words-mod-count-max*)
-	  (progn (setq header-line-format
-				   (append (nbutlast header-line-format 1)
-						   (list (format " Words: %d"
-										 (cppimmo/count--words (point-min) (point-max))))))
-			 (setq *cppimmo/count-words-mod-count* 0))))
-
+  (catch 'count-words-mode-post-mod-hook
+	(when (eq *cppimmo/count-words-use-header-line* nil)
+	  (throw 'count-words-mode-post-mod-hook nil))
+	(setq *cppimmo/count-words-mod-count* (1+ *cppimmo/count-words-mod-count*))
+	;; Only generate a new word count after mod-count-max modifications.
+	(if (> *cppimmo/count-words-mod-count*
+		   *cppimmo/count-words-mod-count-max*)
+		(progn (setq header-line-format
+					 (append (nbutlast header-line-format 1)
+							 (list (format " Words: %d"
+										   (cppimmo/count--words (point-min) (point-max))))))
+			   (setq *cppimmo/count-words-mod-count* 0)))))
+  
 (defun cppimmo/count--characters (@minp @maxp)
   "Count the number of characters between @MINP and @MAXP."
   (interactive)

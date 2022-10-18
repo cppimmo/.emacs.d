@@ -238,6 +238,12 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
 (add-to-list 'auto-mode-alist '("\\.vert\\'" . glsl-mode))
 (add-to-list 'auto-mode-alist '("\\.frag\\'" . glsl-mode))
 
+;;; PACKAGE CONFIGURATION - MY STUFF
+=======================================================
+;; Configure cppimmo/count-words-mode
+(defun cppimmo/my-count-words-mode-hook ()
+  (setq *cppimmo/count-words-use-header-line* nil))
+(add-hook 'cppimmo/count-words-mode-hook #'cppimmo/my-count-words-mode-hook)
 
 ;;; PACKAGE CONFIGURATION - REPOS =======================================================
 ;; Settings for fill column indicator package. Toggle with "fci-mode".
@@ -280,7 +286,7 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
 	"I want tabs!"
 	(setq indent-tabs-mode t) ; Enable indent tabs mode via the mode-hook.
 	(abbrev-mode nil)) ; This probably isn't really relevant.
-  (add-hook 'lua-mode-hook 'cppimmo/lua-mode-hook)))
+  (add-hook 'lua-mode-hook #'cppimmo/lua-mode-hook)))
 
 
 ;; Install and configure ox-leanpub
