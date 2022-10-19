@@ -1,6 +1,8 @@
 ;;; Public RSS Feeds.
 ;;
 (defun cppimmo/append-to-elfeeds (@feed-list)
+  "Append @FEED-LIST to the elfeeds feed list.
+Use quoted list and refer to elfeeds documentation."
   (setq elfeeds-feeds (append elfeeds-feeds @feed-list)))
 
 (cppimmo/append-to-elfeeds
@@ -28,4 +30,5 @@
 		("https://planet.emacslife.com/atom.xml" news blog emacs)
 		("https://www.reddit.com/r/orgmode.rss" emacs reddit)
 		("https://oneofus.la/have-emacs-will-hack/feed.xml" emacs)
-		("https://thetech.com/feed" news)))
+		("https://thetech.com/feed" news)
+		("https://www.moonofalabama.org/index.rdf" news)))

@@ -232,20 +232,19 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
 	) ; End of enabling disabled features.
   ) ; End of miscellaneous.
 
-;;; PACKAGE CONFIGURATION - NON-REPOS =======================================================
+;;; PACKAGE CONFIGURATION - NON-REPOS ===========================================
 ;; Install and configure glsl-mode.
 (autoload 'glsl-mode "glsl-mode" nil t)
 (add-to-list 'auto-mode-alist '("\\.vert\\'" . glsl-mode))
 (add-to-list 'auto-mode-alist '("\\.frag\\'" . glsl-mode))
 
-;;; PACKAGE CONFIGURATION - MY STUFF
-=======================================================
+;;; PACKAGE CONFIGURATION - MY STUFF ============================================
 ;; Configure cppimmo/count-words-mode
 (defun cppimmo/my-count-words-mode-hook ()
   (setq *cppimmo/count-words-use-header-line* nil))
 (add-hook 'cppimmo/count-words-mode-hook #'cppimmo/my-count-words-mode-hook)
 
-;;; PACKAGE CONFIGURATION - REPOS =======================================================
+;;; PACKAGE CONFIGURATION - REPOS ===============================================
 ;; Settings for fill column indicator package. Toggle with "fci-mode".
 (use-package fill-column-indicator
   :config
