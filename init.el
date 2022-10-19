@@ -415,6 +415,10 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
   :config (setq org-journal-dir "~/.emacs.d/org-journal"))
 
 
+;; Install and configure ement.
+(use-package ement)
+
+
 ;;; BUILT-IN MODE CONFIGURATION =================================================
 
 (defun cppimmo/ispell-windows-nt ()
