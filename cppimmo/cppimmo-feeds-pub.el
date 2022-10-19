@@ -1,6 +1,9 @@
 ;;; Public RSS Feeds.
 ;;
-(setq elfeed-feeds
+(defun cppimmo/append-to-elfeeds (@feed-list)
+  (setq elfeeds-feeds (append elfeeds-feeds @feed-list)))
+
+(cppimmo/append-to-elfeeds
 	  ;; The extra symbols are relevant tags.
 	  '(("https://www.slackware.com/~alien/multilib/ChangeLog.rss" slackware)
 		("https://mirrors.slackware.com/feeds/slackware64-current.rss" slackware)
