@@ -3,7 +3,7 @@
 (defun cppimmo/append-to-elfeeds (@feed-list)
   "Append @FEED-LIST to the elfeeds feed list.
 Use quoted list and refer to elfeeds documentation."
-  (setq elfeeds-feeds (append elfeeds-feeds @feed-list)))
+  (setq elfeed-feeds (append elfeed-feeds @feed-list)))
 
 (cppimmo/append-to-elfeeds
 	  ;; The extra symbols are relevant tags.

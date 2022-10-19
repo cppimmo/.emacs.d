@@ -158,7 +158,6 @@
   (cppimmo/initialize-font)
   ) ;; End of user interface settings.
 
-
 ;;; Backup configuration.
 (defun cppimmo/make-backup-file-name (@file-path)
   "This function from Xah Lee creates new directories for backups.
@@ -253,7 +252,6 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
 		  fci-rule-width  2
 		  fci-rule-color  "red")))
 
-
 ;; Settings for the pomodoro package.
 (use-package pomodoro
   :config
@@ -270,10 +268,8 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
 	;; Properly replace the play sound function.
 	(advice-add 'play-pomodoro-sound :override #'cppimmo/play-pomodoro-sound)))
 
-
 ;; Install and configure php-mode
 (use-package php-mode)
-
 
 ;; Install and configure lua-mode
 (use-package lua-mode
@@ -287,10 +283,8 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
 	(abbrev-mode nil)) ; This probably isn't really relevant.
   (add-hook 'lua-mode-hook #'cppimmo/lua-mode-hook)))
 
-
 ;; Install and configure ox-leanpub
 (use-package ox-leanpub)
-
 
 ;; Install and configure markdown-mode.
 (use-package markdown-mode
@@ -301,15 +295,12 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
 ;; Install and configure markdown-preview-eww.
 (use-package markdown-preview-eww)
 
-
 ;; Install the 2048-game package.
 (use-package 2048-game)
-
 
 ;; Install the doom-themes packages and set the theme.
 (use-package doom-themes)
 ;;  :config (load-theme 'doom-1337 t))
-
 
 ;; Install and configure SLIME.
 (use-package slime
@@ -317,18 +308,14 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
   (progn
 	(setq inferior-lisp-program "sbcl")))
 
-
 ;; Install and configure magit.
 (use-package magit)
-
 
 ;; Install and configure highlight numbers.
 (use-package highlight-numbers)
 
-
 ;; Install and configure highlight parentheses.
 (use-package highlight-parentheses)
-
 
 ;; Install and configure elfeed.
 (use-package elfeed
@@ -340,10 +327,8 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
 	  (when (file-exists-p $feed-file-priv)
 		(load $feed-file-priv)))))
 
-
 ;; Install and configure ement.
 ;; (use-package ement)
-
 
 ;; Install and configure web-mode.
 ;; https://web-mode.org/
@@ -365,30 +350,24 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
 	(add-to-list 'web-mode-indentation-params '("lineup-ternary" . nil)))
   (add-hook 'web-mode-hook #'cppimmo/web-mode-hook))
 
-
 ;; Install and confiure css-eldoc.
 (use-package css-eldoc
   :config
   (add-hook 'css-mode-hook 'turn-on-css-eldoc)
   (add-hook 'scss-mode-hook 'turn-on-css-eldoc))
 
-
 ;; Install and configure helpful.
 (use-package helpful)
 ;; helpful-callabe, -function, -macro, -command, -key, -variable, -at-point
 
-
 ;; Install and configure auctex.
 ;; (use-package auctex)
-
 
 ;; Install and configure powershell.
 (use-package powershell)
 
-
 ;; Install and configure olivetti.
 (use-package olivetti)
-
 
 ;; Install and configure pdf-tools.
 ;; (use-package pdf-tools)
@@ -397,7 +376,6 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
 (use-package cursory
   :config (cursory-set-preset
 		   (or (cursory-restore-latest-preset) 'box)))
-
 
 ;; Install and configure cmake-mode.
 (use-package cmake-mode)
@@ -408,15 +386,16 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
 ;; Install and configure cmake-project.
 (use-package cmake-project)
 
-
 ;; Install and configure org-journal.
 (use-package org-journal
   :config (setq org-journal-dir "~/.emacs.d/org-journal"))
 
-
 ;; Install and configure ement.
 (use-package ement)
 
+;; Install and configure geiser.
+(use-package geiser)
+(use-package geiser-racket)
 
 ;;; BUILT-IN MODE CONFIGURATION =================================================
 
@@ -436,7 +415,6 @@ The trick is to use msys2 and the MinGW hunspell and hunspell-en packages.
 (setq-default c-basic-offset 4
 	      tab-width 4
 	      indent-tabs-mode t)
-
 
 ;; Dired.
 ;; From: https://www.emacswiki.org/emacs/DiredSortDirectoriesFirst
@@ -458,7 +436,6 @@ The trick is to use msys2 and the MinGW hunspell and hunspell-en packages.
   (interactive)
   (find-file-other-frame (dired-get-file-for-visit)))
 
-
 ;; ERC.
 ;; Set the ERC log directory. (C-c C-l)
 (setq erc-server "irc.libera.chat"
@@ -475,10 +452,8 @@ The trick is to use msys2 and the MinGW hunspell and hunspell-en packages.
   (interactive)
   (erc-tls :port 6697))
 
-
 ;; Load abbreviations (abbrev-mode).
 (load "~/.emacs.d/cppimmo/cppimmo-abbrev.el")
-
 
 ;; Bookmarks
 (setq bookmark-save-flag 1 ; Save bookmark file after one modification.
@@ -491,7 +466,6 @@ The trick is to use msys2 and the MinGW hunspell and hunspell-en packages.
   (setq-local css-indent-offset 2))
 (add-hook 'css-mode-hook #'cppimmo/css-mode-hook)
 
-
 ;; rst-mode
 (defun cppimmo/rst-mode-hook ()
   "My rst-mode hook."
@@ -499,10 +473,8 @@ The trick is to use msys2 and the MinGW hunspell and hunspell-en packages.
   (auto-fill-mode t))
 (add-hook 'rst-mode-hook #'cppimmo/rst-mode-hook)
 
-
 ;; Dairy.
 (setq european-calendar-style nil)
-
 
 ;;; LOAD KEYBINDINGS ============================================================
 (load "cppimmo-keybindings")
