@@ -18,6 +18,11 @@
   (call-interactively @command))
 
 (defun cppimmo/buffer-menu-other-frame ()
-  "Run the buffer-menu command in a new frame."
+  "Execute the buffer-menu command in a new frame."
   (interactive)
   (cppimmo/execute-command-other-frame 'buffer-menu))
+
+(defun cppimmo/bookmark-bmenu-other-frame ()
+  "Execute the bookmark-bmenu-list command in a new frame."
+  (interactive)
+  (cppimmo/execute-command-other-frame 'bookmark-bmenu-list))
