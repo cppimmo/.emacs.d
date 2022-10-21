@@ -63,3 +63,8 @@ Date Completed: /<2022-09-09 Fri>/
 * TODO Use Buffer Change Hooks to Enable Header Line Format Only in the Current Buffer in cppimmo-count-words-mode
 Date Issued: /<2022-09-11 Sun>/
 Date Completed: /.../
+
+* TODO Setup for C and C++ Development
+Use [[http://tuhdo.github.io/index.html][Setup C/C++ Development Environment for Emacs]].
+Date Issued: /<2022-10-20 Thu>/
+Date Completed: /.../
