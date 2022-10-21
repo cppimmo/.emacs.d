@@ -399,7 +399,11 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
 
 ;; Install and configure company.
 (use-package company
-  :config (add-hook 'prog-mode-hook 'company-mode))
+  :config
+  (setq company-idle-delay 0.5 ; Delay in seconds.
+		company-minimum-prefix-length 3 ; Three characters minimum.
+		company-selection-wrap-around t) ; Wrap compeletion dropdown navigation.
+  (add-hook 'prog-mode-hook 'company-mode))
 
 ;; Install and configure nyan-mode.
 (use-package nyan-mode
