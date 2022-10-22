@@ -396,6 +396,10 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
 ;; Install and configure geiser.
 (use-package geiser)
 (use-package geiser-racket)
+(use-package geiser-mit)
+(when (string-equal system-type "gnu/linux") ; Prefer mit-scheme on GNU/Linux.
+  (setq geiser-mit-binary "/usr/bin/scheme"
+		geiser-active-implementations '(mit)))
 
 ;; Install and configure company.
 (use-package company
