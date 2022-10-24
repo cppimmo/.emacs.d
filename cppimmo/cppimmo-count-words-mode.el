@@ -1,17 +1,49 @@
+;; BSD 2-Clause License
+;; 
+;; Copyright (c) 2022, Brian Hoffpauir
+;; All rights reserved.
+;; 
+;; Redistribution and use in source and binary forms, with or without
+;; modification, are permitted provided that the following conditions are met:
+;; 
+;; 1. Redistributions of source code must retain the above copyright notice, this
+;;    list of conditions and the following disclaimer.
+;;     
+;; 2. Redistributions in binary form must reproduce the above copyright notice,
+;;    this list of conditions and the following disclaimer in the documentation
+;;    and/or other materials provided with the distribution.
+;; 
+;; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+;; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+;; IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+;; DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+;; FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+;; DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+;; SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+;; CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+;; OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+;; OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ;;; Count Words Mode
 ;;
-(defvar *cppimmo/count-words-use-header-line* t
-  "Enable/disable the word count for the buffer in the header line.")
+(defgroup cppimmo/count-words-mode
+  nil ; Set MEMBERS later.
+  "Custom group for cppimmo/count-words-mode.")
+
+(defcustom *cppimmo/count-words-use-header-line* t
+  "Enable/disable the word count for the buffer in the header line."
+  :group #'cppimmo/count-words-mode-custom-group)
 
 (make-variable-buffer-local
  (defvar *cppimmo/count-words-mod-count* 0 ; Mod meaning modification.
    "Count the per buffer insertions to reduce word count frequency."))
 
-(defvar *cppimmo/count-words-mod-count-max* 25
-  "Refresh the word count every mod-count-max insertions")
+(defcustom *cppimmo/count-words-mod-count-max* 25
+  "Refresh the word count every mod-count-max insertions"
+  :group #'cppimmo/count-words-mode-custom-group)
 
-(defvar *cppimmo/count-words-wpm* 238
-  "The default word count if the user does not supply a custom value.")
+(defcustom *cppimmo/count-words-wpm* 238
+  "The default word count if the user does not supply a custom value."
+  :group #'cppimmo/count-words-mode-custom-group)
 
 (defun cppimmo/count--lines (@minp @maxp)
   "Count the number of lines inclusively between @MINP and @MAXP."
