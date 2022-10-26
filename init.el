@@ -437,8 +437,9 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
 ;; Install and configure nyan-mode.
 (use-package nyan-mode
   :config
-	(when (string-equal system-type "gnu/linux")
-	  (nyan-mode 1)))
+	;; (when (string-equal system-type "gnu/linux")
+  ;; (nyan-mode 1))
+  )
 
 ;; Install and configure info-colors.
 (use-package info-colors
