@@ -446,6 +446,9 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
   :config
   (add-hook 'Info-selection-hook 'info-colors-fontify-node))
 
+;; Install and configure paren-face.
+(use-package paren-face)
+
 ;;; BUILT-IN MODE CONFIGURATION =================================================
 
 (defun cppimmo/ispell-windows-nt ()
