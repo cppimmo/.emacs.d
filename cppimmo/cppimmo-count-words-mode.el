@@ -41,7 +41,10 @@
   "Refresh the word count every mod-count-max insertions"
   :group #'cppimmo/count-words-mode-custom-group)
 
-(defcustom *cppimmo/count-words-wpm* 238
+(defconst +cppimmo/count-words-avg-wpm+ 238
+  "The average word per minutes of a reader.")
+
+(defcustom *cppimmo/count-words-wpm* +cppimmo/count-words-avg-wpm+
   "The default word count if the user does not supply a custom value."
   :group #'cppimmo/count-words-mode-custom-group)
 
@@ -163,7 +166,7 @@ Requires a single @WPM argument."
 ;; cppimmo/count-words-mode-hook defined lazily
 (define-minor-mode cppimmo/count-words-mode
   "Use to easily count words within a buffer."
-  :lighter " cppimmo/CW"
+  :lighter " Counter"
   :keymap (let (($map (make-sparse-keymap)))
 			(define-key $map (kbd "C-c C-b") #'cppimmo/count-words-buffer)
 			(define-key $map (kbd "C-c C-r") #'cppimmo/count-words-region)
