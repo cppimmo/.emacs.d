@@ -31,6 +31,7 @@
 
 (defcustom *cppimmo/count-words-use-header-line* t
   "Enable/disable the word count for the buffer in the header line."
+  :type 'boolean
   :group #'cppimmo/count-words-mode-custom-group)
 
 (make-variable-buffer-local
@@ -39,6 +40,7 @@
 
 (defcustom *cppimmo/count-words-mod-count-max* 25
   "Refresh the word count every mod-count-max insertions"
+  :type 'integer
   :group #'cppimmo/count-words-mode-custom-group)
 
 (defconst +cppimmo/count-words-avg-wpm+ 238
@@ -46,17 +48,16 @@
 
 (defcustom *cppimmo/count-words-wpm* +cppimmo/count-words-avg-wpm+
   "The default word count if the user does not supply a custom value."
+  :type 'integer
   :group #'cppimmo/count-words-mode-custom-group)
 
 (defun cppimmo/count--lines (@minp @maxp)
   "Count the number of lines inclusively between @MINP and @MAXP."
-  (interactive)
   (count-lines @minp @maxp))
 
 ;; TODO: Ensure that this count is accurate and not affected by punctuations.
 (defun cppimmo/count--words (@minp @maxp)
   "Count the number of words between @MINP and @MAXP"
-  (interactive)
   (catch 'count--words
   (save-excursion
 	(let (($word-count 0))
@@ -85,7 +86,6 @@ Mod meaning modification."
   
 (defun cppimmo/count--characters (@minp @maxp)
   "Count the number of characters between @MINP and @MAXP."
-  (interactive)
   (- @maxp @minp))
 
 (defun cppimmo/count--message (@minp @maxp)

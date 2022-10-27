@@ -118,26 +118,32 @@
 (defun cppimmo/cycle-custom-themes ()
   "Cycle through the known custom themes."
   (interactive)
-  (let (($enabled-theme (car custom-enabled-themes))($index)($theme-at-index))
-	(setq $index (cl-position $enabled-theme custom-known-themes))
-	(message "Initial index: %d" $index)
-	(catch 'cppimmo/cycle-custom-themes-break
-	  (while (and (< $index (length custom-known-themes))
-					 (or (eq $theme-at-index 'use-package)
-						 (eq $theme-at-index 'user)
-						 (eq $theme-at-index 'changed)))
-		(setq $theme-at-index (nth $index custom-known-themes))
-		(message "Index: %d, Theme: %s" $index (symbol-name $theme-at-index))
-		;; Note: custom-theme-p returns the remainder of a list.
-		;;	  (when (eq (custom-theme-p (nth $index custom-known-themes)) t)
-		;;		(message "I'm not a theme!"))
-		;;		(when (or (eq $theme-at-index 'use-package)
-		;;				  (eq $theme-at-index 'user)
-		;;				  (eq $theme-at-index 'changed))
-		;;		  (setq $index (1+ $index))
-		;;		  (throw 'cppimmo/cycle-custom-themes-break t))
-		(setq $index (1+ $index))))
-	(load-theme (nth $index custom-known-themes) t)))
+  (let (($known-themes)
+		($active-theme))
+	(setq $known-themes (cl-set-difference custom-known-themes
+										   '(use-package user changed))
+		  $active-theme (car custom-enabled-themes))
+	(disable-theme $active-theme)
+	(enable-theme (car $known-themes))))
+  ;;(let (($index)
+		;;($enabled-theme)
+		;;($theme-at-index)
+		;;($known-themes))
+	;;(setq $known-themes (cl-set-difference custom-known-themes
+	;;									   '(use-package user changed))
+	;;	  $enabled-theme (car $known-themes)
+	;;	  $index (cl-position $enabled-theme $known-themes))
+	;;(message "Initial index: %d" $index)
+	;;(catch 'cppimmo/cycle-custom-themes-break
+	;;  (while (< $index (length $known-themes))
+	;;	(setq $theme-at-index (nth $index $known-themes))
+	;;	(message "Index: %d, Theme: %s" $index (symbol-name $theme-at-index))
+	;;	(setq $index (1+ $index))))
+	;;(message "Index (final): %d" $index)
+	;;(load-theme (nth $index $known-themes) t)
+	;;(disable-theme (nth $index $known-themes))
+	;;(setq $index (1+ $index))
+	;;(enable-theme (nth $index $known-themes))))
 
 (progn
   (setq inhibit-startup-message t

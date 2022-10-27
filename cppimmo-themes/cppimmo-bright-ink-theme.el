@@ -90,6 +90,7 @@ Consider installing highlight-numbers and highlight-parentheses.")
  ;; '(highlight-parentheses- ) ; hightlight-parentheses
  '(cppimmo/font-lock-operator-face ((t (:foreground "#ff1210"))))
  '(dired-directory ((t (:foreground "#3305a0"))))
+ '(cppimmo/delim-face ((t (:foreground "#ff1210" :inherit shadow))))
  )
 
 (provide-theme 'cppimmo-bright-ink)

@@ -29,31 +29,52 @@
   nil ; Set MEMBERS later.
   "Custom group for cppimmo/count-words-mode.")
 
+(defface cppimmo/delim-face '((t (:inherit shadow)))
+  "Delimeter face for cppimmo/delim-face-mode."
+  :group 'cppimmo/delim-face-mode)
 
+(defcustom cppimmo/delim-face-regexp-lisp "[][()]"
+  "Regular expression for lisp language delimeters."
+  :type  'regexp
+  :group 'cppimmo/delim-face-mode)
+
+(defcustom cppimmo/delim-face-regexp-c "[][(){}]"
+  "Regular expression for C-like language syntax delimeters"
+  :type  'regexp
+  :group 'cppimmo/delim-face-mode)
 
 ;; cppimmo/delim-face-mode-map defined automatically.
 ;; cppimmo/delim-face-mode-hook defined lazily
-(define-minor-mode cppimmo/count-words-mode
-  "Use to easily count words within a buffer."
-  :lighter " Counter"
+(define-minor-mode cppimmo/delim-face-mode
+  "Use to create a face for programming language delimeters."
+  :lighter ""
   :keymap (let (($map (make-sparse-keymap)))
 			$map)
-
+  
   (if cppimmo/delim-face-mode
-	  (progn (message "cppimmo/count-words-mode activated!")
-			 (add-hook 'post-self-insert-hook
-					   #'cppimmo/count-words-mode-post-mod-hook))
-	(progn (message "cppimmo/count-words-mode deactivated!")
-		   (remove-hook 'post-self-insert-hook
-						#'cppimmo/count-words-mode-post-mod-hook)
-		   ;; Turn off the header line.
-		   (setq header-line-format '()))))
+	  (progn
+		(message "cppimmo/count-words-mode activated!")
+		(let ((keywords `((,cppimmo/delim-face-regexp 0 'cppimmo/delim-face))))
+		  (if cppimmo/delim-face-mode
+			  (font-lock-add-keywords  nil keywords)
+			(font-lock-remove-keywords nil keywords)))
+		(when font-lock-mode
+		  (if (and (fboundp #'font-lock-flush)
+				   (fboundp #'font-lock-ensure))
+			  (save-excursion
+				(widen)
+				(font-lock-flush)
+				(font-lock-ensure))
+			(with-no-warnings
+			  (font-lock-fontify-buffer)))))
+	(progn
+	  (message "cppimmo/count-words-mode deactivated!"))))
 
-(define-globalized-minor-mode cppimmo/global-delim-face-mode
-  cppimmo/delim-face-mode
-  (lambda ()
-	(cppimmo/delim-face-mode 1)
-  :group cppimmo/delim-face-mode)
+;;(define-globalized-minor-mode cppimmo/global-delim-face-mode
+;;  cppimmo/delim-face-mode
+;;  (lambda ()
+;;	(cppimmo/delim-face-mode 1)
+;;  :group cppimmo/delim-face-mode)
 
 ;; Create and bind default hooks.
 (defun cppimmo/delim-face-mode-default-hook () nil)
