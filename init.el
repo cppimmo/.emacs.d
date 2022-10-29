@@ -290,9 +290,9 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
 	(pomodoro-add-to-mode-line) ; Add to modeline.
 	;; Place all audio files in the repository to make things easier.
 	(setq pomodoro-work-start-sound
-		  "~/.emacs.d/audio/bad-to-the-bone-fart.wav") ; Work time alert.
+		  "~/.emacs.d/audio/beacon-alarm.wav") ; Work time alert.
 	(setq pomodoro-break-start-sound
-		  "~/.emacs.d/audio/bad-to-the-bone-fart.wav") ; Break time alert.
+		  "~/.emacs.d/audio/beacon-alarm.wav") ; Break time alert.
 	(defun cppimmo/play-pomodoro-sound (@sound)
 	  "Replace the play sound function for the pomodoro package."
 	  (play-sound-file (expand-file-name @sound)))
@@ -435,7 +435,7 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
 ;; Install and configure company.
 (use-package company
   :config
-  (setq company-idle-delay 0.5 ; Delay in seconds.
+  (setq company-idle-delay 0.25 ; Delay in seconds.
 		company-minimum-prefix-length 3 ; Three characters minimum.
 		company-selection-wrap-around t) ; Wrap compeletion dropdown navigation.
   (add-hook 'prog-mode-hook 'company-mode))
