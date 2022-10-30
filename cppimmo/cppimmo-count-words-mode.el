@@ -32,7 +32,7 @@
 (defcustom *cppimmo/count-words-use-header-line* t
   "Enable/disable the word count for the buffer in the header line."
   :type 'boolean
-  :group #'cppimmo/count-words-mode-custom-group)
+  :group 'cppimmo/count-words-mode-custom-group)
 
 (make-variable-buffer-local
  (defvar *cppimmo/count-words-mod-count* 0 ; Mod meaning modification.
@@ -41,7 +41,7 @@
 (defcustom *cppimmo/count-words-mod-count-max* 25
   "Refresh the word count every mod-count-max insertions"
   :type 'integer
-  :group #'cppimmo/count-words-mode-custom-group)
+  :group 'cppimmo/count-words-mode)
 
 (defconst +cppimmo/count-words-avg-wpm+ 238
   "The average word per minutes of a reader.")
@@ -49,7 +49,7 @@
 (defcustom *cppimmo/count-words-wpm* +cppimmo/count-words-avg-wpm+
   "The default word count if the user does not supply a custom value."
   :type 'integer
-  :group #'cppimmo/count-words-mode-custom-group)
+  :group 'cppimmo/count-words-mode)
 
 (defun cppimmo/count--lines (@minp @maxp)
   "Count the number of lines inclusively between @MINP and @MAXP."

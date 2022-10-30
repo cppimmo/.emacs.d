@@ -54,6 +54,7 @@
 (load "cppimmo-dvorak")
 (load "cppimmo-xml")
 (load "cppimmo-count-words-mode")
+(load "cppimmo-delim-face-mode")
 (load "cppimmo-commands")
 
 ;;; PACKAGE SYSTEM SETUP ========================================================
