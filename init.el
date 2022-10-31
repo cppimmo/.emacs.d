@@ -275,6 +275,8 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
   (setq *cppimmo/count-words-use-header-line* nil))
 (add-hook 'cppimmo/count-words-mode-hook #'cppimmo/my-count-words-mode-hook)
 
+(cppimmo/global-delim-face-mode 1)
+
 ;;; PACKAGE CONFIGURATION - REPOS ===============================================
 ;; Settings for fill column indicator package. Toggle with "fci-mode".
 (use-package fill-column-indicator
@@ -338,7 +340,11 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
 (use-package slime
   :config
   (progn
-	(setq inferior-lisp-program "sbcl")))
+	(setq inferior-lisp-program "sbcl"
+		  slime-contribs '(slime-fancy
+						   slime-company
+						   slime-quicklisp slime-asdf))))
+(use-package slime-company)
 
 ;; Install and configure magit.
 (use-package magit)
@@ -455,6 +461,15 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
 
 ;; Install and configure paren-face.
 (use-package paren-face)
+
+;; Install and configure winum.
+;; Select window <n> | C-x w <n>.
+;; Select window greater than 10 | C-x w `.
+(use-package winum
+  :config
+  (setq winum-scope 'frame-local
+		winum-format "[%s]")
+  (winum-mode))
 
 ;;; BUILT-IN MODE CONFIGURATION =================================================
 

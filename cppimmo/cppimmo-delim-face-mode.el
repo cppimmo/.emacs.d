@@ -125,8 +125,8 @@ minor mode globally."
 	  (message "cppimmo/delim-face-mode deactivated!"))))
 
 (define-globalized-minor-mode cppimmo/global-delim-face-mode
-  cppimmo/delim-face-mode
-  #'cppimmo/global-delim-face-turn-on
+  cppimmo/delim-face-mode ; The mode name.
+  cppimmo/global-delim-face-turn-on ; Not a symbol?
   :group cppimmo/delim-face-mode)
   
 ;; Create and bind default hooks.
