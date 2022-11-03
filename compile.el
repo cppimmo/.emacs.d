@@ -27,15 +27,23 @@
 ;;; Byte compile the elisp files in the cppimmo/ directory.
 ;;
 ;; TODO: Generate the list by searching for .el files in the directory.
-(setq file-list (list "cppimmo-count-words-mode.el"
-					  "cppimmo-dvorak.el"
-					  "cppimmo-xml.el"))
-(setq file-parent-directory "~/.emacs.d/cppimmo/")
 
-(defun cppimmo/byte-compile (@file-name)
-  ""
-  (if (eq (byte-compile-file (concat file-parent-directory @file-name)) nil)
+(defun cppimmo/byte-compile (@file-parent-dir @file-name)
+  "Byte compile @FILE-NAME."
+  (if (eq (byte-compile-file (concat @file-parent-dir @file-name)) nil)
 	  (message "%s compilation failiure!" @file-name)
-	(message "%s compiled successfully." @file-nameq)))
-  
-(mapc #'cppimmo/byte-compile file-list)
+	(message "%s compiled successfully." @file-name)))
+
+(let (($file-list)
+	  ($file-parent-dir))
+  (setq $file-list (list "cppimmo-abbrev.el"
+						 "cppimmo-commands.el"
+						 "cppimmo-count-words-mode.el"
+						 "cppimmo-delim-face-mode.el"
+						 "cppimmo-dvorak.el"
+						 "cppimmo-keybindings.el"
+						 "cppimmo-xml.el")
+		$file-parent-dir "~/.emacs.d/cppimmo/")
+  (mapc (lambda (@file-name)
+		  (funcall #'cppimmo/byte-compile $file-parent-dir @file-name)
+		  $file-list)))
