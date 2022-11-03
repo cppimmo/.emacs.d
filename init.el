@@ -471,6 +471,12 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
 		winum-format "[%s]")
   (winum-mode))
 
+;; Install and configure origami.
+(use-package origami
+  :config
+  (add-hook 'prog-mode-hook #'global-origami-mode)
+  (define-key origami-mode-map (kbd "M-o") #'origami-recursively-toggle-node))
+
 ;;; BUILT-IN MODE CONFIGURATION =================================================
 
 (defun cppimmo/ispell-windows-nt ()
