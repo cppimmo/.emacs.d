@@ -52,3 +52,11 @@
   "Execute the bookmark-bmenu-list command in a new frame."
   (interactive)
   (cppimmo/execute-command-other-frame 'bookmark-bmenu-list))
+
+(defun cppimmo/goto-percent (@percent)
+  "Move to @PERCENT as a percentage of the buffer point position.
+@PERCENT The percentage to move to in the buffer."
+  (interactive "nGo to percent ([0, 100]%%): ")
+  (when (not (and (>= @percent 0) (<= @percent 100)))
+	(error "@PERCENT must be within the range: [0, 100]."))
+  (goto-char (/ (* (point-max) @percent) 100)))

@@ -42,6 +42,7 @@
   (global-set-key (kbd "C-x 5 M-x") #'cppimmo/execute-command-other-frame)
   (global-set-key (kbd "C-x 5 C-x C-b") #'cppimmo/buffer-menu-other-frame)
   (global-set-key (kbd "C-x 5 C-x r l") #'cppimmo/bookmark-bmenu-other-frame)
+  (global-set-key (kbd "M-g t") #'cppimmo/goto-percent)
   ;; Set binding for whitespace-mode minor mode.
   (global-set-key (kbd "C-M-y") 'whitespace-mode)
   ;; Set bindings for dired.
