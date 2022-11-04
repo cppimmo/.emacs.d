@@ -442,7 +442,7 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
 ;; Install and configure company.
 (use-package company
   :config
-  (setq company-idle-delay 0.25 ; Delay in seconds.
+  (setq company-idle-delay 0.15 ; Delay in seconds.
 		company-minimum-prefix-length 3 ; Three characters minimum.
 		company-selection-wrap-around t) ; Wrap compeletion dropdown navigation.
   (add-hook 'prog-mode-hook 'company-mode))
