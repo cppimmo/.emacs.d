@@ -1,6 +1,6 @@
 ;;; Vibrant Ink Theme
-;; Note: I did not create this theme.  It was made by gerb13.
-;; See: https://gist.github.com/germ13/770348fd8e4ff31860b9
+;;; Note: I did not create this theme.  It was made by gerb13.
+;;; See: https://gist.github.com/germ13/770348fd8e4ff31860b9
 
 (deftheme cppimmo-vibrant-ink
   "Vibrant ink theme for Emacs.")

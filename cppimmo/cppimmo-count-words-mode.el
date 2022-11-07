@@ -1,30 +1,32 @@
-;; BSD 2-Clause License
-;; 
-;; Copyright (c) 2022, Brian Hoffpauir
-;; All rights reserved.
-;; 
-;; Redistribution and use in source and binary forms, with or without
-;; modification, are permitted provided that the following conditions are met:
-;; 
-;; 1. Redistributions of source code must retain the above copyright notice, this
-;;    list of conditions and the following disclaimer.
-;;     
-;; 2. Redistributions in binary form must reproduce the above copyright notice,
-;;    this list of conditions and the following disclaimer in the documentation
-;;    and/or other materials provided with the distribution.
-;; 
-;; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-;; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-;; IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-;; DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-;; FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-;; DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-;; SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-;; CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-;; OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-;; OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+;;; BSD 2-Clause License
+;;; 
+;;; Copyright (c) 2022, Brian Hoffpauir
+;;; All rights reserved.
+;;; 
+;;; Redistribution and use in source and binary forms, with or without
+;;; modification, are permitted provided that the following conditions are met:
+;;; 
+;;; 1. Redistributions of source code must retain the above copyright notice,
+;;;    this list of conditions and the following disclaimer.
+;;;     
+;;; 2. Redistributions in binary form must reproduce the above copyright notice,
+;;;    this list of conditions and the following disclaimer in the documentation
+;;;    and/or other materials provided with the distribution.
+;;; 
+;;; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+;;; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+;;; IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+;;; ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+;;; LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+;;; CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+;;; SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+;;; INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+;;; CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+;;; ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+;;; POSSIBILITY OF SUCH DAMAGE.
+;;;
 ;;; Count Words Mode
-;;
+;;;
 (defgroup cppimmo/count-words-mode
   nil ; Set MEMBERS later.
   "Custom group for cppimmo/count-words-mode.")
@@ -55,7 +57,7 @@
   "Count the number of lines inclusively between @MINP and @MAXP."
   (count-lines @minp @maxp))
 
-;; TODO: Ensure that this count is accurate and not affected by punctuations.
+;;; TODO: Ensure that this count is accurate and not affected by punctuations.
 (defun cppimmo/count--words (@minp @maxp)
   "Count the number of words between @MINP and @MAXP"
   (catch 'count--words
@@ -136,7 +138,7 @@ Mod meaning modification."
 @WC word count."
   (/ (float @wc) (float @wpm)))
 
-;; TODO: Use prompt to display default value.
+;;; TODO: Use prompt to display default value.
 (defun cppimmo/count-words--read-time-prompt ()
   "Prompt meant to be supplied to the interactive function.
 Requires a single @WPM argument."
@@ -162,8 +164,8 @@ Requires a single @WPM argument."
 											  (cppimmo/count--words
 											   (region-beginning) (region-end))) 60.0)))
 
-;; cppimmo/count-words-mode-map defined automatically.
-;; cppimmo/count-words-mode-hook defined lazily
+;;; cppimmo/count-words-mode-map defined automatically.
+;;; cppimmo/count-words-mode-hook defined lazily
 (define-minor-mode cppimmo/count-words-mode
   "Use to easily count words within a buffer."
   :lighter " Counter"
@@ -186,7 +188,7 @@ Requires a single @WPM argument."
 		   ;; Turn off the header line.
 		   (setq header-line-format '()))))
 
-;; Create and bind default hooks.
+;;; Create and bind default hooks.
 (defun cppimmo/count-words-mode-default-hook () nil)
 (defun cppimmo/count-words-mode-default-on-hook () nil)
 (defun cppimmo/count-words-mode-default-off-hook () nil)

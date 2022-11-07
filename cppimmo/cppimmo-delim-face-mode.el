@@ -1,30 +1,32 @@
-;; BSD 2-Clause License
-;; 
-;; Copyright (c) 2022, Brian Hoffpauir
-;; All rights reserved.
-;; 
-;; Redistribution and use in source and binary forms, with or without
-;; modification, are permitted provided that the following conditions are met:
-;; 
-;; 1. Redistributions of source code must retain the above copyright notice, this
-;;    list of conditions and the following disclaimer.
-;;     
-;; 2. Redistributions in binary form must reproduce the above copyright notice,
-;;    this list of conditions and the following disclaimer in the documentation
-;;    and/or other materials provided with the distribution.
-;; 
-;; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-;; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-;; IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-;; DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-;; FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-;; DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-;; SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-;; CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-;; OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-;; OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+;;; BSD 2-Clause License
+;;; 
+;;; Copyright (c) 2022, Brian Hoffpauir
+;;; All rights reserved.
+;;; 
+;;; Redistribution and use in source and binary forms, with or without
+;;; modification, are permitted provided that the following conditions are met:
+;;; 
+;;; 1. Redistributions of source code must retain the above copyright notice,
+;;;    this list of conditions and the following disclaimer.
+;;;     
+;;; 2. Redistributions in binary form must reproduce the above copyright notice,
+;;;    this list of conditions and the following disclaimer in the documentation
+;;;    and/or other materials provided with the distribution.
+;;; 
+;;; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+;;; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+;;; IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+;;; ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+;;; LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+;;; CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+;;; SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+;;; INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+;;; CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+;;; ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+;;; POSSIBILITY OF SUCH DAMAGE.
+;;;
 ;;; Count Words Mode
-;; Paren-face-mode was used as a reference for implementing this code.
+;;; Paren-face-mode was used as a reference for implementing this code.
 (defgroup cppimmo/delim-face-mode
   nil ; Set MEMBERS later.
   "Custom group for cppimmo/count-words-mode.")
@@ -82,14 +84,14 @@ by @REGEXP-SYM.
 	  (with-no-warnings
 		(font-lock-fontify-buffer))))) ; Reset font lock.
 
-(defun cppimmo/delim-face-turn-on (&optional @use-global)
+(defun cppimmo/delim-face-turn-on (&optional @use-global-p)
   "Perform initial setup for `cppimmo/delim-face-mode'.
 The function determines if the current major mode is in the
 `*cppimmo/delim-face-modes-lisp*' or `*cppimmo/delim-face-modes-c*' symbol lists and
 applies the font face to the appropriate delimeters.
-@USE-GLOBAL Optional boolean flag for use globally."
-  (when (not (booleanp @use-global))
-	(error "@USE-GLOBAL must be a boolean value."))
+@USE-GLOBAL-P Optional boolean flag for use globally."
+  (when (not (booleanp @use-global-p))
+	(error "@USE-GLOBAL-P must be a boolean value."))
   (let ((apply-derived-mode-p
 		 (lambda (@list) ; @LIST the arguments.
 		   "Procedure to ensure the major modes specified in @LIST
@@ -97,9 +99,9 @@ are derived from the current major mode."
 		   (apply #'derived-mode-p @list)))
 		(modefun-if-global
 		 (lambda ()
-		   "Procedure to test if @USE-GLOBAL is true and enable the
+		   "Procedure to test if @USE-GLOBAL-P is true and enable the
 minor mode globally."
-		   (when @use-global
+		   (when @use-global-p
 			   (cppimmo/delim-face-mode 1)))))
 	(cond ((funcall apply-derived-mode-p *cppimmo/delim-face-modes-lisp*)
 		   (cppimmo/delim-face-pre-turn-on *cppimmo/delim-face-regexp-lisp*)
@@ -129,7 +131,7 @@ minor mode globally."
   cppimmo/global-delim-face-turn-on ; Not a symbol?
   :group cppimmo/delim-face-mode)
   
-;; Create and bind default hooks.
+;;; Create and bind default hooks.
 (defun cppimmo/delim-face-mode-default-hook () nil)
 (defun cppimmo/delim-face-mode-default-on-hook () nil)
 (defun cppimmo/delim-face-mode-default-off-hook () nil)

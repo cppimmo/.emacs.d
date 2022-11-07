@@ -1,34 +1,36 @@
-;; BSD 2-Clause License
-;; 
-;; Copyright (c) 2022, Brian Hoffpauir
-;; All rights reserved.
-;; 
-;; Redistribution and use in source and binary forms, with or without
-;; modification, are permitted provided that the following conditions are met:
-;; 
-;; 1. Redistributions of source code must retain the above copyright notice, this
-;;    list of conditions and the following disclaimer.
-;;     
-;; 2. Redistributions in binary form must reproduce the above copyright notice,
-;;    this list of conditions and the following disclaimer in the documentation
-;;    and/or other materials provided with the distribution.
-;; 
-;; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-;; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-;; IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-;; DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-;; FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-;; DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-;; SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-;; CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-;; OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-;; OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+;;; BSD 2-Clause License
+;;; 
+;;; Copyright (c) 2022, Brian Hoffpauir
+;;; All rights reserved.
+;;; 
+;;; Redistribution and use in source and binary forms, with or without
+;;; modification, are permitted provided that the following conditions are met:
+;;; 
+;;; 1. Redistributions of source code must retain the above copyright notice,
+;;;    this list of conditions and the following disclaimer.
+;;;     
+;;; 2. Redistributions in binary form must reproduce the above copyright notice,
+;;;    this list of conditions and the following disclaimer in the documentation
+;;;    and/or other materials provided with the distribution.
+;;; 
+;;; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+;;; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+;;; IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+;;; ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+;;; LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+;;; CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+;;; SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+;;; INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+;;; CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+;;; ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+;;; POSSIBILITY OF SUCH DAMAGE.
+;;;
 ;;; Keybindings
-;;
-;; Set the menu app key to hyper.
-;; Use Shift+F10 or Ctrl+Shift+F10 instead for application/context menu.
-;; Protesilaos blog post about setting the hyper key with xmodmap:
-;; https://protesilaos.com/codelog/2019-10-10-debian-xmodmap/
+;;;
+;;; Set the menu app key to hyper.
+;;; Use Shift+F10 or Ctrl+Shift+F10 instead for application/context menu.
+;;; Protesilaos blog post about setting the hyper key with xmodmap:
+;;; https://protesilaos.com/codelog/2019-10-10-debian-xmodmap/
 (when (string-equal system-type "gnu/linux")
   (global-set-key (kbd "<menu>") nil))
 (when (string-equal system-type "windows-nt")
@@ -43,10 +45,12 @@
   (global-set-key (kbd "C-x 5 C-x C-b") #'cppimmo/buffer-menu-other-frame)
   (global-set-key (kbd "C-x 5 C-x r l") #'cppimmo/bookmark-bmenu-other-frame)
   (global-set-key (kbd "M-g t") #'cppimmo/goto-percent)
+  
   ;; Set binding for whitespace-mode minor mode.
   (global-set-key (kbd "C-M-y") 'whitespace-mode)
   ;; Set bindings for dired.
   (define-key dired-mode-map "F" #'cppimmo/dired-open-in-new-frame)
+  
   ;; Set binding for hl-line-mode.
   (global-set-key (kbd "H-l b") 'hl-line-mode) ; locally.
   (global-set-key (kbd "H-l g") 'global-hl-line-mode) ; Globally.

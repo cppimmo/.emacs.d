@@ -1,31 +1,33 @@
-;; BSD 2-Clause License
-;; 
-;; Copyright (c) 2022, Brian Hoffpauir
-;; All rights reserved.
-;; 
-;; Redistribution and use in source and binary forms, with or without
-;; modification, are permitted provided that the following conditions are met:
-;; 
-;; 1. Redistributions of source code must retain the above copyright notice, this
-;;    list of conditions and the following disclaimer.
-;;     
-;; 2. Redistributions in binary form must reproduce the above copyright notice,
-;;    this list of conditions and the following disclaimer in the documentation
-;;    and/or other materials provided with the distribution.
-;; 
-;; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-;; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-;; IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-;; DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-;; FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-;; DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-;; SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-;; CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-;; OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-;; OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+;;; BSD 2-Clause License
+;;; 
+;;; Copyright (c) 2022, Brian Hoffpauir
+;;; All rights reserved.
+;;; 
+;;; Redistribution and use in source and binary forms, with or without
+;;; modification, are permitted provided that the following conditions are met:
+;;; 
+;;; 1. Redistributions of source code must retain the above copyright notice,
+;;;    this list of conditions and the following disclaimer.
+;;;     
+;;; 2. Redistributions in binary form must reproduce the above copyright notice,
+;;;    this list of conditions and the following disclaimer in the documentation
+;;;    and/or other materials provided with the distribution.
+;;; 
+;;; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+;;; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+;;; IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+;;; ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+;;; LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+;;; CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+;;; SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+;;; INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+;;; CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+;;; ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+;;; POSSIBILITY OF SUCH DAMAGE.
+;;;
 ;;; init.el
-;;
-;; Define the customize options file. System & configuration dependent.
+;;;
+;;; Define the customize options file. System & configuration dependent.
 (setq  custom-file (expand-file-name "custom.el" user-emacs-directory))
 (when (file-exists-p custom-file)
   (load custom-file))
@@ -46,11 +48,11 @@
 				   @path)))))
 
 (cppimmo/append-to-load-path "~/.emacs.d")
-;; Append my own Emacs Lisp library directories to the load-path variable.
+;;; Append my own Emacs Lisp library directories to the load-path variable.
 (mapcar (lambda (@path) ; Prefix @PATH with user-emacs-directory.
 		  (funcall #'cppimmo/append-to-load-path @path t))
 		(list "cppimmo" "addons"))
-;; Load library files.
+;;; Load library files.
 (load "cppimmo-dvorak")
 (load "cppimmo-xml")
 (load "cppimmo-count-words-mode")
@@ -58,20 +60,20 @@
 (load "cppimmo-commands")
 
 ;;; PACKAGE SYSTEM SETUP ========================================================
-;; Try to silence GPG errors on Windows.
+;;; Try to silence GPG errors on Windows.
 (when (string-equal system-type "windows-nt")
   (setq package-check-signature nil))
 
 (defun cppimmo/add-to-package-archives (@name @link)
   (add-to-list 'package-archives '(@name . @link) t))
 
-;; Define and initialise package repositories.
+;;; Define and initialise package repositories.
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
-;; (add-to-list 'package-archives '("melpa-stable" .  "http://stable.melpa.org/packages/") t)
+;;(add-to-list 'package-archives '("melpa-stable" .  "http://stable.melpa.org/packages/") t)
 (package-initialize)
 
-;; Install use-package to simplify the configuration file.
+;;; Install use-package to simplify the configuration file.
 (when (not (package-installed-p 'use-package))
   (package-install 'use-package))
 (require 'use-package)
@@ -84,10 +86,10 @@
   (require 'subr-x)
   (if (string-equal system-type "windows-nt")
 	  (setq user-full-name (getenv "USERNAME")))
-  ;;  (if (string-equal system-type "gnu/linux")
-  ;;	  (progn (shell-command "export EMACS_USER_FULL_NAME=` finger -s $USER \
-  ;; | tr -s ' ' | cut -d ' ' -f 2,3 | tail -1`")
-  ;;		(setq user-full-name (getenv "EMACS_USER_FULL_NAME"))))
+  ;;(if (string-equal system-type "gnu/linux")
+  ;;(progn (shell-command "export EMACS_USER_FULL_NAME=` finger -s $USER \
+  ;;| tr -s ' ' | cut -d ' ' -f 2,3 | tail -1`")
+  ;;(setq user-full-name (getenv "EMACS_USER_FULL_NAME"))))
   (let (($str))
 	(setq $str (concat (string-reverse "4240riuapffohb")
 					     (replace-regexp-in-string " at " "@"
@@ -264,13 +266,13 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
   ) ; End of miscellaneous.
 
 ;;; PACKAGE CONFIGURATION - NON-REPOS ===========================================
-;; Install and configure glsl-mode.
+;;; Install and configure glsl-mode.
 (autoload 'glsl-mode "glsl-mode" nil t)
 (add-to-list 'auto-mode-alist '("\\.vert\\'" . glsl-mode))
 (add-to-list 'auto-mode-alist '("\\.frag\\'" . glsl-mode))
 
 ;;; PACKAGE CONFIGURATION - MY STUFF ============================================
-;; Configure cppimmo/count-words-mode
+;;; Configure cppimmo/count-words-mode
 (defun cppimmo/my-count-words-mode-hook ()
   (setq *cppimmo/count-words-use-header-line* nil))
 (add-hook 'cppimmo/count-words-mode-hook #'cppimmo/my-count-words-mode-hook)
@@ -278,7 +280,7 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
 (cppimmo/global-delim-face-mode 1)
 
 ;;; PACKAGE CONFIGURATION - REPOS ===============================================
-;; Settings for fill column indicator package. Toggle with "fci-mode".
+;;; Settings for fill column indicator package. Toggle with "fci-mode".
 (use-package fill-column-indicator
   :config
   (progn
@@ -286,7 +288,7 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
 		  fci-rule-width  2
 		  fci-rule-color  "red")))
 
-;; Settings for the pomodoro package.
+;;; Settings for the pomodoro package.
 (use-package pomodoro
   :config
   (progn
@@ -302,10 +304,10 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
 	;; Properly replace the play sound function.
 	(advice-add 'play-pomodoro-sound :override #'cppimmo/play-pomodoro-sound)))
 
-;; Install and configure php-mode
+;;; Install and configure php-mode
 (use-package php-mode)
 
-;; Install and configure lua-mode
+;;; Install and configure lua-mode
 (use-package lua-mode
   :config
   (progn
@@ -317,26 +319,26 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
 	(abbrev-mode nil)) ; This probably isn't really relevant.
   (add-hook 'lua-mode-hook #'cppimmo/lua-mode-hook)))
 
-;; Install and configure ox-leanpub
+;;; Install and configure ox-leanpub
 (use-package ox-leanpub)
 
-;; Install and configure markdown-mode.
+;;; Install and configure markdown-mode.
 (use-package markdown-mode
   :config
   ;; The the appropriate "markdown-command" for Microsoft Windows.
   (if (string-equal system-type "windows-nt")
 	  (progn (custom-set-variables '(markdown-command "pandoc.exe")))))
-;; Install and configure markdown-preview-eww.
+;;; Install and configure markdown-preview-eww.
 (use-package markdown-preview-eww)
 
-;; Install the 2048-game package.
+;;; Install the 2048-game package.
 (use-package 2048-game)
 
-;; Install the doom-themes packages and set the theme.
+;;; Install the doom-themes packages and set the theme.
 (use-package doom-themes)
-;;  :config (load-theme 'doom-1337 t))
+;;:config (load-theme 'doom-1337 t))
 
-;; Install and configure SLIME.
+;;; Install and configure SLIME.
 (use-package slime
   :config
   (progn
@@ -346,16 +348,16 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
 						   slime-quicklisp slime-asdf))))
 (use-package slime-company)
 
-;; Install and configure magit.
+;;; Install and configure magit.
 (use-package magit)
 
-;; Install and configure highlight numbers.
+;;; Install and configure highlight numbers.
 (use-package highlight-numbers)
 
-;; Install and configure highlight parentheses.
+;;; Install and configure highlight parentheses.
 (use-package highlight-parentheses)
 
-;; Install and configure elfeed.
+;;; Install and configure elfeed.
 (use-package elfeed
   :config
   (progn
@@ -365,11 +367,11 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
 	  (when (file-exists-p $feed-file-priv)
 		(load $feed-file-priv)))))
 
-;; Install and configure ement.
-;; (use-package ement)
+;;; Install and configure ement.
+;;(use-package ement)
 
-;; Install and configure web-mode.
-;; https://web-mode.org/
+;;; Install and configure web-mode.
+;;; https://web-mode.org/
 (use-package web-mode
   :config
   ;; TODO: Style left padding.
@@ -388,50 +390,50 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
 	(add-to-list 'web-mode-indentation-params '("lineup-ternary" . nil)))
   (add-hook 'web-mode-hook #'cppimmo/web-mode-hook))
 
-;; Install and confiure css-eldoc.
+;;; Install and confiure css-eldoc.
 (use-package css-eldoc
   :config
   (add-hook 'css-mode-hook 'turn-on-css-eldoc)
   (add-hook 'scss-mode-hook 'turn-on-css-eldoc))
 
-;; Install and configure helpful.
+;;; Install and configure helpful.
 (use-package helpful)
 ;; helpful-callabe, -function, -macro, -command, -key, -variable, -at-point
 
-;; Install and configure auctex.
-;; (use-package auctex)
+;;; Install and configure auctex.
+;;(use-package auctex)
 
-;; Install and configure powershell.
+;;; Install and configure powershell.
 (use-package powershell)
 
-;; Install and configure olivetti.
+;;; Install and configure olivetti.
 (use-package olivetti)
 
-;; Install and configure pdf-tools.
-;; (use-package pdf-tools)
+;;; Install and configure pdf-tools.
+;;(use-package pdf-tools)
 
-;; Install and configure cursory.
+;;; Install and configure cursory.
 (use-package cursory
   :config (cursory-set-preset
 		   (or (cursory-restore-latest-preset) 'box)))
 
-;; Install and configure cmake-mode.
+;;; Install and configure cmake-mode.
 (use-package cmake-mode)
-;; Install and configure cmake-font-lock.
+;;; Install and configure cmake-font-lock.
 (use-package cmake-font-lock)
-;; Install and configure cmake-ide.
+;;; Install and configure cmake-ide.
 (use-package cmake-ide)
-;; Install and configure cmake-project.
+;;; Install and configure cmake-project.
 (use-package cmake-project)
 
-;; Install and configure org-journal.
+;;; Install and configure org-journal.
 (use-package org-journal
   :config (setq org-journal-dir "~/.emacs.d/org-journal"))
 
-;; Install and configure ement.
+;;; Install and configure ement.
 (use-package ement)
 
-;; Install and configure geiser.
+;;; Install and configure geiser.
 (use-package geiser)
 (use-package geiser-racket)
 (use-package geiser-mit)
@@ -439,7 +441,7 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
   (setq geiser-mit-binary "/usr/bin/scheme"
 		geiser-active-implementations '(mit)))
 
-;; Install and configure company.
+;;; Install and configure company.
 (use-package company
   :config
   (setq company-idle-delay 0.15 ; Delay in seconds.
@@ -447,31 +449,31 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
 		company-selection-wrap-around t) ; Wrap compeletion dropdown navigation.
   (add-hook 'prog-mode-hook 'company-mode))
 
-;; Install and configure nyan-mode.
+;;; Install and configure nyan-mode.
 (use-package nyan-mode
   :config
-	;; (when (string-equal system-type "gnu/linux")
-  ;; (nyan-mode 1))
+  ;;(when (string-equal system-type "gnu/linux")
+  ;;(nyan-mode 1))
   )
 
-;; Install and configure info-colors.
+;;; Install and configure info-colors.
 (use-package info-colors
   :config
   (add-hook 'Info-selection-hook 'info-colors-fontify-node))
 
-;; Install and configure paren-face.
+;;; Install and configure paren-face.
 (use-package paren-face)
 
-;; Install and configure winum.
-;; Select window <n> | C-x w <n>.
-;; Select window greater than 10 | C-x w `.
+;;; Install and configure winum.
+;;; Select window <n> | C-x w <n>.
+;;; Select window greater than 10 | C-x w `.
 (use-package winum
   :config
   (setq winum-scope 'frame-local
 		winum-format "[%s]")
   (winum-mode))
 
-;; Install and configure origami.
+;;; Install and configure origami.
 (use-package origami
   :config
   (add-hook 'prog-mode-hook #'global-origami-mode)
@@ -486,18 +488,18 @@ The trick is to use msys2 and the MinGW hunspell and hunspell-en packages.
  URL `https://stackoverflow.com/questions/8931580/hunspell-cant-open-affix-or-dictionary-files-for-dictionary-named-en-us'"
   (setq ispell-program-name "C:/tools/msys64/mingw64/bin/hunspell.exe") ; Set the executable name.
   (setq ispell-dictionary "en_US")) ; Set the appropriate word dictionary.
-;; Set the ispell program name on Microsoft Windows systems.
+;;; Set the ispell program name on Microsoft Windows systems.
 (if (string-equal system-type "windows-nt")
     (progn (cppimmo/ispell-windows-nt))) ; Finally call the windows-nt configuration.
 
-;; Configuration for the CC mode.
+;;; Configuration for the CC mode.
 (setq c-default-style "bsd")
 (setq-default c-basic-offset 4
 	      tab-width 4
 	      indent-tabs-mode t)
 
-;; Dired.
-;; From: https://www.emacswiki.org/emacs/DiredSortDirectoriesFirst
+;;; Dired.
+;;; From: https://www.emacswiki.org/emacs/DiredSortDirectoriesFirst
 (defun cppimmo/dired-sort ()
   "Make dired listings sort and display directories first."
   (save-excursion
@@ -516,8 +518,8 @@ The trick is to use msys2 and the MinGW hunspell and hunspell-en packages.
   (interactive)
   (find-file-other-frame (dired-get-file-for-visit)))
 
-;; ERC.
-;; Set the ERC log directory. (C-c C-l)
+;;; ERC.
+;;; Set the ERC log directory. (C-c C-l)
 (setq erc-server "irc.libera.chat"
       erc-nick "cppimmo"
       erc-user-full-name ""
@@ -532,28 +534,28 @@ The trick is to use msys2 and the MinGW hunspell and hunspell-en packages.
   (interactive)
   (erc-tls :port 6697))
 
-;; Load abbreviations (abbrev-mode).
+;;; Load abbreviations (abbrev-mode).
 (load "~/.emacs.d/cppimmo/cppimmo-abbrev.el")
 
-;; Bookmarks
+;;; Bookmarks
 (setq bookmark-save-flag 1 ; Save bookmark file after one modification.
 	  ;; Ensure bookmark file default doesn't change.
 	  bookmark-default-file "~/.emacs.d/bookmarks")
 
-;; css-mode
+;;; css-mode
 (defun cppimmo/css-mode-hook ()
   "My css-mode hook."
   (setq-local css-indent-offset 2))
 (add-hook 'css-mode-hook #'cppimmo/css-mode-hook)
 
-;; rst-mode
+;;; rst-mode
 (defun cppimmo/rst-mode-hook ()
   "My rst-mode hook."
   (setq-local fill-column 80)
   (auto-fill-mode t))
 (add-hook 'rst-mode-hook #'cppimmo/rst-mode-hook)
 
-;; Dairy.
+;;; Dairy.
 (setq european-calendar-style nil)
 
 ;;; LOAD KEYBINDINGS ============================================================
