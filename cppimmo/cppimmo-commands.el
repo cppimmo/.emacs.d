@@ -26,6 +26,15 @@
 ;;; Miscellaneous Commands
 ;;
 ;; All interactive commands that don't belong to a mode or library.
+
+(defmacro cppimmo/call-when-interactive (fn-interactive &optional fn-non-interactive)
+  "Call FN-INTERACTIVE when the parent function is called
+interactively.  Call FN-NON-INTERACTIVE when optional argument is non-null."
+  `(if (called-interactively-p 'interactive)
+		 (,fn-interactive)
+	   (when (not (null ,fn-non-interactive))
+		 (,fn-non-interactive))))
+
 (defun cppimmo/kill-ring-buffer-save ()
   "Place the entirety of the current buffer in the kill ring."
   (interactive)
@@ -60,3 +69,41 @@
   (when (not (and (>= @percent 0) (<= @percent 100)))
 	(error "@PERCENT must be within the range: [0, 100]."))
   (goto-char (/ (* (point-max) @percent) 100)))
+
+(defun cppimmo/pluralize (@word @amount-of &optional @special-form)
+  "Create a plural version of @WORD.
+Insert the plural version of @WORD in the current buffer when called
+interactively.  When called non-interatively return the plural version of @WORD
+as a string.
+@WORD The word to create a plural form for.
+@AMOUNT-OF Specify the amount of @WORD(s) (i.e. the number of things).
+@SPECIAL-FORM Optional specialized plural form of @WORD."
+  (interactive "sEnter a word: \nnEnter the amount of the word: \nsEnter a special form (default: nil): ")
+  (when (not (stringp @word))
+	(error "@WORD must be of type string."))
+  (when (or (not (integerp @amount-of)) (<= @amount-of 0))
+	(error "@AMOUNT-OF must be of type integer and greater than 0."))
+  (when (and (not (null @special-form)) (not (stringp @special-form)))
+	(error "@SPECIAL-FORM must be of type string or set to nil."))
+  (if (= (truncate @amount-of) 1)
+	  (cppimmo/call-when-interactive
+	   (lambda ()
+		 (insert @word))
+	   (lambda ()
+		 @word))
+	(if (or (null @special-form) (string-empty-p @special-form))
+		(cppimmo/call-when-interactive
+		 (lambda ()
+		   (insert (concat @word "s")))
+		 (lambda ()
+		   (concat @word "s")))
+	  (cppimmo/call-when-interactive
+	   (lambda ()
+		 (insert @special-form))
+	   (lambda ()
+		 @special-form)))))
+
+(defun cppimmo/apostrophize (@word &optional @plural-p)
+  ""
+  (interactive)
+  nil)
