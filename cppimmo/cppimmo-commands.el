@@ -88,17 +88,20 @@ as a string.
   (if (= (truncate @amount-of) 1)
 	  (cppimmo/call-when-interactive
 	   (lambda ()
+		 (message "Inserting %s into the current buffer..." @word)
 		 (insert @word))
 	   (lambda ()
 		 @word))
 	(if (or (null @special-form) (string-empty-p @special-form))
 		(cppimmo/call-when-interactive
 		 (lambda ()
+		   (message "Inserting %ss into the current buffer..." @word)
 		   (insert (concat @word "s")))
 		 (lambda ()
 		   (concat @word "s")))
 	  (cppimmo/call-when-interactive
 	   (lambda ()
+		 (message "Inserting %s into the current buffer..." @special-form)
 		 (insert @special-form))
 	   (lambda ()
 		 @special-form)))))
