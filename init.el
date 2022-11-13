@@ -32,6 +32,14 @@
 (when (file-exists-p custom-file)
   (load custom-file))
 
+(defun cppimmo/system-windows-p ()
+  "Windows system predicate."
+  (string-equal system-type "windows-nt"))
+
+(defun cppimmo/system-gnu-linux-p ()
+  "GNU/Linux system predicate."
+  (string-equal system-type "gnu/linux"))
+
 (defun cppimmo/append-to-load-path (@path &optional @use-dot-emacs)
   "Append @PATH string to the load-path variable.
 @PATH Path string to append.
@@ -84,9 +92,9 @@
 ;;; BASIC STARTUP STUFF =========================================================
 (progn
   (require 'subr-x)
-  (if (string-equal system-type "windows-nt")
+  (if (cppimmo/system-windows-p)
 	  (setq user-full-name (getenv "USERNAME")))
-  ;;(if (string-equal system-type "gnu/linux")
+  ;;(if (cppimmo/system-gnu-linux-p)
   ;;(progn (shell-command "export EMACS_USER_FULL_NAME=` finger -s $USER \
   ;;| tr -s ' ' | cut -d ' ' -f 2,3 | tail -1`")
   ;;(setq user-full-name (getenv "EMACS_USER_FULL_NAME"))))
@@ -186,7 +194,7 @@
 	(global-visual-line-mode t) ; Enable visual line mode globally.
 	(setq visual-line-fringe-indicators
 		  '(left-curly-arrow right-curly-arrow))) ; Set the visual line fringe indicators.
-  (if (string-equal system-type "windows-nt")
+  (if (cppimmo/system-windows-p)
 	  (progn (cppimmo/configure-frame-size 90 34)))
   ;; Call font setup.
   (cppimmo/initialize-font)
@@ -247,7 +255,7 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
   (setq global-mark-ring-max 10) ; 10 yanks limit.
   
   ;; Preserve creation date on Windows (irrelevant on UNIX-like systems).
-  (if (string-equal system-type "windows-nt")
+  (if (cppimmo/system-windows-p)
 	  (progn (setq backup-by-copying t)))
   ;; (setq create-lockfiles nil)
   (setq auto-save-default nil) ; I save impulsively, so disabling this is fine.
@@ -326,7 +334,7 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
 (use-package markdown-mode
   :config
   ;; The the appropriate "markdown-command" for Microsoft Windows.
-  (if (string-equal system-type "windows-nt")
+  (if (cppimmo/system-windows-p)
 	  (progn (custom-set-variables '(markdown-command "pandoc.exe")))))
 ;;; Install and configure markdown-preview-eww.
 (use-package markdown-preview-eww)
@@ -437,7 +445,7 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
 (use-package geiser)
 (use-package geiser-racket)
 (use-package geiser-mit)
-(when (string-equal system-type "gnu/linux") ; Prefer mit-scheme on GNU/Linux.
+(when (cppimmo/system-gnu-linux-p) ; Prefer mit-scheme on GNU/Linux.
   (setq geiser-mit-binary "/usr/bin/scheme"
 		geiser-active-implementations '(mit)))
 
@@ -452,7 +460,7 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
 ;;; Install and configure nyan-mode.
 (use-package nyan-mode
   :config
-  ;;(when (string-equal system-type "gnu/linux")
+  ;;(when (cppimmo/system-gnu-linux-p)
   ;;(nyan-mode 1))
   )
 
@@ -489,7 +497,7 @@ The trick is to use msys2 and the MinGW hunspell and hunspell-en packages.
   (setq ispell-program-name "C:/tools/msys64/mingw64/bin/hunspell.exe") ; Set the executable name.
   (setq ispell-dictionary "en_US")) ; Set the appropriate word dictionary.
 ;;; Set the ispell program name on Microsoft Windows systems.
-(if (string-equal system-type "windows-nt")
+(if (cppimmo/system-windows-p)
     (progn (cppimmo/ispell-windows-nt))) ; Finally call the windows-nt configuration.
 
 ;;; Configuration for the CC mode.
