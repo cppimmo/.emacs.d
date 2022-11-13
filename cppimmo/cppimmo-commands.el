@@ -111,3 +111,11 @@ as a string.
   ""
   (interactive)
   nil)
+
+(defun cppimmo/describe-last-command ()
+  "Display the full documentation of the last command."
+  (interactive)
+  (let (($last-cmd last-command))
+  (when (not (commandp $last-cmd))
+	(error "LAST-COMMAND must be a command!"))
+  (describe-command $last-cmd)))
