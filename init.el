@@ -566,6 +566,9 @@ The trick is to use msys2 and the MinGW hunspell and hunspell-en packages.
 ;;; Dairy.
 (setq european-calendar-style nil)
 
+;;; sql-mode
+(setq sql-product 'mysql) ; Default SQL interpreter.
+
 ;;; LOAD KEYBINDINGS ============================================================
 (load "cppimmo-keybindings")
 (cppimmo/bind-keys-g)
