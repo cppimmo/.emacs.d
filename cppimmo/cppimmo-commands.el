@@ -119,3 +119,10 @@ as a string.
   (when (not (commandp $last-cmd))
 	(error "LAST-COMMAND must be a command!"))
   (describe-command $last-cmd)))
+
+(defun cppimmo/find-file-sudo (@file-name)
+  "Edit file @FILE-NAME as the super user."
+  (interactive "FFind file (sudo): ")
+  (let (($tramp-file-name
+		 (concat "/sudo::" (expand-file-name @file-name))))
+	(find-file $tramp-file-name)))
