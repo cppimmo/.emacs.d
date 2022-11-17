@@ -138,3 +138,12 @@ as a string.
   "Custom theme day/night cycle with fixed arguments."
   (interactive)
   (cppimmo/custom-theme-day-night-cycle 'cppimmo-bright-ink 'modus-vivendi))
+
+(defun cppimmo/find-file-sudo (@file-name)
+  "Edit file @FILE-NAME as the super user."
+  (interactive "FFind file (sudo): ")
+  (when (cppimmo/system-windows-p)
+	("Error this command is not applicable to Windows systems."))
+  (let (($tramp-file-name
+		 (concat "/sudo::" (expand-file-name @file-name))))
+	(find-file $tramp-file-name)))
