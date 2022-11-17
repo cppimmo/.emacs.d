@@ -126,35 +126,24 @@
     ((member "Segoe UI Emoji" (font-family-list)) "Segoe UI Emoji")
     ((member "Symbola" (font-family-list)) "Symbola"))))
 
-(defun cppimmo/cycle-custom-themes ()
-  "Cycle through the known custom themes."
-  (interactive)
-  (let (($known-themes)
-		($active-theme))
-	(setq $known-themes (cl-set-difference custom-known-themes
-										   '(use-package user changed))
-		  $active-theme (car custom-enabled-themes))
-	(disable-theme $active-theme)
-	(enable-theme (car $known-themes))))
-  ;;(let (($index)
-		;;($enabled-theme)
-		;;($theme-at-index)
-		;;($known-themes))
-	;;(setq $known-themes (cl-set-difference custom-known-themes
-	;;									   '(use-package user changed))
-	;;	  $enabled-theme (car $known-themes)
-	;;	  $index (cl-position $enabled-theme $known-themes))
-	;;(message "Initial index: %d" $index)
-	;;(catch 'cppimmo/cycle-custom-themes-break
-	;;  (while (< $index (length $known-themes))
-	;;	(setq $theme-at-index (nth $index $known-themes))
-	;;	(message "Index: %d, Theme: %s" $index (symbol-name $theme-at-index))
-	;;	(setq $index (1+ $index))))
-	;;(message "Index (final): %d" $index)
-	;;(load-theme (nth $index $known-themes) t)
-	;;(disable-theme (nth $index $known-themes))
-	;;(setq $index (1+ $index))
-	;;(enable-theme (nth $index $known-themes))))
+;;;(defun cppimmo/cycle-custom-themes ()
+;;;  "Cycle through the known custom themes."
+;;;  (interactive)
+;;;  (let (($known-themes)
+;;;		($active-theme))
+;;;	(setq $known-themes (cl-set-difference custom-known-themes
+;;;										   '(use-package user changed))
+;;;		  $active-theme (car custom-enabled-themes))
+;;;	(disable-theme $active-theme)
+;;;	(enable-theme (car $known-themes))))
+;;;(run-with-idle-timer
+;;; 10 nil
+;;; (lambda ()
+;;;   (let* (($time-list    (decode-time))
+;;;		  ($time-hours   (nth 2 $time-list))
+;;;		  ($time-minutes (nth 2 $time-minutes)))
+;;;	 (cond (()
+;;;			)))))
 
 (progn
   (setq inhibit-startup-message t

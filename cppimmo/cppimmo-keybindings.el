@@ -50,7 +50,7 @@
   (global-set-key (kbd "C-M-y") 'whitespace-mode)
   ;; Set bindings for dired.
   (define-key dired-mode-map "F" #'cppimmo/dired-open-in-new-frame)
-  
+  (global-set-key (kbd "H-c t") #'cppimmo/custom-theme-fixed-cycle)
   ;; Set binding for hl-line-mode.
   (global-set-key (kbd "H-l b") 'hl-line-mode) ; locally.
   (global-set-key (kbd "H-l g") 'global-hl-line-mode) ; Globally.

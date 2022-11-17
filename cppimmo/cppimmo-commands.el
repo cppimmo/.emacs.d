@@ -119,3 +119,22 @@ as a string.
   (when (not (commandp $last-cmd))
 	(error "LAST-COMMAND must be a command!"))
   (describe-command $last-cmd)))
+
+(defun cppimmo/custom-theme-day-night-cycle (@day-theme @night-theme)
+  "Switch between the day/night custom themes denoted by
+@DAY-THEME and @NIGHT-THEME."
+  (interactive "SEnter symbol for the daytime theme: \nSEnter a symbol for the nighttime theme: ")
+  (when (or (not (symbolp @day-theme)) (not (symbolp @night-theme)))
+	(error "@DAY-THEME and @NIGHT-THEME must be of type symbol."))
+  (if (eq (car custom-enabled-themes) @day-theme)
+	  (progn
+		(disable-theme @day-theme)
+		(load-theme @night-theme t))
+	(progn
+	  (disable-theme @night-theme)
+	  (load-theme @day-theme t))))
+
+(defun cppimmo/custom-theme-fixed-cycle ()
+  "Custom theme day/night cycle with fixed arguments."
+  (interactive)
+  (cppimmo/custom-theme-day-night-cycle 'cppimmo-bright-ink 'modus-vivendi))
