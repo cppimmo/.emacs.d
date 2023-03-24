@@ -151,7 +151,7 @@
   
   (add-to-list 'custom-theme-load-path "~/.emacs.d/cppimmo-themes/") ; Set theme load path.
   ;; Set the theme (if custom).
-  (load-theme 'cppimmo-bright-ink t)
+  (load-theme 'naysayer t) ; 'cppimmo-bright-ink
 
   ;; Extra highlighting for programming modes.
   (add-hook 'prog-mode-hook #'highlight-numbers-mode)
@@ -475,6 +475,9 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
   :config
   (add-hook 'prog-mode-hook #'global-origami-mode)
   (define-key origami-mode-map (kbd "M-o") #'origami-recursively-toggle-node))
+
+;;; Install and configure naysayer.
+(use-package naysayer-theme)
 
 ;;; BUILT-IN MODE CONFIGURATION =================================================
 
