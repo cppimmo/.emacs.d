@@ -54,7 +54,7 @@
 
 (define-abbrev-table 'c++-mode-abbrev-table
   '(
-	("std" "std::")
+	("std" "std:")
 	))
 
 (set-default 'abbrev-mode t) ; Enable abbrev-mode in most contexts.
