@@ -65,6 +65,7 @@
 (load "cppimmo-xml")
 (load "cppimmo-count-words-mode")
 (load "cppimmo-delim-face-mode")
+(load "cppimmo-cl-face")
 (load "cppimmo-commands")
 
 ;;; PACKAGE SYSTEM SETUP ========================================================

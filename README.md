@@ -5,14 +5,14 @@
 
 # Table of Contents
 
-1.  [My GNU Emacs Configuration](#org2474762)
-2.  [Note](#orga583019)
-3.  [Packages Used (MELPA)](#org1914df4)
-4.  [Libraries](#orgc6469b6)
-    1.  [cppimmo/cppimmo-xml.el](#orgd07c051)
-    2.  [cppimmo/cppimmo-count-words-mode.el](#org21da43c)
-5.  [Key Bindings](#org0b99c18)
-6.  [License](#org1e5cddc)
+1.  [My GNU Emacs Configuration](#orgca3ebb5)
+2.  [Note](#orgcfa630b)
+3.  [Packages Used (MELPA)](#org5dab8c3)
+4.  [Libraries](#orga466ceb)
+    1.  [cppimmo/cppimmo-xml.el](#org63c4b4a)
+    2.  [cppimmo/cppimmo-count-words-mode.el](#org8033227)
+5.  [Key Bindings](#org30ca159)
+6.  [License](#org3349cd7)
 
 This repository is for versioning my GNU Emacs configuration files.  I hope to
 keep them platform independent, so I can use them across all my machines (both
@@ -49,7 +49,7 @@ This configuration uses custom.el as the customize options settings file.
 
 ## cppimmo/cppimmo-xml.el
 
-Contains functions for working creating my blog posts and RSS feed blog post entry items.  See "Key Bindings".
+Contains functions for working creating blog posts and RSS feed blog post entry items.  See "Key Bindings".
 
 
 ## cppimmo/cppimmo-count-words-mode.el
@@ -65,7 +65,7 @@ Wraps the functionality provided by the default count-words- functions.  See "Ke
 
 **cppimmo-insert-xml Library Functions (nxml-mode)**
 
--   "C-c M-!" - Insert XML CDATA tag for XML documents (I use this for styling my blog).
+-   "C-c M-!" - Insert XML CDATA tag for XML documents.
 -   "C-c M-@" - Insert blog tags for XML documents (blog posts).
 -   "C-c M-#" - Insert XML tags for RSS feed item (blog posts).
 
