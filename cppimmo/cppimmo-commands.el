@@ -147,3 +147,30 @@ as a string.
   (let (($tramp-file-name
 		 (concat "/sudo::" (expand-file-name @file-name))))
 	(find-file $tramp-file-name)))
+
+(defun cppimmo/zoom-all-buffers (&rest @args)
+  "Scale text in all buffers.
+@ARGS Property list; set :INCREASE, :DECREASE, or :RESET to T"
+   (dolist ($buffer (buffer-list))
+	 (with-current-buffer $buffer
+	   (cond ((eq (plist-get @args :increase) t)
+			  (message ":increase")
+			  (text-scale-adjust text-scale-mode-step))
+			 ((eq (plist-get @args :decrease) t)
+			  (message ":decrease")
+			  (text-scale-adjust (- text-scale-mode-step)))
+			 ((eq (plist-get @args :reset) t)
+			  (message ":reset")
+			  (text-scale-set 0))))))
+
+(defun cppimmo/zoom-all-buffers-increase ()
+  "Increase text scale in all buffers."
+  (interactive (cppimmo/zoom-all-buffers :increase t)))
+
+(defun cppimmo/zoom-all-buffers-decrease ()
+  "Decrease text scale in all buffers."
+  (interactive (cppimmo/zoom-all-buffers :decrease t)))
+
+(defun cppimmo/zoom-all-buffers-reset ()
+  "Reset text scale in all buffers."
+  (interactive (cppimmo/zoom-all-buffers :reset t)))
