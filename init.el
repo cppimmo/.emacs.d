@@ -261,6 +261,11 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
 	(put 'upcase-region 'disabled nil) ; Upcase region C-x C-u
 	(put 'downcase-region 'disabled nil) ; Downcase region C-x C-l
 	) ; End of enabling disabled features.
+
+  ;; Enable fido-vertical-mode (fido-mode enabled also)
+  ;; Alternative is icomplete-mode
+  (if (version> emacs-version "28.1")
+	  (fido-vertical-mode 1)) ; Will search & show commands with term regardless of position.
   ) ; End of miscellaneous.
 
 ;;; PACKAGE CONFIGURATION - NON-REPOS ===========================================
