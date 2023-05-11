@@ -330,8 +330,8 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
 (use-package markdown-mode
   :config
   ;; The the appropriate "markdown-command" for Microsoft Windows.
-  (if (cppimmo/system-windows-p)
-	  (progn (custom-set-variables '(markdown-command "pandoc.exe")))))
+  (when (cppimmo/system-windows-p)
+    (progn (custom-set-variables '(markdown-command "pandoc.exe")))))
 ;;; Install and configure markdown-preview-eww.
 (use-package markdown-preview-eww)
 
@@ -346,10 +346,10 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
 (use-package slime
   :config
   (progn
-	(setq inferior-lisp-program "sbcl"
-		  slime-contribs '(slime-fancy
-						   slime-company
-						   slime-quicklisp slime-asdf))))
+    (setq inferior-lisp-program "sbcl"
+	  slime-contribs '(slime-fancy
+			   slime-company
+			   slime-quicklisp slime-asdf))))
 (use-package slime-company)
 
 ;;; Install and configure magit.
