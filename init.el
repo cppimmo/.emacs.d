@@ -41,25 +41,25 @@
   "GNU/Linux system predicate."
   (string-equal system-type "gnu/linux"))
 
-(defun cppimmo/append-to-load-path (@path &optional @use-dot-emacs)
-  "Append @PATH string to the load-path variable.
-@PATH Path string to append.
-@USE-DOT-EMACS Prefix @PATH with user-emacs-directory when true."
-  (when (not (stringp @path)) ; Ensure @PATH is a string.
-	(error "Argument @PATH is not of type"))
+(defun cppimmo/append-to-load-path (path &optional use-dot-emacs-p)
+  "Append PATH string to the load-path variable.
+PATH Path string to append.
+USE-DOT-EMACS Prefix PATH with user-emacs-directory when true."
+  (when (not (stringp path)) ; Ensure PATH is a string.
+	(error "Argument PATH is not of type"))
   (setq load-path
 		(append load-path
 				(list
-				 (if (equal @use-dot-emacs t)
-					 ;; Prefix @PATH with user-emacs-directory.
-					 (concat user-emacs-directory @path)
+				 (if (equal use-dot-emacs-p t)
+					 ;; Prefix PATH with user-emacs-directory.
+					 (concat user-emacs-directory path)
 				   ;; No user-emacs-directory prefix.
-				   @path)))))
+				   path)))))
 
 (cppimmo/append-to-load-path "~/.emacs.d")
 ;;; Append my own Emacs Lisp library directories to the load-path variable.
-(mapcar (lambda (@path) ; Prefix @PATH with user-emacs-directory.
-		  (funcall #'cppimmo/append-to-load-path @path t))
+(mapcar (lambda (path) ; Prefix @PATH with user-emacs-directory.
+		  (funcall #'cppimmo/append-to-load-path path t))
 		(list "cppimmo" "addons"))
 ;;; Load library files.
 (load "cppimmo-dvorak")
@@ -74,20 +74,23 @@
 (when (string-equal system-type "windows-nt")
   (setq package-check-signature nil))
 
-(defun cppimmo/add-to-package-archives (@name @link)
-  (add-to-list 'package-archives '(@name . @link) t))
+(defun cppimmo/add-to-package-archives (name link)
+  (add-to-list 'package-archives '(name . link) t))
 
 ;;; Define and initialise package repositories.
 (require 'package)
+(add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/") t)
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
-;;(add-to-list 'package-archives '("melpa-stable" .  "http://stable.melpa.org/packages/") t)
 (package-initialize)
 
 ;;; Install use-package to simplify the configuration file.
-(when (not (package-installed-p 'use-package))
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
   (package-install 'use-package))
 (require 'use-package)
-(setq use-package-always-ensure 't)
+(eval-and-compile
+  (setq use-package-always-ensure t
+		use-package-expand-minimally t))
 
 (use-package gnu-elpa-keyring-update)
 
@@ -95,23 +98,14 @@
 (progn
   (require 'subr-x)
   (if (cppimmo/system-windows-p)
-	  (setq user-full-name (getenv "USERNAME")))
-  ;;(if (cppimmo/system-gnu-linux-p)
-  ;;(progn (shell-command "export EMACS_USER_FULL_NAME=` finger -s $USER \
-  ;;| tr -s ' ' | cut -d ' ' -f 2,3 | tail -1`")
-  ;;(setq user-full-name (getenv "EMACS_USER_FULL_NAME"))))
-  (let (($str))
-	(setq $str (concat (string-reverse "4240riuapffohb")
-					     (replace-regexp-in-string " at " "@"
-					       (replace-regexp-in-string " dot " "."" at gmail dot com"))))
-	(setq user-mail-address $str)))
+	  (setq user-full-name (getenv "USERNAME"))))
 
 ;;; User Iterface
-(defun cppimmo/configure-frame-size (@width @height)
+(defun cppimmo/configure-frame-size (width height)
   "Set the initial frame size for floating window managers.
 @WIDTH the desired character width of the frame.
 @HEIGHT the desired character height of the frame."
-  (when window-system (set-frame-size (selected-frame) @width @height)))
+  (when window-system (set-frame-size (selected-frame) width height)))
 
 (defun cppimmo/initialize-font ()
   "Setup font."
@@ -153,7 +147,7 @@
   
   (add-to-list 'custom-theme-load-path "~/.emacs.d/cppimmo-themes/") ; Set theme load path.
   ;; Set the theme (if custom).
-  (load-theme 'naysayer t) ; 'cppimmo-bright-ink
+  (load-theme 'doom-monokai-classic t) ; 'cppimmo-bright-ink
 
   ;; Extra highlighting for programming modes.
   (add-hook 'prog-mode-hook #'highlight-numbers-mode)
@@ -165,9 +159,8 @@
   
   (global-font-lock-mode t) ; Ensure syntax highlighting is always enabled.
   (setq font-lock-maximum-decoration t) ; Max font decor.
-  
-  (setq frame-title-format ; Set the frame title format.
-		'("GNU Emacs - %b | " user-login-name "@" system-name))
+  ;; Set the frame title format.
+  (setq frame-title-format '("GNU Emacs - %b | " user-login-name "@" system-name))
   (tool-bar-mode -1) ; Disable icon tool bar.
   (column-number-mode t) ; Always show line cursor position in the modeline.
   (when (version<= "28.1" emacs-version)
@@ -185,33 +178,32 @@
 	(global-visual-line-mode t) ; Enable visual line mode globally.
 	(setq visual-line-fringe-indicators
 		  '(left-curly-arrow right-curly-arrow))) ; Set the visual line fringe indicators.
-  (if (cppimmo/system-windows-p)
+  (when (cppimmo/system-windows-p)
 	  (progn (cppimmo/configure-frame-size 90 34)))
   ;; Call font setup.
   (cppimmo/initialize-font)
-  ) ;; End of user interface settings.
+  ) ; End of user interface settings.
 
 ;;; Backup configuration.
-(defun cppimmo/make-backup-file-name (@file-path)
+(defun cppimmo/make-backup-file-name (file-path)
   "This function from Xah Lee creates new directories for backups.
 It creates directories that do not exist in the backup root.
 Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
-  (let ($backup-root $backup-file-path) ; let* could be used here, but it would be ugly.
-	(setq $backup-root "~/.emacs.d/backup/")
+  (let (backup-root backup-file-path) ; let* could be used here, but it would be ugly.
+	(setq backup-root "~/.emacs.d/backup/")
 	;; This format remove the Windows drive letter.
-	(setq $backup-file-path
-		  (format "%s%s~" $backup-root
-				  (replace-regexp-in-string "^[A-Za-z]:/" "" @file-path)))
+	(setq backup-file-path
+		  (format "%s%s~" backup-root
+				  (replace-regexp-in-string "^[A-Za-z]:/" "" file-path)))
 	(make-directory
-	 (file-name-directory $backup-file-path)
-	 (file-name-directory $backup-file-path))
-	$backup-file-path)) ; Return backup-file-path string.
+	 (file-name-directory backup-file-path)
+	 (file-name-directory backup-file-path))
+	backup-file-path)) ; Return backup-file-path string.
 
 (progn
   (setq make-backup-files t) ; Make sure backups are enabled.
   ;; Set the backup file name function
-  (setq make-backup-file-name-function 'cppimmo/make-backup-file-name)
-  )
+  (setq make-backup-file-name-function 'cppimmo/make-backup-file-name))
 
 ;;; Miscellaneous
 (progn
@@ -246,7 +238,7 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
   (setq global-mark-ring-max 10) ; 10 yanks limit.
   
   ;; Preserve creation date on Windows (irrelevant on UNIX-like systems).
-  (if (cppimmo/system-windows-p)
+  (when (cppimmo/system-windows-p)
 	  (progn (setq backup-by-copying t)))
   ;; (setq create-lockfiles nil)
   (setq auto-save-default nil) ; I save impulsively, so disabling this is fine.
@@ -265,22 +257,25 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
 
   ;; Enable fido-vertical-mode (fido-mode enabled also)
   ;; Alternative is icomplete-mode
-  (if (version> emacs-version "28.1")
-	  (fido-vertical-mode 1)) ; Will search & show commands with term regardless of position.
+  (when (version< "28.1" emacs-version)
+    (fido-vertical-mode 1)) ; Will search & show commands with term regardless of position.
   ) ; End of miscellaneous.
 
 ;;; PACKAGE CONFIGURATION - NON-REPOS ===========================================
+
 ;;; Install and configure glsl-mode.
 (autoload 'glsl-mode "glsl-mode" nil t)
 (add-to-list 'auto-mode-alist '("\\.vert\\'" . glsl-mode))
 (add-to-list 'auto-mode-alist '("\\.frag\\'" . glsl-mode))
 
 ;;; PACKAGE CONFIGURATION - MY STUFF ============================================
+
 ;;; Configure cppimmo/count-words-mode
 (defun cppimmo/my-count-words-mode-hook ()
   (setq *cppimmo/count-words-use-header-line* nil))
-(add-hook 'cppimmo/count-words-mode-hook #'cppimmo/my-count-words-mode-hook)
+(add-hook 'cppimmo/count-words-mode-hook #'cppimmo/my-count-words-mode-hook) ; Add custom hook
 
+;;; Enable delim face mode
 (cppimmo/global-delim-face-mode 1)
 
 ;;; PACKAGE CONFIGURATION - REPOS ===============================================
@@ -302,9 +297,9 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
 		  "~/.emacs.d/audio/beacon-alarm.wav") ; Work time alert.
 	(setq pomodoro-break-start-sound
 		  "~/.emacs.d/audio/beacon-alarm.wav") ; Break time alert.
-	(defun cppimmo/play-pomodoro-sound (@sound)
+	(defun cppimmo/play-pomodoro-sound (sound)
 	  "Replace the play sound function for the pomodoro package."
-	  (play-sound-file (expand-file-name @sound)))
+	  (play-sound-file (expand-file-name sound)))
 	;; Properly replace the play sound function.
 	(advice-add 'play-pomodoro-sound :override #'cppimmo/play-pomodoro-sound)))
 
@@ -344,32 +339,40 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
 
 ;;; Install and configure SLIME.
 (use-package slime
-  :config
-  (progn
-    (setq inferior-lisp-program "sbcl"
-	  slime-contribs '(slime-fancy
-			   slime-company
-			   slime-quicklisp slime-asdf))))
-(use-package slime-company)
+  :ensure t
+  :defer t
+  :init (setq inferior-lisp-program "sbcl"))
+
+(use-package slime-company
+  :after (slime company)
+  :ensure t
+  :config (setq slime-company-completion 'fuzzy
+				slime-company-after-completion 'slime-company-just-one-space))
+
+(slime-setup '(slime-fancy slime-company slime-cl-indent slime-fuzzy slime-quicklisp slime-asdf))
 
 ;;; Install and configure magit.
-(use-package magit)
+(use-package magit
+  :ensure t)
 
 ;;; Install and configure highlight numbers.
-(use-package highlight-numbers)
+(use-package highlight-numbers
+  :ensure t)
 
 ;;; Install and configure highlight parentheses.
-(use-package highlight-parentheses)
+(use-package highlight-parentheses
+  :ensure t)
 
 ;;; Install and configure elfeed.
 (use-package elfeed
+  :ensure t
   :config
   (progn
 	(load "~/.emacs.d/cppimmo/cppimmo-feeds-pub.el")
 	;; Load private feed file if it exists and append items to list.
-	(let (($feed-file-priv "~/.emacs.d/cppimmo/cppimmo-feeds-priv.el"))
-	  (when (file-exists-p $feed-file-priv)
-		(load $feed-file-priv)))))
+	(let ((feed-file-priv "~/.emacs.d/cppimmo/cppimmo-feeds-priv.el"))
+	  (when (file-exists-p feed-file-priv)
+		(load feed-file-priv)))))
 
 ;;; Install and configure ement.
 ;;(use-package ement)
@@ -489,69 +492,116 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
 ;;; Install and configure naysayer.
 (use-package naysayer-theme)
 
+;;; Install and configure smart-mode-line & smart-mode-line-powerline-theme
+;;(progn
+;;  (use-package smart-mode-line
+;;	:ensure t
+;;	:config
+;;	(setq sml/no-confirm-load-theme t))
+  ;;(use-package smart-mode-line-powerline-theme
+  ;;:ensure t
+  ;;:config
+  ;;(setq powerline-arrow-shape 'curve
+  ;;	  powerline-default-separator-dir '(right . left)
+  ;;	  sml/theme 'powerline))
+  ;; Finally call sml/setup
+;;  (sml/setup))
+
+(use-package nerd-icons
+  :custom (nerd-icons-font-family "Symbols Nerd Font Mono"))
+
+;;;(use-package nerd-icons-install-fonts
+;;;  :ensure nil)
+
+(use-package nerd-icons-dired
+  :hook (dired-mode . nerd-icons-dired-mode))
+
+(use-package doom-modeline
+  :ensure t
+  :init (doom-modeline-mode 1))
+
 ;;; BUILT-IN MODE CONFIGURATION =================================================
 
-(defun cppimmo/ispell-windows-nt ()
-  "Configuration for the ispell functionality on Windows.
+(use-package ispell
+  :ensure nil
+  :config
+  (defun cppimmo/ispell-windows-nt ()
+	"Configuration for the ispell functionality on Windows.
 The trick is to use msys2 and the MinGW hunspell and hunspell-en packages.
  URL `https://www.reddit.com/r/emacs/comments/8by3az/how_to_set_up_sell_check_for_emacs_in_windows/'
  URL `https://stackoverflow.com/questions/8931580/hunspell-cant-open-affix-or-dictionary-files-for-dictionary-named-en-us'"
-  (setq ispell-program-name "C:/tools/msys64/mingw64/bin/hunspell.exe") ; Set the executable name.
-  (setq ispell-dictionary "en_US")) ; Set the appropriate word dictionary.
-;;; Set the ispell program name on Microsoft Windows systems.
-(if (cppimmo/system-windows-p)
-    (progn (cppimmo/ispell-windows-nt))) ; Finally call the windows-nt configuration.
+	(setq ispell-program-name "C:/tools/msys64/mingw64/bin/hunspell.exe") ; Set the executable name.
+	(setq ispell-dictionary "en_US")) ; Set the appropriate word dictionary.
+  ;; Set the ispell program name on Microsoft Windows systems.
+  (if (cppimmo/system-windows-p)
+      (progn (cppimmo/ispell-windows-nt)))) ; Finally call the windows-nt configuration.)
+  
 
-;;; Configuration for the CC mode.
-(setq c-default-style "bsd")
-(setq-default c-basic-offset 4
-	      tab-width 4
-	      indent-tabs-mode t)
+(use-package cc-mode
+  :ensure nil
+  :config
+  ;; Configuration for the CC mode.
+  (setq c-default-style "bsd")
+  (setq-default c-basic-offset 4
+				tab-width 4
+				indent-tabs-mode t))
 
-;;; Dired.
-;;; From: https://www.emacswiki.org/emacs/DiredSortDirectoriesFirst
-(defun cppimmo/dired-sort ()
-  "Make dired listings sort and display directories first."
-  (save-excursion
-	(let (buffer-read-only)
-	  (forward-line 2) ;; Move beyond directory heading.
-	  (sort-regexp-fields t "^.*$" "[ ]*." (point) (point-max)))
-	(set-buffer-modified-p nil)))
+(use-package dired
+  :ensure nil
+  :config
+  ;; Dired.
+  ;; From: https://www.emacswiki.org/emacs/DiredSortDirectoriesFirst
+  (defun cppimmo/dired-sort ()
+	"Make dired listings sort and display directories first."
+	(save-excursion
+	  (let (buffer-read-only)
+		(forward-line 2) ; Move beyond directory heading.
+		(sort-regexp-fields t "^.*$" "[ ]*." (point) (point-max)))
+	  (set-buffer-modified-p nil)))
+  
+  (defadvice dired-readin
+	  (after dired-after-updating-hook first () activate)
+	"Make dired sort listings with directories first before adding marks."
+	(cppimmo/dired-sort))
+  
+  (defun cppimmo/dired-open-in-new-frame ()
+	"Open a file/directory in a new frame."
+	(interactive)
+	(find-file-other-frame (dired-get-file-for-visit))))
 
-(defadvice dired-readin
-	(after dired-after-updating-hook first () activate)
-  "Make dired sort listings with directories first before adding marks."
-  (cppimmo/dired-sort))
+(use-package erc
+  :ensure nil
+  :config
+  ;; ERC.
+  ;; Set the ERC log directory. (C-c C-l)
+  (setq erc-server "irc.libera.chat"
+		erc-nick "cppimmo"
+		erc-user-full-name ""
+		erc-track-shorten-start 8
+		erc-autojoin-channels-alist '(("irc.libera.chat" "##slackware"))
+		erc-kill-buffer-on-part t
+		erc-auto-query 'bury
+		erc-log-channels-directory "~/.emacs.d/erc-log")
+  
+  (defun cppimmo/launch-erc ()
+	""
+	(interactive)
+	(erc-tls :port 6697)))
 
-(defun cppimmo/dired-open-in-new-frame ()
-  "Open a file/directory in a new frame."
-  (interactive)
-  (find-file-other-frame (dired-get-file-for-visit)))
+(use-package abbrev
+  :ensure nil
+  :config
+  ;; Load abbreviations (abbrev-mode).
+  (load "~/.emacs.d/cppimmo/cppimmo-abbrev.el"))
 
-;;; ERC.
-;;; Set the ERC log directory. (C-c C-l)
-(setq erc-server "irc.libera.chat"
-      erc-nick "cppimmo"
-      erc-user-full-name ""
-      erc-track-shorten-start 8
-      erc-autojoin-channels-alist '(("irc.libera.chat" "##slackware"))
-      erc-kill-buffer-on-part t
-      erc-auto-query 'bury
-      erc-log-channels-directory "~/.emacs.d/erc-log")
-
-(defun cppimmo/launch-erc ()
-  ""
-  (interactive)
-  (erc-tls :port 6697))
-
-;;; Load abbreviations (abbrev-mode).
-(load "~/.emacs.d/cppimmo/cppimmo-abbrev.el")
-
-;;; Bookmarks
-(setq bookmark-save-flag 1 ; Save bookmark file after one modification.
-	  ;; Ensure bookmark file default doesn't change.
-	  bookmark-default-file "~/.emacs.d/bookmarks")
-
+(use-package bookmark
+  :ensure nil
+  :config
+  ;; Bookmarks
+  (setq bookmark-save-flag 1 ; Save bookmark file after one modification.
+		;; Ensure bookmark file default doesn't change.
+		bookmark-default-file "~/.emacs.d/bookmarks"))
+  
 ;;; css-mode
 (defun cppimmo/css-mode-hook ()
   "My css-mode hook."
