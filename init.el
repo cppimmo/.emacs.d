@@ -70,6 +70,17 @@ USE-DOT-EMACS Prefix PATH with user-emacs-directory when true."
 (load "cppimmo-commands")
 
 ;;; PACKAGE SYSTEM SETUP ========================================================
+
+(defun cppimmo/internet-connection-p (&optional host)
+  "Test if an internet connection is available.
+HOST Host string argument to ping command."
+  (unless (or (stringp host) (eq host nil))
+    (error "HOST must be a string."))
+  (= 0 (call-process "ping" nil nil nil "-c" "1" "-W" "1"
+		   (if host
+		       host
+		     "www.google.com"))))
+
 ;;; Try to silence GPG errors on Windows.
 (when (string-equal system-type "windows-nt")
   (setq package-check-signature nil))
@@ -89,10 +100,11 @@ USE-DOT-EMACS Prefix PATH with user-emacs-directory when true."
   (package-install 'use-package))
 (require 'use-package)
 (eval-and-compile
-  (setq use-package-always-ensure t
-		use-package-expand-minimally t))
+  (when (cppimmo/internet-connection-p "slackware.com")
+    (setq use-package-always-ensure t))
+  (setq use-package-expand-minimally t))
 
-(use-package gnu-elpa-keyring-update)
+;;(use-package gnu-elpa-keyring-update)
 
 ;;; BASIC STARTUP STUFF =========================================================
 (progn
@@ -328,7 +340,7 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
   (when (cppimmo/system-windows-p)
     (progn (custom-set-variables '(markdown-command "pandoc.exe")))))
 ;;; Install and configure markdown-preview-eww.
-(use-package markdown-preview-eww)
+;;(use-package markdown-preview-eww)
 
 ;;; Install the 2048-game package.
 (use-package 2048-game)
@@ -507,11 +519,9 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
   ;; Finally call sml/setup
 ;;  (sml/setup))
 
+;;; Use M-x nerd-icons-install-fonts to setup fonts
 (use-package nerd-icons
   :custom (nerd-icons-font-family "Symbols Nerd Font Mono"))
-
-;;;(use-package nerd-icons-install-fonts
-;;;  :ensure nil)
 
 (use-package nerd-icons-dired
   :hook (dired-mode . nerd-icons-dired-mode))
