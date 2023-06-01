@@ -530,6 +530,9 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
   :ensure t
   :init (doom-modeline-mode 1))
 
+(use-package company-c-headers
+  :config (add-to-list 'company-backends 'company-c-headers))
+
 ;;; BUILT-IN MODE CONFIGURATION =================================================
 
 (use-package ispell
