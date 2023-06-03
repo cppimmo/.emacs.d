@@ -407,7 +407,8 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
 	(add-to-list 'web-mode-indentation-params '("lineup-calls" . nil))
 	(add-to-list 'web-mode-indentation-params '("lineup-concats" . nil))
 	(add-to-list 'web-mode-indentation-params '("lineup-ternary" . nil)))
-  (add-hook 'web-mode-hook #'cppimmo/web-mode-hook))
+  (add-hook 'web-mode-hook #'cppimmo/web-mode-hook)
+  (add-to-list 'auto-mode-alist '("\\.php\\'" . web-mode)))
 
 ;;; Install and confiure css-eldoc.
 (use-package css-eldoc
