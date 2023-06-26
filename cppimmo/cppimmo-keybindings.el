@@ -51,7 +51,7 @@
   (global-set-key (kbd "C-c C-_") #'cppimmo/zoom-all-buffers-decrease)
   (global-set-key (kbd "C-c C-0") #'cppimmo/zoom-all-buffers-reset)
   ;; Set binding for whitespace-mode minor mode.
-  (global-set-key (kbd "C-M-y") 'whitespace-mode)
+  (global-set-key (kbd "C-c M-y") 'whitespace-mode)
   ;; Set bindings for dired.
   (define-key dired-mode-map "F" #'cppimmo/dired-open-in-new-frame)
   (global-set-key (kbd "H-c t") #'cppimmo/custom-theme-fixed-cycle)

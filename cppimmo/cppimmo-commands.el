@@ -174,3 +174,13 @@ ARGS Property list; set :INCREASE, :DECREASE, or :RESET to T"
 (defun cppimmo/zoom-all-buffers-reset ()
   "Reset text scale in all buffers."
   (interactive (cppimmo/zoom-all-buffers :reset t)))
+
+(defun cppimmo/tabify-buffer ()
+  "Tabify entire buffer."
+  (interactive)
+  (tabify (point-min) (point-max)))
+
+(defun cppimmo/untabify-buffer ()
+  "Untabify entire buffer."
+  (interactive)
+  (untabify (point-min) (point-max)))

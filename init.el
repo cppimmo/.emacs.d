@@ -33,11 +33,16 @@
 (when (file-exists-p custom-file)
   (load custom-file))
 
-(defun cppimmo/which-system-p (sys-symbol)
-  "Predicate returns wether current system is equal to @SYS-SYMBOL."
-  (cond
-   ((eq sys-symbol 'windows) (string-equal system-type "windows-nt"))
-   ((eq sys-symbol 'linux) (string-equal system-type "gnu/linux"))))
+;;; System type control structure macro.  Use macroexpand to test.
+(defmacro cppimmo/when-system (sys-symbol &rest body)
+  "Control structure macro execute BODY when current system is equal to SYS-SYMBOL."
+  (declare (indent 1) (debug ((symbolp form &optional form) body)))
+  `(when (cond
+		  ((eq ,sys-symbol 'windows) (string-equal system-type "windows-nt"))
+		  ((eq ,sys-symbol 'linux) (string-equal system-type "gnu/linux"))
+		  ((eq ,sys-symbol 'bsd) (string-equal system-type "berkley-unix"))
+		  ((eq ,sys-symbol 'macos) (string-equal system-type "darwin")))
+	 (progn ,@body)))
 
 (defun cppimmo/append-to-load-path (path &optional use-dot-emacs-p)
   "Append PATH string to the load-path variable.
@@ -80,7 +85,7 @@ HOST Host string argument to ping command."
 		     "www.google.com"))))
 
 ;;; Try to silence GPG errors on Windows.
-(when (cppimmo/which-system-p 'windows)
+(cppimmo/when-system 'windows
   (setq package-check-signature nil))
 
 (defun cppimmo/add-to-package-archives (name link)
@@ -107,8 +112,8 @@ HOST Host string argument to ping command."
 ;;; BASIC STARTUP STUFF =========================================================
 (progn
   (require 'subr-x)
-  (if (cppimmo/which-system-p 'windows)
-	  (setq user-full-name (getenv "USERNAME"))))
+  (cppimmo/when-system 'windows
+	(setq user-full-name (getenv "USERNAME"))))
 
 ;;; User Iterface
 (defun cppimmo/configure-frame-size (width height)
@@ -173,8 +178,8 @@ HOST Host string argument to ping command."
 	(global-visual-line-mode t) ; Enable visual line mode globally.
 	(setq visual-line-fringe-indicators
 		  '(left-curly-arrow right-curly-arrow))) ; Set the visual line fringe indicators.
-  (when (cppimmo/which-system-p 'windows)
-	  (progn (cppimmo/configure-frame-size 90 34)))
+  (cppimmo/when-system 'windows
+	(cppimmo/configure-frame-size 90 34))
   ) ; End of user interface settings.
 
 ;;; Backup configuration.
@@ -231,8 +236,8 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
   (setq global-mark-ring-max 10) ; 10 yanks limit.
   
   ;; Preserve creation date on Windows (irrelevant on UNIX-like systems).
-  (when (cppimmo/which-system-p 'windows)
-	  (progn (setq backup-by-copying t)))
+  (cppimmo/when-system 'windows
+	(setq backup-by-copying t))
   ;; (setq create-lockfiles nil)
   (setq auto-save-default nil) ; I save impulsively, so disabling this is fine.
 
@@ -317,8 +322,8 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
 (use-package markdown-mode
   :config
   ;; The the appropriate "markdown-command" for Microsoft Windows.
-  (when (cppimmo/which-system-p 'windows)
-    (progn (custom-set-variables '(markdown-command "pandoc.exe")))))
+  (cppimmo/when-system 'windows
+    (custom-set-variables '(markdown-command "pandoc.exe"))))
 ;;; Install and configure markdown-preview-eww.
 ;;(use-package markdown-preview-eww)
 
@@ -437,12 +442,12 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
 ;;; Install and configure geiser.
 (use-package geiser
   :config
-  (when (cppimmo/which-system-p 'linux)
-	(setq geiser-active-implementations '(mit racket))))
+  (cppimmo/when-system 'linux
+	(setq geise-active-implementations '(mit racket))))
 (use-package geiser-racket)
 (use-package geiser-mit
   :config
-  (when (cppimmo/which-system-p 'linux) ; Prefer mit-scheme on GNU/Linux.
+  (cppimmo/when-system 'linux ; Prefer mit-scheme on GNU/Linux.
 	(setq geiser-mit-binary "/usr/bin/scheme")))
 
 ;;; Install and configure racket-mode.
@@ -459,8 +464,8 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
 ;;; Install and configure nyan-mode.
 (use-package nyan-mode
   :config
-  ;;(when (cppimmo/which-system-p 'linux)
-  ;;(nyan-mode 1))
+  ;;(cppimmo/when-system 'linux
+    ;;(nyan-mode 1))
   )
 
 ;;; Install and configure info-colors.
@@ -518,7 +523,7 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
 (use-package company-c-headers
   :config (add-to-list 'company-backends 'company-c-headers))
 
-(when (cppimmo/which-system-p 'linux)
+(cppimmo/when-system 'linux
   (use-package vterm
 	:ensure t))
 
@@ -551,18 +556,14 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
 (use-package ispell
   :ensure nil
   :config
-  (defun cppimmo/ispell-windows-nt ()
-	"Configuration for the ispell functionality on Windows.
-The trick is to use msys2 and the MinGW hunspell and hunspell-en packages.
- URL `https://www.reddit.com/r/emacs/comments/8by3az/how_to_set_up_sell_check_for_emacs_in_windows/'
- URL `https://stackoverflow.com/questions/8931580/hunspell-cant-open-affix-or-dictionary-files-for-dictionary-named-en-us'"
-	(setq ispell-program-name "C:/tools/msys64/mingw64/bin/hunspell.exe") ; Set the executable name.
-	(setq ispell-dictionary "en_US")) ; Set the appropriate word dictionary.
-  ;; Set the ispell program name on Microsoft Windows systems.
-  (if (cppimmo/which-system-p 'windows)
-      (progn (cppimmo/ispell-windows-nt)))) ; Finally call the windows-nt configuration.)
+  ;; Configuration for the ispell functionality on Windows.
+  ;; The trick is to use msys2 and the MinGW hunspell and hunspell-en packages.
+  ;; https://www.reddit.com/r/emacs/comments/8by3az/how_to_set_up_sell_check_for_emacs_in_windows/
+  ;; https://stackoverflow.com/questions/8931580/hunspell-cant-open-affix-or-dictionary-files-for-dictionary-named-en-us
+  (cppimmo/when-system 'windows
+    (setq ispell-program-name "C:/tools/msys64/mingw64/bin/hunspell.exe" ; Set the executable pathname.
+		  ispell-dictionary "en_US"))) ; Set the appropriate word dictionary.
   
-
 (use-package cc-mode
   :ensure nil
   :config
