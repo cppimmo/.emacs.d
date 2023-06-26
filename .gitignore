@@ -50,3 +50,6 @@ addons/**
 
 # Ignore the org-journal directory.
 org-journal/**
+
+# Some logview file
+logview-cache.extmap

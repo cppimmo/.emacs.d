@@ -33,13 +33,11 @@
 (when (file-exists-p custom-file)
   (load custom-file))
 
-(defun cppimmo/system-windows-p ()
-  "Windows system predicate."
-  (string-equal system-type "windows-nt"))
-
-(defun cppimmo/system-gnu-linux-p ()
-  "GNU/Linux system predicate."
-  (string-equal system-type "gnu/linux"))
+(defun cppimmo/which-system-p (sys-symbol)
+  "Predicate returns wether current system is equal to @SYS-SYMBOL."
+  (cond
+   ((eq sys-symbol 'windows) (string-equal system-type "windows-nt"))
+   ((eq sys-symbol 'linux) (string-equal system-type "gnu/linux"))))
 
 (defun cppimmo/append-to-load-path (path &optional use-dot-emacs-p)
   "Append PATH string to the load-path variable.
@@ -82,7 +80,7 @@ HOST Host string argument to ping command."
 		     "www.google.com"))))
 
 ;;; Try to silence GPG errors on Windows.
-(when (string-equal system-type "windows-nt")
+(when (cppimmo/which-system-p 'windows)
   (setq package-check-signature nil))
 
 (defun cppimmo/add-to-package-archives (name link)
@@ -109,7 +107,7 @@ HOST Host string argument to ping command."
 ;;; BASIC STARTUP STUFF =========================================================
 (progn
   (require 'subr-x)
-  (if (cppimmo/system-windows-p)
+  (if (cppimmo/which-system-p 'windows)
 	  (setq user-full-name (getenv "USERNAME"))))
 
 ;;; User Iterface
@@ -118,21 +116,6 @@ HOST Host string argument to ping command."
 @WIDTH the desired character width of the frame.
 @HEIGHT the desired character height of the frame."
   (when window-system (set-frame-size (selected-frame) width height)))
-
-(defun cppimmo/initialize-font ()
-  "Setup font."
-  ;; Font stuff.
-  (set-fontset-font
-   t
-   (if (version< emacs-version "28.1")
-	   '(#x1f300 . #x1fad0) ; Then
-	 'emoji) ; Else
-   (cond
-	((member "Apple Color Emoji" (font-family-list)) "Apple Color Emoji")
-    ((member "Noto Color Emoji" (font-family-list)) "Noto Color Emoji")
-    ((member "Noto Emoji" (font-family-list)) "Noto Emoji")
-    ((member "Segoe UI Emoji" (font-family-list)) "Segoe UI Emoji")
-    ((member "Symbola" (font-family-list)) "Symbola"))))
 
 ;;;(defun cppimmo/cycle-custom-themes ()
 ;;;  "Cycle through the known custom themes."
@@ -190,10 +173,8 @@ HOST Host string argument to ping command."
 	(global-visual-line-mode t) ; Enable visual line mode globally.
 	(setq visual-line-fringe-indicators
 		  '(left-curly-arrow right-curly-arrow))) ; Set the visual line fringe indicators.
-  (when (cppimmo/system-windows-p)
+  (when (cppimmo/which-system-p 'windows)
 	  (progn (cppimmo/configure-frame-size 90 34)))
-  ;; Call font setup.
-  (cppimmo/initialize-font)
   ) ; End of user interface settings.
 
 ;;; Backup configuration.
@@ -250,7 +231,7 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
   (setq global-mark-ring-max 10) ; 10 yanks limit.
   
   ;; Preserve creation date on Windows (irrelevant on UNIX-like systems).
-  (when (cppimmo/system-windows-p)
+  (when (cppimmo/which-system-p 'windows)
 	  (progn (setq backup-by-copying t)))
   ;; (setq create-lockfiles nil)
   (setq auto-save-default nil) ; I save impulsively, so disabling this is fine.
@@ -294,10 +275,9 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
 ;;; Settings for fill column indicator package. Toggle with "fci-mode".
 (use-package fill-column-indicator
   :config
-  (progn
-	(setq fci-rule-column 80
-		  fci-rule-width  2
-		  fci-rule-color  "red")))
+  (setq fci-rule-column 80
+		fci-rule-width  2
+		fci-rule-color  "red"))
 
 ;;; Settings for the pomodoro package.
 (use-package pomodoro
@@ -337,7 +317,7 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
 (use-package markdown-mode
   :config
   ;; The the appropriate "markdown-command" for Microsoft Windows.
-  (when (cppimmo/system-windows-p)
+  (when (cppimmo/which-system-p 'windows)
     (progn (custom-set-variables '(markdown-command "pandoc.exe")))))
 ;;; Install and configure markdown-preview-eww.
 ;;(use-package markdown-preview-eww)
@@ -408,6 +388,7 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
 	(add-to-list 'web-mode-indentation-params '("lineup-concats" . nil))
 	(add-to-list 'web-mode-indentation-params '("lineup-ternary" . nil)))
   (add-hook 'web-mode-hook #'cppimmo/web-mode-hook)
+  ;; Load all php files in web-mode by default
   (add-to-list 'auto-mode-alist '("\\.php\\'" . web-mode)))
 
 ;;; Install and confiure css-eldoc.
@@ -454,12 +435,15 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
 (use-package ement)
 
 ;;; Install and configure geiser.
-(use-package geiser)
+(use-package geiser
+  :config
+  (when (cppimmo/which-system-p 'linux)
+	(setq geiser-active-implementations '(mit racket))))
 (use-package geiser-racket)
-(use-package geiser-mit)
-(when (cppimmo/system-gnu-linux-p) ; Prefer mit-scheme on GNU/Linux.
-  (setq geiser-mit-binary "/usr/bin/scheme"
-		geiser-active-implementations '(mit)))
+(use-package geiser-mit
+  :config
+  (when (cppimmo/which-system-p 'linux) ; Prefer mit-scheme on GNU/Linux.
+	(setq geiser-mit-binary "/usr/bin/scheme")))
 
 ;;; Install and configure racket-mode.
 (use-package racket-mode)
@@ -475,7 +459,7 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
 ;;; Install and configure nyan-mode.
 (use-package nyan-mode
   :config
-  ;;(when (cppimmo/system-gnu-linux-p)
+  ;;(when (cppimmo/which-system-p 'linux)
   ;;(nyan-mode 1))
   )
 
@@ -534,6 +518,34 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
 (use-package company-c-headers
   :config (add-to-list 'company-backends 'company-c-headers))
 
+(when (cppimmo/which-system-p 'linux)
+  (use-package vterm
+	:ensure t))
+
+(use-package psysh)
+
+(use-package php-eldoc)
+
+(use-package logview)
+
+(use-package emojify
+  :config
+  (set-fontset-font
+	 t
+	 (if (version< emacs-version "28.1")
+		 '(#x1f300 . #x1fad0) ; Then
+	   'emoji) ; Else
+	 (cond
+	  ((member "Apple Color Emoji" (font-family-list)) "Apple Color Emoji")
+      ((member "Noto Color Emoji" (font-family-list)) "Noto Color Emoji")
+      ((member "Noto Emoji" (font-family-list)) "Noto Emoji")
+      ((member "Segoe UI Emoji" (font-family-list)) "Segoe UI Emoji")
+      ((member "Symbola" (font-family-list)) "Symbola")))
+  (setq emojify-display-style 'unicode
+		emojify-emoji-styles '(unicode))
+  ;; Binding for inserting unicode emoji (binding similar to insert-char):
+  (bind-key* (kbd "C-x 8 C-<return>") #'emojify-insert-emoji))
+
 ;;; BUILT-IN MODE CONFIGURATION =================================================
 
 (use-package ispell
@@ -547,7 +559,7 @@ The trick is to use msys2 and the MinGW hunspell and hunspell-en packages.
 	(setq ispell-program-name "C:/tools/msys64/mingw64/bin/hunspell.exe") ; Set the executable name.
 	(setq ispell-dictionary "en_US")) ; Set the appropriate word dictionary.
   ;; Set the ispell program name on Microsoft Windows systems.
-  (if (cppimmo/system-windows-p)
+  (if (cppimmo/which-system-p 'windows)
       (progn (cppimmo/ispell-windows-nt)))) ; Finally call the windows-nt configuration.)
   
 
