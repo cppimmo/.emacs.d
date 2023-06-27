@@ -58,8 +58,11 @@ USE-DOT-EMACS Prefix PATH with user-emacs-directory when true."
 					 (concat user-emacs-directory path)
 				   ;; No user-emacs-directory prefix.
 				   path)))))
+;;; Conditionally append dot emacs dir to load path (this code should probably be removed).
+;;(let ((dot-emacs-path "~/.emacs.d"))
+;;  (unless (seq-contains-p load-path dot-emacs-path #'string-equal)
+;; 	(cppimmo/append-to-load-path dot-emacs-path)))
 
-(cppimmo/append-to-load-path "~/.emacs.d")
 ;;; Append my own Emacs Lisp library directories to the load-path variable.
 (mapcar (lambda (path) ; Prefix @PATH with user-emacs-directory.
 		  (funcall #'cppimmo/append-to-load-path path t))
@@ -74,15 +77,17 @@ USE-DOT-EMACS Prefix PATH with user-emacs-directory when true."
 
 ;;; PACKAGE SYSTEM SETUP ========================================================
 
-(defun cppimmo/internet-connection-p (&optional host)
+(defun cppimmo/internet-connection-p (&optional urls)
   "Test if an internet connection is available.
-HOST Host string argument to ping command."
-  (unless (or (stringp host) (eq host nil))
-    (error "HOST must be a string."))
-  (= 0 (call-process "ping" nil nil nil "-c" "1" "-W" "1"
-		   (if host
-		       host
-		     "www.google.com"))))
+URLS List of URL strings (set to package-archives by default)."
+  (unless urls (setq urls (mapcar 'cdr package-archives))) ; Use second element of pair
+  (catch 'ret
+    (dolist (url urls)
+      (condition-case var
+		  ;; kill-buffer silences output of url-retrieve-synchronously function
+		  (kill-buffer (url-retrieve-synchronously url))
+		(error (throw 'ret nil)))) ; Return nil if url cannot be retrieved
+    t)) ; Return true if URLs were retrieved successfully
 
 ;;; Try to silence GPG errors on Windows.
 (cppimmo/when-system 'windows
@@ -92,8 +97,8 @@ HOST Host string argument to ping command."
   (add-to-list 'package-archives '(name . link) t))
 
 ;;; Define and initialise package repositories.
+;;; GNU and NONGNU in list by default.
 (require 'package)
-(add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/") t)
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
 (package-initialize)
 
@@ -101,9 +106,10 @@ HOST Host string argument to ping command."
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
   (package-install 'use-package))
-(require 'use-package)
+
 (eval-and-compile
-  (when (cppimmo/internet-connection-p "slackware.com")
+  (require 'use-package)
+  (when (cppimmo/internet-connection-p)
     (setq use-package-always-ensure t))
   (setq use-package-expand-minimally t))
 
@@ -142,7 +148,7 @@ HOST Host string argument to ping command."
 ;;;			)))))
 
 (progn
-  (setq inhibit-startup-message t
+  (setq inhibit-startup-message nil
 		initial-scratch-message (concat "Welcome, " (capitalize user-login-name) "!"))
   
   (add-to-list 'custom-theme-load-path "~/.emacs.d/cppimmo-themes/") ; Set theme load path.
@@ -630,23 +636,32 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
 		bookmark-default-file "~/.emacs.d/bookmarks"))
   
 ;;; css-mode
-(defun cppimmo/css-mode-hook ()
-  "My css-mode hook."
-  (setq-local css-indent-offset 2))
-(add-hook 'css-mode-hook #'cppimmo/css-mode-hook)
+(use-package css-mode
+  :config
+  (defun cppimmo/css-mode-hook ()
+	"My css-mode hook."
+	(setq-local css-indent-offset 2))
+  (add-hook 'css-mode-hook #'cppimmo/css-mode-hook))
 
 ;;; rst-mode
-(defun cppimmo/rst-mode-hook ()
-  "My rst-mode hook."
-  (setq-local fill-column 80)
-  (auto-fill-mode t))
-(add-hook 'rst-mode-hook #'cppimmo/rst-mode-hook)
+(use-package rst
+  :config
+  (defun cppimmo/rst-mode-hook ()
+	"My rst-mode hook."
+	(setq-local fill-column 80)
+	(auto-fill-mode t))
+  (add-hook 'rst-mode-hook #'cppimmo/rst-mode-hook))
 
-;;; Dairy.
-(setq european-calendar-style nil)
+;;; Diary.
+;;(use-package calender
+;;  :config
+;;  (setq european-calendar-style nil))
 
 ;;; sql-mode
-(setq sql-product 'mysql) ; Default SQL interpreter.
+;;(use-package sql
+;;  :ensure nil
+;;  :config
+;;  (setq sql-product 'mysql)) ; Default SQL interpreter.
 
 ;;; LOAD KEYBINDINGS ============================================================
 (load "cppimmo-keybindings")
