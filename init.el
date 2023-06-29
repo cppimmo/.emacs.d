@@ -500,45 +500,37 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
 ;;; Install and configure naysayer.
 (use-package naysayer-theme)
 
-;;; Install and configure smart-mode-line & smart-mode-line-powerline-theme
-;;(progn
-;;  (use-package smart-mode-line
-;;	:ensure t
-;;	:config
-;;	(setq sml/no-confirm-load-theme t))
-  ;;(use-package smart-mode-line-powerline-theme
-  ;;:ensure t
-  ;;:config
-  ;;(setq powerline-arrow-shape 'curve
-  ;;	  powerline-default-separator-dir '(right . left)
-  ;;	  sml/theme 'powerline))
-  ;; Finally call sml/setup
-;;  (sml/setup))
-
 ;;; Use M-x nerd-icons-install-fonts to setup fonts
 (use-package nerd-icons
   :custom (nerd-icons-font-family "Symbols Nerd Font Mono"))
 
+;;; Display nerd-icons within dired mode
 (use-package nerd-icons-dired
   :hook (dired-mode . nerd-icons-dired-mode))
 
+;;; Customized modeline used in Doom Emacs
 (use-package doom-modeline
   :ensure t
   :init (doom-modeline-mode 1))
 
+;;; Autocomplete for C/C++ stdlib headers
 (use-package company-c-headers
   :config (add-to-list 'company-backends 'company-c-headers))
 
+;;; vtermlib for LINUX
 (cppimmo/when-system 'linux
   (use-package vterm
 	:ensure t))
 
+;;; Interactive REPL for PHP
 (use-package psysh)
 
 (use-package php-eldoc)
 
+;;; Major mode for viewing logs
 (use-package logview)
 
+;;; Configure emoji display
 (use-package emojify
   :config
   (set-fontset-font
@@ -556,6 +548,16 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
 		emojify-emoji-styles '(unicode))
   ;; Binding for inserting unicode emoji (binding similar to insert-char):
   (bind-key* (kbd "C-x 8 C-<return>") #'emojify-insert-emoji))
+
+;;; Major mode for GDScript used by the Godot game engine
+(use-package gdscript-mode
+  :config
+  (progn
+	(setq gdscript-use-tab-indents t
+		  gdscript-indent-offset 4
+		  gdscript-gdformat-save-and-format t)
+	(cppimmo/when-system 'windows
+	  (setq gdscript-godot-executable "godot.exe"))))
 
 ;;; BUILT-IN MODE CONFIGURATION =================================================
 
@@ -637,6 +639,7 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
   
 ;;; css-mode
 (use-package css-mode
+  :ensure nil
   :config
   (defun cppimmo/css-mode-hook ()
 	"My css-mode hook."
@@ -645,6 +648,7 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
 
 ;;; rst-mode
 (use-package rst
+  :ensure nil
   :config
   (defun cppimmo/rst-mode-hook ()
 	"My rst-mode hook."
