@@ -53,3 +53,9 @@ org-journal/**
 
 # Some logview file
 logview-cache.extmap
+
+# Circe login stuff
+.authinfo.gpg
+
+# Circe IRC logs
+.lui-logs/

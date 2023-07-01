@@ -559,6 +559,70 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
 	(cppimmo/when-system 'windows
 	  (setq gdscript-godot-executable "godot.exe"))))
 
+;;; Circe IRC
+(use-package circe
+  :config
+  (progn
+	;; Create .authinfo file and enter the following:
+	;; machine irc.libera.chat login yournick password password port 6667
+	;; To encrypt enter the following command:
+	;; gpg -e r myemail@email.com .authinfo
+	(setq auth-sources '("~/.emacs.d/.authinfo.gpg"))
+	
+	(defun cppimmo/circe-fetch-password (&rest params)
+	  (require 'auth-source)
+	  (let ((match (car (apply 'auth-source-search params))))
+		(if match
+			(let ((secret (plist-get match :secret)))
+			  (if (functionp secret)
+				  (funcall secret)
+				secret))
+		  (error "Password not found for %S" params))))
+	
+	(defun cppimmo/circe-nickserv-password (server)
+	  (cppimmo/circe-fetch-password :max 1 :user "cppimmo" :host "irc.libera.chat" :port 6667))
+	
+	(setq lui-logging-directory "~/.emacs.d/.lui-logs/"
+		  circe-format-self-say "<{nick}> {body}"
+		  circe-network-options
+		  `(("Libera Chat"
+			 :logging t
+			 :nick "cppimmo"
+			 :channels (:after-auth "##slackware"
+									"##slackware-help"
+									"##slackware-offtopic"
+									"#slackbuilds"
+									"#msb"
+									"#sbopkg"
+									"#slackdocs"
+									"#freebsd-irc"
+									"#emacs")
+			 :nickserv-password cppimmo/circe-nickserv-password))))
+
+  (add-hook 'circe-chat-mode-hook #'cppimmo/circe-prompt)
+  (defun cppimmo/circe-prompt ()
+	(lui-set-prompt
+	 (concat (propertize (concat (buffer-name) ">")
+						 'face 'circe-prompt-face)
+			 " ")))
+
+  (defun cppimmo/irc-network-connected-p (network)
+	"Return non-nil if there's any Circe server-buffer whose
+`circe-server-netwok' is NETWORK."
+	(catch 'return
+      (dolist (buffer (circe-server-buffers))
+		(with-current-buffer buffer
+          (if (string= network circe-server-network)
+              (throw 'return t))))))
+
+  (defun cppimmo/irc-connect (network)
+	"Connect to NETWORK, but ask user for confirmation if it's
+already been connected to."
+	(interactive "sNetwork: ")
+	(if (or (not (circe-network-connected-p network))
+			(y-or-n-p (format "Already connected to %s, reconnect?" network)))
+		(circe network))))
+	
 ;;; BUILT-IN MODE CONFIGURATION =================================================
 
 (use-package ispell
@@ -604,25 +668,6 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
 	(interactive)
 	(find-file-other-frame (dired-get-file-for-visit))))
 
-(use-package erc
-  :ensure nil
-  :config
-  ;; ERC.
-  ;; Set the ERC log directory. (C-c C-l)
-  (setq erc-server "irc.libera.chat"
-		erc-nick "cppimmo"
-		erc-user-full-name ""
-		erc-track-shorten-start 8
-		erc-autojoin-channels-alist '(("irc.libera.chat" "##slackware"))
-		erc-kill-buffer-on-part t
-		erc-auto-query 'bury
-		erc-log-channels-directory "~/.emacs.d/erc-log")
-  
-  (defun cppimmo/launch-erc ()
-	""
-	(interactive)
-	(erc-tls :port 6697)))
-
 (use-package abbrev
   :ensure nil
   :config
@@ -666,6 +711,12 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
 ;;  :ensure nil
 ;;  :config
 ;;  (setq sql-product 'mysql)) ; Default SQL interpreter.
+
+;; Shell script mode
+(use-package sh-script
+  :config
+  (progn
+	(setq sh-indentation 2)))
 
 ;;; LOAD KEYBINDINGS ============================================================
 (load "cppimmo-keybindings")
