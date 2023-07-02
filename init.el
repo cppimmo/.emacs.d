@@ -34,15 +34,32 @@
   (load custom-file))
 
 ;;; System type control structure macro.  Use macroexpand to test.
-(defmacro cppimmo/when-system (sys-symbol &rest body)
-  "Control structure macro execute BODY when current system is equal to SYS-SYMBOL."
+(defmacro cppimmo/when-system (sys-symbols &rest body)
+  "Control structure macro executes BODY when current system is one
+of SYS-SYMBOLS.
+SYS-SYMBOLS Can be a single symbol or list of symbols.
+
+Example call with all possible SYS-SYSMBOLS:
+(cppimmo/when-system '(windows linux bsd macos) ...)"
   (declare (indent 1) (debug ((symbolp form &optional form) body)))
-  `(when (cond
-		  ((eq ,sys-symbol 'windows) (string-equal system-type "windows-nt"))
-		  ((eq ,sys-symbol 'linux) (string-equal system-type "gnu/linux"))
-		  ((eq ,sys-symbol 'bsd) (string-equal system-type "berkley-unix"))
-		  ((eq ,sys-symbol 'macos) (string-equal system-type "darwin")))
-	 (progn ,@body)))
+  `(progn
+	 (let* ((eval-symbols ,sys-symbols) ; Store evaluated macro argument
+			(symbols eval-symbols)) ; Store evaluated macro argument in symbols list
+	   ;; Convert single symbol to list if needed
+	   (unless (listp eval-symbols)
+		 (setq symbols (list eval-symbols)))
+	   ;; Build up result of applying logical OR to each symbol in the SYMBOLS list
+	   (when (seq-reduce
+			  #'(lambda (a b) (or a b))
+			  (mapcar (lambda (sym) ; This lambda relates a symbol to the corresponding SYSTEM-TYPE
+						(cond
+						 ((eq sym 'windows) (string-equal system-type "windows-nt"))
+						 ((eq sym 'linux) (string-equal system-type "gnu/linux"))
+						 ((eq sym 'bsd) (string-equal system-type "berkley-unix"))
+						 ((eq sym 'macos) (string-equal system-type "darwin"))))
+					  symbols)
+			  nil) ; Supplying nil as the INITIAL-VALUE ensures the correct behavior
+		 (progn ,@body)))))
 
 (defun cppimmo/append-to-load-path (path &optional use-dot-emacs-p)
   "Append PATH string to the load-path variable.
@@ -149,7 +166,7 @@ URLS List of URL strings (set to package-archives by default)."
 
 (progn
   (setq inhibit-startup-message nil
-		initial-scratch-message (concat "Welcome, " (capitalize user-login-name) "!"))
+		initial-scratch-message (concat "Welcome, " (capitalize (user-login-name)) "!"))
   
   (add-to-list 'custom-theme-load-path "~/.emacs.d/cppimmo-themes/") ; Set theme load path.
   ;; Set the theme (if custom).
@@ -166,7 +183,7 @@ URLS List of URL strings (set to package-archives by default)."
   (global-font-lock-mode t) ; Ensure syntax highlighting is always enabled.
   (setq font-lock-maximum-decoration t) ; Max font decor.
   ;; Set the frame title format.
-  (setq frame-title-format '("GNU Emacs - %b | " user-login-name "@" system-name))
+  (setq frame-title-format '("GNU Emacs - %b | " (user-login-name) "@" (system-name)))
   (tool-bar-mode -1) ; Disable icon tool bar.
   (column-number-mode t) ; Always show line cursor position in the modeline.
   (when (version<= "28.1" emacs-version)
@@ -518,9 +535,43 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
   :config (add-to-list 'company-backends 'company-c-headers))
 
 ;;; vtermlib for LINUX
-(cppimmo/when-system 'linux
+(cppimmo/when-system '(linux macos bsd)
   (use-package vterm
-	:ensure t))
+	:ensure t
+	:config
+	(progn
+	  (defun cppimmo/pathname-contains-home-p (path)
+		"Predicate check if PATH is proceeded by the operating...
+system's home directory."
+		(string-match (concat
+					   ;; Eval args until one of the yields non-nil, then return that value.
+					   (or (cppimmo/when-system 'linux "/home/")
+						   ;; Actually don't need windows lol
+						   (cppimmo/when-system 'windows "C:/Users/"))
+					   (user-login-name))
+					  default-directory))
+	  (defun cppimmo/pathname-prettify-home (path)
+		(let ((start-idx (cppimmo/pathname-contains-home-p path))
+			  (end-idx (match-end 0)))
+		  (if (not (null start-idx))
+			  (concat "~/" (substring path (+ end-idx 1)))
+			path)))
+	  ;; This avoids doing any shell-side configuration.
+	  (defun cppimmo/vterm ()
+		"Command to launch a new vterm buffer.
+The buffer will be renamed automatically with the buffer local directory."
+		(interactive)
+		(with-current-buffer (vterm) ; vterm returns the buffer
+		  (rename-buffer
+		   (concat "*" (user-login-name) "@" (system-name) ":"
+				   ;; Append 
+				   (let ((result (cppimmo/pathname-prettify-home default-directory)))
+					 (if (string= (substring result -1) "/") ; Negative substring idx's count backwards
+						 result
+					   (concat result "/")))
+				   "*"))
+		  (rename-uniquely))))
+	 (bind-key* (kbd "C-c C-v") #'cppimmo/vterm)))
 
 ;;; Interactive REPL for PHP
 (use-package psysh)
