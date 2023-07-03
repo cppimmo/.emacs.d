@@ -59,3 +59,5 @@ logview-cache.extmap
 
 # Circe IRC logs
 .lui-logs/
+
+/tramp

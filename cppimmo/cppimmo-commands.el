@@ -142,7 +142,7 @@ DAY-THEME and NIGHT-THEME."
 (defun cppimmo/find-file-sudo (filename)
   "Edit file @FILE-NAME as the super user."
   (interactive "FFind file (sudo): ")
-  (when (cppimmo/system-windows-p)
+  (cppimmo/when-system 'windows
 	("Error this command is not applicable to Windows systems."))
   (let ((tramp-file-name
 		 (concat "/sudo::" (expand-file-name filename))))

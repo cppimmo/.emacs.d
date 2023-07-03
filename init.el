@@ -129,7 +129,6 @@ URLS List of URL strings (set to package-archives by default)."
   (when (cppimmo/internet-connection-p)
     (setq use-package-always-ensure t))
   (setq use-package-expand-minimally t))
-
 ;;(use-package gnu-elpa-keyring-update)
 
 ;;; BASIC STARTUP STUFF =========================================================
@@ -169,21 +168,15 @@ URLS List of URL strings (set to package-archives by default)."
 		initial-scratch-message (concat "Welcome, " (capitalize (user-login-name)) "!"))
   
   (add-to-list 'custom-theme-load-path "~/.emacs.d/cppimmo-themes/") ; Set theme load path.
-  ;; Set the theme (if custom).
-  (load-theme 'doom-monokai-classic t) ; 'cppimmo-bright-ink
-
-  ;; Extra highlighting for programming modes.
-  (add-hook 'prog-mode-hook #'highlight-numbers-mode)
-  (add-hook 'prog-mode-hook #'highlight-parentheses-mode)
-  (add-hook 'prog-mode-hook #'show-paren-mode)
-  (add-hook 'minibuffer-setup-hook #'highlight-parentheses-minibuffer-setup)
-
+  ;;(load-theme 'cppimmo-bright-ink t) ; Set the theme (if custom).
+  (add-hook 'prog-mode-hook #'show-paren-mode) ; Extra highlighting for programming modes.
   (setq cursor-type 'bar) ; Set the cursor type.
-  
   (global-font-lock-mode t) ; Ensure syntax highlighting is always enabled.
   (setq font-lock-maximum-decoration t) ; Max font decor.
-  ;; Set the frame title format.
-  (setq frame-title-format '("GNU Emacs - %b | " (user-login-name) "@" (system-name)))
+
+  ;; Set the frame title format (using backtick which produces list and comma operator to eval)
+  (setq frame-title-format `("GNU Emacs - %b | " ,(user-login-name) "@" ,(system-name)))
+  
   (tool-bar-mode -1) ; Disable icon tool bar.
   (column-number-mode t) ; Always show line cursor position in the modeline.
   (when (version<= "28.1" emacs-version)
@@ -195,36 +188,58 @@ URLS List of URL strings (set to package-archives by default)."
 			 (not (string-match "N/A" (battery))))
 	;; Example of battery output: "Power on-line, battery N/A (N/A% load, remaining time N/A)"
 	(display-battery-mode t))
+  
   (when (version<= "26.0.50" emacs-version)
 	(global-display-line-numbers-mode t)) ; Enable line number bar globally.
   (when (version<= "24.4" emacs-version)
 	(global-visual-line-mode t) ; Enable visual line mode globally.
 	(setq visual-line-fringe-indicators
 		  '(left-curly-arrow right-curly-arrow))) ; Set the visual line fringe indicators.
+
   (cppimmo/when-system 'windows
 	(cppimmo/configure-frame-size 90 34))
   ) ; End of user interface settings.
 
-;;; Backup configuration.
-(defun cppimmo/make-backup-file-name (file-path)
-  "This function from Xah Lee creates new directories for backups.
-It creates directories that do not exist in the backup root.
-Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
-  (let (backup-root backup-file-path) ; let* could be used here, but it would be ugly.
-	(setq backup-root "~/.emacs.d/backup/")
-	;; This format remove the Windows drive letter.
-	(setq backup-file-path
-		  (format "%s%s~" backup-root
-				  (replace-regexp-in-string "^[A-Za-z]:/" "" file-path)))
-	(make-directory
-	 (file-name-directory backup-file-path)
-	 (file-name-directory backup-file-path))
-	backup-file-path)) ; Return backup-file-path string.
-
+;;; File backup & saving configuration
 (progn
-  (setq make-backup-files t) ; Make sure backups are enabled.
-  ;; Set the backup file name function
-  (setq make-backup-file-name-function 'cppimmo/make-backup-file-name))
+  (defun cppimmo/make-backup-file-name (file-path)
+	"This function from Xah Lee creates new directories for backups.
+It creates directories that do not exist in the backup root.
+Other methods of backup can easily exceed the MAX_PATH of POSIX-esque systems."
+	(let (backup-root backup-file-path) ; let* could be used here, but it would be ugly.
+	  (setq backup-root "~/.emacs.d/backup/")
+	  ;; This format remove the Windows drive letter.
+	  (setq backup-file-path
+			(format "%s%s~" backup-root
+					(replace-regexp-in-string "^[A-Za-z]:/" "" file-path)))
+	  (make-directory
+	   (file-name-directory backup-file-path)
+	   (file-name-directory backup-file-path))
+	  backup-file-path)) ; Return backup-file-path string.
+ 
+  (setq make-backup-files t ; Make sure backups are enabled.
+		make-backup-file-name-function 'cppimmo/make-backup-file-name) ; Set the backup file name function
+
+  ;; Preserve creation date on Windows (irrelevant on UNIX-like systems).
+  (cppimmo/when-system 'windows
+	(setq backup-by-copying t))
+  ;; (setq create-lockfiles nil)
+
+  ;; Remember the cursor position in previously visited files.
+  (if (version< emacs-version "25.0")
+	  (progn
+		(require 'saveplace)
+		(setq-default save-place t))
+	(save-place-mode 1))
+  
+  (setq auto-save-default nil) ; I save impulsively, so disabling this is fine.
+
+  ;; I'm unsure if I should use this option, due to my use of cloud syncing clients
+  ;; such as MEGA.  The file may be modified by MEGA and I could lose my work.
+  ;; Although, this may be a moot concern.  Nevertheless, I will leave it incase I
+  ;; believe I can use it in the future.
+  ;; (global-auto-revert-mode 1) ; Reload buffer upon file modification.
+  ) 
 
 ;;; Miscellaneous
 (progn
@@ -239,13 +254,6 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
   (setq shift-select-mode t) ; I want to have select with shift + movement keys.
   (setq line-move-visual t)
   
-  ;; Remember the cursor position in previously visited files.
-  (if (version< emacs-version "25.0")
-	  (progn
-		(require 'saveplace)
-		(setq-default save-place t))
-	(save-place-mode 1))
-  
   ;; Set the fill column in auto fill mode.
   (add-hook 'text-mode-hook
 			(lambda ()
@@ -257,18 +265,6 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
   (setq set-mark-command-repeat-pop nil) ; Disable mark popping (ex: C-u C-SPC).
   (setq mark-ring-max 10) ; 10 yanks limit.
   (setq global-mark-ring-max 10) ; 10 yanks limit.
-  
-  ;; Preserve creation date on Windows (irrelevant on UNIX-like systems).
-  (cppimmo/when-system 'windows
-	(setq backup-by-copying t))
-  ;; (setq create-lockfiles nil)
-  (setq auto-save-default nil) ; I save impulsively, so disabling this is fine.
-
-  ;; I'm unsure if I should use this option, due to my use of cloud syncing clients
-  ;; such as MEGA.  The file may be modified by MEGA and I could lose my work.
-  ;; Although, this may be a moot concern.  Nevertheless, I will leave it incase I
-  ;; believe I can use it in the future.
-  ;; (global-auto-revert-mode 1) ; Reload buffer upon file modification.
   
   ;; Enable disabled features.
   (progn
@@ -292,9 +288,16 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
 ;;; PACKAGE CONFIGURATION - MY STUFF ============================================
 
 ;;; Configure cppimmo/count-words-mode
-(defun cppimmo/my-count-words-mode-hook ()
-  (setq *cppimmo/count-words-use-header-line* nil))
-(add-hook 'cppimmo/count-words-mode-hook #'cppimmo/my-count-words-mode-hook) ; Add custom hook
+;;et ((use-package-ensure-elpa nil))
+;;se-package cppimmo-count-words-mode
+;;:ensure nil
+;;:load-path "~/.emacs.d/cppimmo/cppimmo-count-words-mode.el"
+;;:config
+  (progn
+	(defun cppimmo/my-count-words-mode-hook ()
+	  (setq *cppimmo/count-words-use-header-line* nil))
+	(add-hook 'cppimmo/count-words-mode-hook #'cppimmo/my-count-words-mode-hook))
+;; ; Add custom hook
 
 ;;; Enable delim face mode
 (cppimmo/global-delim-face-mode 1)
@@ -354,8 +357,11 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
 (use-package 2048-game)
 
 ;;; Install the doom-themes packages and set the theme.
-(use-package doom-themes)
-;;:config (load-theme 'doom-1337 t))
+(use-package doom-themes
+  :config
+  (progn
+    ;;(load-theme 'doom-1337 t))
+    (load-theme 'doom-monokai-classic t)))
 
 ;;; Install and configure SLIME.
 (use-package slime
@@ -377,11 +383,16 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX systems."
 
 ;;; Install and configure highlight numbers.
 (use-package highlight-numbers
-  :ensure t)
+  :ensure t
+  :config
+  (add-hook 'prog-mode-hook #'highlight-numbers-mode))
 
 ;;; Install and configure highlight parentheses.
 (use-package highlight-parentheses
-  :ensure t)
+  :ensure t
+  :config
+  (add-hook 'prog-mode-hook #'highlight-parentheses-mode)
+  (add-hook 'minibuffer-setup-hook #'highlight-parentheses-minibuffer-setup))
 
 ;;; Install and configure elfeed.
 (use-package elfeed
