@@ -143,9 +143,9 @@ DAY-THEME and NIGHT-THEME."
   "Edit file @FILE-NAME as the super user."
   (interactive "FFind file (sudo): ")
   (cppimmo/when-system 'windows
-	("Error this command is not applicable to Windows systems."))
-  (let ((tramp-file-name
-		 (concat "/sudo::" (expand-file-name filename))))
+	(error "Error this command is not applicable to Windows systems."))
+  (let ((tramp-file-name (concat "/sudo::"
+								 (expand-file-name filename))))
 	(find-file tramp-file-name)))
 
 (defun cppimmo/zoom-all-buffers (&rest args)
