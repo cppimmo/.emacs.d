@@ -184,3 +184,12 @@ ARGS Property list; set :INCREASE, :DECREASE, or :RESET to T"
   "Untabify entire buffer."
   (interactive)
   (untabify (point-min) (point-max)))
+
+(defun cppimmo/empty-trash ()
+  "Empty the current user's recycle bin."
+  (interactive)
+  (cppimmo/when-system 'windows
+	(shell-command (format "powershell -Command {Clear-RecycleBin -Force}")))
+  (cppimmo/when-system 'linux
+	nil))
+
