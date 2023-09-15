@@ -75,22 +75,28 @@ USE-DOT-EMACS Prefix PATH with user-emacs-directory when true."
 					 (concat user-emacs-directory path)
 				   ;; No user-emacs-directory prefix.
 				   path)))))
-;;; Conditionally append dot emacs dir to load path (this code should probably be removed).
-;;(let ((dot-emacs-path "~/.emacs.d"))
-;;  (unless (seq-contains-p load-path dot-emacs-path #'string-equal)
-;; 	(cppimmo/append-to-load-path dot-emacs-path)))
+
+(defun cppimmo/load-directory (path)
+  "Load the Emacs Lisp source/binary files located in PATH."
+  (message "Loading elisp files in %s" path)
+  (let* ((elisp-pattern "\\(\\.el\\|\\.elc\\)$") ; Pattern for elisp file extensions
+		 (abs-path-p t) ; Use absolute path
+		 (elisp-files (directory-files path abs-path-p elisp-pattern)))
+	(dolist (file elisp-files)
+	  (message "Loading elisp file: %s" file)
+	  (load file))))
 
 ;;; Append my own Emacs Lisp library directories to the load-path variable.
 (mapcar (lambda (path) ; Prefix @PATH with user-emacs-directory.
 		  (funcall #'cppimmo/append-to-load-path path t))
 		(list "cppimmo" "addons"))
+
 ;;; Load library files.
-(load "cppimmo-dvorak")
-(load "cppimmo-xml")
 (load "cppimmo-count-words-mode")
 (load "cppimmo-delim-face-mode")
 (load "cppimmo-cl-face")
 (load "cppimmo-commands")
+;;(cppimmo/load-directory "~/.emacs.d/cppimmo/")
 
 ;;; PACKAGE SYSTEM SETUP ========================================================
 
@@ -399,11 +405,11 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX-esque systems."
   :ensure t
   :config
   (progn
-	(load "~/.emacs.d/cppimmo/cppimmo-feeds-pub.el")
-	;; Load private feed file if it exists and append items to list.
-	(let ((feed-file-priv "~/.emacs.d/cppimmo/cppimmo-feeds-priv.el"))
-	  (when (file-exists-p feed-file-priv)
-		(load feed-file-priv)))))
+    (load "~/.emacs.d/cppimmo/cppimmo-feeds-pub.el")
+    ;; Load private feed file if it exists and append items to list.
+    (let ((feed-file-priv "~/.emacs.d/cppimmo/cppimmo-feeds-priv.el"))
+      (when (file-exists-p feed-file-priv)
+	(load feed-file-priv)))))
 
 ;;; Install and configure ement.
 ;;(use-package ement)
@@ -743,7 +749,18 @@ already been connected to."
   (setq bookmark-save-flag 1 ; Save bookmark file after one modification.
 		;; Ensure bookmark file default doesn't change.
 		bookmark-default-file "~/.emacs.d/bookmarks"))
-  
+
+(use-package nxml-mode
+  :ensure nil
+  :config
+  (defun cppimmo/xml-insert-cdata ()
+	"Insert CDATA tags for XML documents.
+Moves the point back 3 characters for immediate editing."
+	(interactive)
+	(let ((left-side "<![CDATA[") (right-side "]]>"))
+	  (insert left-side right-side)
+	  (backward-char (length right-side)))))
+
 ;;; css-mode
 (use-package css-mode
   :ensure nil
