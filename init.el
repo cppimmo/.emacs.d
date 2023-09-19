@@ -29,18 +29,19 @@
 ;;;;
 
 ;;; Define the customize options file. System & configuration dependent.
-(setq  custom-file (expand-file-name "custom.el" user-emacs-directory))
-(when (file-exists-p custom-file)
-  (load custom-file))
+(progn
+  (setq  custom-file (expand-file-name "custom.el" user-emacs-directory))
+  (when (file-exists-p custom-file)
+	(load custom-file)))
 
 ;;; System type control structure macro.  Use macroexpand to test.
-(defmacro cppimmo/when-system (sys-symbols &rest body)
+(defmacro cppimmo:when-system (sys-symbols &rest body)
   "Control structure macro executes BODY when current system is one
 of SYS-SYMBOLS.
 SYS-SYMBOLS Can be a single symbol or list of symbols.
 
 Example call with all possible SYS-SYSMBOLS:
-(cppimmo/when-system '(windows linux bsd macos) ...)"
+(cppimmo:when-system '(windows linux bsd macos) ...)"
   (declare (indent 1) (debug ((symbolp form &optional form) body)))
   `(progn
 	 (let* ((eval-symbols ,sys-symbols) ; Store evaluated macro argument
@@ -61,7 +62,7 @@ Example call with all possible SYS-SYSMBOLS:
 			  nil) ; Supplying nil as the INITIAL-VALUE ensures the correct behavior
 		 (progn ,@body)))))
 
-(defun cppimmo/append-to-load-path (path &optional use-dot-emacs-p)
+(defun cppimmo:append-to-load-path (path &optional use-dot-emacs-p)
   "Append PATH string to the load-path variable.
 PATH Path string to append.
 USE-DOT-EMACS Prefix PATH with user-emacs-directory when true."
@@ -76,7 +77,7 @@ USE-DOT-EMACS Prefix PATH with user-emacs-directory when true."
 				   ;; No user-emacs-directory prefix.
 				   path)))))
 
-(defun cppimmo/load-directory (path)
+(defun cppimmo:load-directory (path)
   "Load the Emacs Lisp source/binary files located in PATH."
   (message "Loading elisp files in %s" path)
   (let* ((elisp-pattern "\\(\\.el\\|\\.elc\\)$") ; Pattern for elisp file extensions
@@ -86,21 +87,9 @@ USE-DOT-EMACS Prefix PATH with user-emacs-directory when true."
 	  (message "Loading elisp file: %s" file)
 	  (load file))))
 
-;;; Append my own Emacs Lisp library directories to the load-path variable.
-(mapcar (lambda (path) ; Prefix @PATH with user-emacs-directory.
-		  (funcall #'cppimmo/append-to-load-path path t))
-		(list "cppimmo" "addons"))
-
-;;; Load library files.
-(load "cppimmo-count-words-mode")
-(load "cppimmo-delim-face-mode")
-(load "cppimmo-cl-face")
-(load "cppimmo-commands")
-;;(cppimmo/load-directory "~/.emacs.d/cppimmo/")
-
 ;;; PACKAGE SYSTEM SETUP ========================================================
 
-(defun cppimmo/internet-connection-p (&optional urls)
+(defun cppimmo:internet-connection-p (&optional urls)
   "Test if an internet connection is available.
 URLS List of URL strings (set to package-archives by default)."
   (unless urls (setq urls (mapcar 'cdr package-archives))) ; Use second element of pair
@@ -113,10 +102,10 @@ URLS List of URL strings (set to package-archives by default)."
     t)) ; Return true if URLs were retrieved successfully
 
 ;;; Try to silence GPG errors on Windows.
-(cppimmo/when-system 'windows
+(cppimmo:when-system 'windows
   (setq package-check-signature nil))
 
-(defun cppimmo/add-to-package-archives (name link)
+(defun cppimmo:add-to-package-archives (name link)
   (add-to-list 'package-archives '(name . link) t))
 
 ;;; Define and initialise package repositories.
@@ -132,25 +121,43 @@ URLS List of URL strings (set to package-archives by default)."
 
 (eval-and-compile
   (require 'use-package)
-  (when (cppimmo/internet-connection-p)
+  (when (cppimmo:internet-connection-p)
     (setq use-package-always-ensure t))
   (setq use-package-expand-minimally t))
 ;;(use-package gnu-elpa-keyring-update)
 
+;;; NECESSARY STARTUP PACKAGES ==================================================
+
+;;; Namespace utility
+(use-package names)
+
 ;;; BASIC STARTUP STUFF =========================================================
+;;; Append my own Emacs Lisp library directories to the load-path variable.
+
+(mapcar (lambda (path) ; Prefix PATH with user-emacs-directory.
+		  (funcall #'cppimmo:append-to-load-path path t))
+		(list "cppimmo" "addons"))
+
+;;; Load library files.
+(load "cppimmo-count-words-mode")
+(load "cppimmo-delim-face-mode")
+(load "cppimmo-cl-face")
+(load "cppimmo-commands")
+;;(cppimmo:load-directory "~/.emacs.d/cppimmo/")
+
 (progn
   (require 'subr-x)
-  (cppimmo/when-system 'windows
+  (cppimmo:when-system 'windows
 	(setq user-full-name (getenv "USERNAME"))))
 
 ;;; User Iterface
-(defun cppimmo/configure-frame-size (width height)
+(defun cppimmo:configure-frame-size (width height)
   "Set the initial frame size for floating window managers.
 @WIDTH the desired character width of the frame.
 @HEIGHT the desired character height of the frame."
   (when window-system (set-frame-size (selected-frame) width height)))
 
-;;;(defun cppimmo/cycle-custom-themes ()
+;;;(defun cppimmo:cycle-custom-themes ()
 ;;;  "Cycle through the known custom themes."
 ;;;  (interactive)
 ;;;  (let (($known-themes)
@@ -202,13 +209,13 @@ URLS List of URL strings (set to package-archives by default)."
 	(setq visual-line-fringe-indicators
 		  '(left-curly-arrow right-curly-arrow))) ; Set the visual line fringe indicators.
 
-  (cppimmo/when-system 'windows
-	(cppimmo/configure-frame-size 90 34))
+  (cppimmo:when-system 'windows
+	(cppimmo:configure-frame-size 90 34))
   ) ; End of user interface settings.
 
 ;;; File backup & saving configuration
 (progn
-  (defun cppimmo/make-backup-file-name (file-path)
+  (defun cppimmo:make-backup-file-name (file-path)
 	"This function from Xah Lee creates new directories for backups.
 It creates directories that do not exist in the backup root.
 Other methods of backup can easily exceed the MAX_PATH of POSIX-esque systems."
@@ -224,10 +231,10 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX-esque systems."
 	  backup-file-path)) ; Return backup-file-path string.
  
   (setq make-backup-files t ; Make sure backups are enabled.
-		make-backup-file-name-function 'cppimmo/make-backup-file-name) ; Set the backup file name function
+		make-backup-file-name-function 'cppimmo:make-backup-file-name) ; Set the backup file name function
 
   ;; Preserve creation date on Windows (irrelevant on UNIX-like systems).
-  (cppimmo/when-system 'windows
+  (cppimmo:when-system 'windows
 	(setq backup-by-copying t))
   ;; (setq create-lockfiles nil)
 
@@ -260,12 +267,6 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX-esque systems."
   (setq shift-select-mode t) ; I want to have select with shift + movement keys.
   (setq line-move-visual t)
   
-  ;; Set the fill column in auto fill mode.
-  (add-hook 'text-mode-hook
-			(lambda ()
-			  ;; (turn-on-auto-fill) ; Keep as reference.
-			  (set-fill-column 80)))
-  
   (delete-selection-mode t) ; Enable overwriting of marked region.
   ;; (global-superword-mode t) ; Treat snake_case, etc. as a single word.
   (setq set-mark-command-repeat-pop nil) ; Disable mark popping (ex: C-u C-SPC).
@@ -293,20 +294,20 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX-esque systems."
 
 ;;; PACKAGE CONFIGURATION - MY STUFF ============================================
 
-;;; Configure cppimmo/count-words-mode
+;;; Configure cppimmo:count-words-mode
 ;;et ((use-package-ensure-elpa nil))
 ;;se-package cppimmo-count-words-mode
 ;;:ensure nil
 ;;:load-path "~/.emacs.d/cppimmo/cppimmo-count-words-mode.el"
 ;;:config
-  (progn
-	(defun cppimmo/my-count-words-mode-hook ()
-	  (setq *cppimmo/count-words-use-header-line* nil))
-	(add-hook 'cppimmo/count-words-mode-hook #'cppimmo/my-count-words-mode-hook))
+(progn
+  (defun cppimmo:my-count-words-mode-hook ()
+	(setq *cppimmo:count-words-use-header-line* nil))
+  (add-hook 'cppimmo:count-words-mode-hook #'cppimmo:my-count-words-mode-hook))
 ;; ; Add custom hook
 
 ;;; Enable delim face mode
-(cppimmo/global-delim-face-mode 1)
+(cppimmo:global-delim-face-mode 1)
 
 ;;; PACKAGE CONFIGURATION - REPOS ===============================================
 ;;; Settings for fill column indicator package. Toggle with "fci-mode".
@@ -326,11 +327,11 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX-esque systems."
 		  "~/.emacs.d/audio/beacon-alarm.wav") ; Work time alert.
 	(setq pomodoro-break-start-sound
 		  "~/.emacs.d/audio/beacon-alarm.wav") ; Break time alert.
-	(defun cppimmo/play-pomodoro-sound (sound)
+	(defun cppimmo:play-pomodoro-sound (sound)
 	  "Replace the play sound function for the pomodoro package."
 	  (play-sound-file (expand-file-name sound)))
 	;; Properly replace the play sound function.
-	(advice-add 'play-pomodoro-sound :override #'cppimmo/play-pomodoro-sound)))
+	(advice-add 'play-pomodoro-sound :override #'cppimmo:play-pomodoro-sound)))
 
 ;;; Install and configure php-mode
 (use-package php-mode)
@@ -341,11 +342,11 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX-esque systems."
   (progn
   (setq lua-indent-level 4)
   (setq lua-indent-string-contents t)
-  (defun cppimmo/lua-mode-hook ()
+  (defun cppimmo:lua-mode-hook ()
 	"I want tabs!"
 	(setq indent-tabs-mode t) ; Enable indent tabs mode via the mode-hook.
 	(abbrev-mode nil)) ; This probably isn't really relevant.
-  (add-hook 'lua-mode-hook #'cppimmo/lua-mode-hook)))
+  (add-hook 'lua-mode-hook #'cppimmo:lua-mode-hook)))
 
 ;;; Install and configure ox-leanpub
 (use-package ox-leanpub)
@@ -354,7 +355,7 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX-esque systems."
 (use-package markdown-mode
   :config
   ;; The the appropriate "markdown-command" for Microsoft Windows.
-  (cppimmo/when-system 'windows
+  (cppimmo:when-system 'windows
     (custom-set-variables '(markdown-command "pandoc.exe"))))
 ;;; Install and configure markdown-preview-eww.
 ;;(use-package markdown-preview-eww)
@@ -419,7 +420,7 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX-esque systems."
 (use-package web-mode
   :config
   ;; TODO: Style left padding.
-  (defun cppimmo/web-mode-hook ()
+  (defun cppimmo:web-mode-hook ()
 	"cppimmmo hook for web mode."
 	(setq web-mode-markup-indent-offset 2 ; HTML indentation.
 		  web-mode-css-indent-offset    2 ; CSS indentation.
@@ -432,7 +433,7 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX-esque systems."
 	(add-to-list 'web-mode-indentation-params '("lineup-calls" . nil))
 	(add-to-list 'web-mode-indentation-params '("lineup-concats" . nil))
 	(add-to-list 'web-mode-indentation-params '("lineup-ternary" . nil)))
-  (add-hook 'web-mode-hook #'cppimmo/web-mode-hook)
+  (add-hook 'web-mode-hook #'cppimmo:web-mode-hook)
   ;; Load all php files in web-mode by default
   (add-to-list 'auto-mode-alist '("\\.php\\'" . web-mode)))
 
@@ -482,12 +483,12 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX-esque systems."
 ;;; Install and configure geiser.
 (use-package geiser
   :config
-  (cppimmo/when-system 'linux
+  (cppimmo:when-system 'linux
 	(setq geise-active-implementations '(mit racket))))
 (use-package geiser-racket)
 (use-package geiser-mit
   :config
-  (cppimmo/when-system 'linux ; Prefer mit-scheme on GNU/Linux.
+  (cppimmo:when-system 'linux ; Prefer mit-scheme on GNU/Linux.
 	(setq geiser-mit-binary "/usr/bin/scheme")))
 
 ;;; Install and configure racket-mode.
@@ -504,7 +505,7 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX-esque systems."
 ;;; Install and configure nyan-mode.
 (use-package nyan-mode
   :config
-  ;;(cppimmo/when-system 'linux
+  ;;(cppimmo:when-system 'linux
     ;;(nyan-mode 1))
   )
 
@@ -552,29 +553,29 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX-esque systems."
   :config (add-to-list 'company-backends 'company-c-headers))
 
 ;;; vtermlib for LINUX
-(cppimmo/when-system '(linux macos bsd)
+(cppimmo:when-system '(linux macos bsd)
   (use-package vterm
 	:ensure t
 	:config
 	(progn
-	  (defun cppimmo/pathname-contains-home-p (path)
+	  (defun cppimmo:pathname-contains-home-p (path)
 		"Predicate check if PATH is proceeded by the operating...
 system's home directory."
 		(string-match (concat
 					   ;; Eval args until one of the yields non-nil, then return that value.
-					   (or (cppimmo/when-system 'linux "/home/")
+					   (or (cppimmo:when-system 'linux "/home/")
 						   ;; Actually don't need windows lol
-						   (cppimmo/when-system 'windows "C:/Users/"))
+						   (cppimmo:when-system 'windows "C:/Users/"))
 					   (user-login-name))
 					  default-directory))
-	  (defun cppimmo/pathname-prettify-home (path)
-		(let ((start-idx (cppimmo/pathname-contains-home-p path))
+	  (defun cppimmo:pathname-prettify-home (path)
+		(let ((start-idx (cppimmo:pathname-contains-home-p path))
 			  (end-idx (match-end 0)))
 		  (if (not (null start-idx))
 			  (concat "~/" (substring path (+ end-idx 1)))
 			path)))
 	  ;; This avoids doing any shell-side configuration.
-	  (defun cppimmo/vterm ()
+	  (defun cppimmo:vterm ()
 		"Command to launch a new vterm buffer.
 The buffer will be renamed automatically with the buffer local directory."
 		(interactive)
@@ -582,13 +583,13 @@ The buffer will be renamed automatically with the buffer local directory."
 		  (rename-buffer
 		   (concat "*" (user-login-name) "@" (system-name) ":"
 				   ;; Append 
-				   (let ((result (cppimmo/pathname-prettify-home default-directory)))
+				   (let ((result (cppimmo:pathname-prettify-home default-directory)))
 					 (if (string= (substring result -1) "/") ; Negative substring idx's count backwards
 						 result
 					   (concat result "/")))
 				   "*"))
 		  (rename-uniquely))))
-	 (bind-key* (kbd "C-c C-v") #'cppimmo/vterm)))
+	 (bind-key* (kbd "C-c C-v") #'cppimmo:vterm)))
 
 ;;; Interactive REPL for PHP
 (use-package psysh)
@@ -624,7 +625,7 @@ The buffer will be renamed automatically with the buffer local directory."
 	(setq gdscript-use-tab-indents t
 		  gdscript-indent-offset 4
 		  gdscript-gdformat-save-and-format t)
-	(cppimmo/when-system 'windows
+	(cppimmo:when-system 'windows
 	  (setq gdscript-godot-executable "godot.exe"))))
 
 ;;; Circe IRC
@@ -637,7 +638,7 @@ The buffer will be renamed automatically with the buffer local directory."
 	;; gpg -e r myemail@email.com .authinfo
 	(setq auth-sources '("~/.emacs.d/.authinfo.gpg"))
 	
-	(defun cppimmo/circe-fetch-password (&rest params)
+	(defun cppimmo:circe-fetch-password (&rest params)
 	  (require 'auth-source)
 	  (let ((match (car (apply 'auth-source-search params))))
 		(if match
@@ -647,8 +648,8 @@ The buffer will be renamed automatically with the buffer local directory."
 				secret))
 		  (error "Password not found for %S" params))))
 	
-	(defun cppimmo/circe-nickserv-password (server)
-	  (cppimmo/circe-fetch-password :max 1 :user "cppimmo" :host "irc.libera.chat" :port 6667))
+	(defun cppimmo:circe-nickserv-password (server)
+	  (cppimmo:circe-fetch-password :max 1 :user "cppimmo" :host "irc.libera.chat" :port 6667))
 	
 	(setq lui-logging-directory "~/.emacs.d/.lui-logs/"
 		  circe-format-self-say "<{nick}> {body}"
@@ -665,16 +666,16 @@ The buffer will be renamed automatically with the buffer local directory."
 									"#slackdocs"
 									"#freebsd-irc"
 									"#emacs")
-			 :nickserv-password cppimmo/circe-nickserv-password))))
+			 :nickserv-password cppimmo:circe-nickserv-password))))
 
-  (add-hook 'circe-chat-mode-hook #'cppimmo/circe-prompt)
-  (defun cppimmo/circe-prompt ()
+  (add-hook 'circe-chat-mode-hook #'cppimmo:circe-prompt)
+  (defun cppimmo:circe-prompt ()
 	(lui-set-prompt
 	 (concat (propertize (concat (buffer-name) ">")
 						 'face 'circe-prompt-face)
 			 " ")))
 
-  (defun cppimmo/irc-network-connected-p (network)
+  (defun cppimmo:irc-network-connected-p (network)
 	"Return non-nil if there's any Circe server-buffer whose
 `circe-server-netwok' is NETWORK."
 	(catch 'return
@@ -683,7 +684,7 @@ The buffer will be renamed automatically with the buffer local directory."
           (if (string= network circe-server-network)
               (throw 'return t))))))
 
-  (defun cppimmo/irc-connect (network)
+  (defun cppimmo:irc-connect (network)
 	"Connect to NETWORK, but ask user for confirmation if it's
 already been connected to."
 	(interactive "sNetwork: ")
@@ -693,6 +694,15 @@ already been connected to."
 	
 ;;; BUILT-IN MODE CONFIGURATION =================================================
 
+;;; Emacs bultin package configuration
+(use-package emacs
+  :config
+    ;; Set the fill column in auto fill mode.
+  (add-hook 'text-mode-hook
+			(lambda ()
+			  ;; (turn-on-auto-fill) ; Keep as reference.
+			  (set-fill-columnface mode 80))))
+
 (use-package ispell
   :ensure nil
   :config
@@ -700,7 +710,7 @@ already been connected to."
   ;; The trick is to use msys2 and the MinGW hunspell and hunspell-en packages.
   ;; https://www.reddit.com/r/emacs/comments/8by3az/how_to_set_up_sell_check_for_emacs_in_windows/
   ;; https://stackoverflow.com/questions/8931580/hunspell-cant-open-affix-or-dictionary-files-for-dictionary-named-en-us
-  (cppimmo/when-system 'windows
+  (cppimmo:when-system 'windows
     (setq ispell-program-name "C:/tools/msys64/mingw64/bin/hunspell.exe" ; Set the executable pathname.
 		  ispell-dictionary "en_US"))) ; Set the appropriate word dictionary.
   
@@ -718,7 +728,7 @@ already been connected to."
   :config
   ;; Dired.
   ;; From: https://www.emacswiki.org/emacs/DiredSortDirectoriesFirst
-  (defun cppimmo/dired-sort ()
+  (defun cppimmo:dired-sort ()
 	"Make dired listings sort and display directories first."
 	(save-excursion
 	  (let (buffer-read-only)
@@ -729,9 +739,9 @@ already been connected to."
   (defadvice dired-readin
 	  (after dired-after-updating-hook first () activate)
 	"Make dired sort listings with directories first before adding marks."
-	(cppimmo/dired-sort))
+	(cppimmo:dired-sort))
   
-  (defun cppimmo/dired-open-in-new-frame ()
+  (defun cppimmo:dired-open-in-new-frame ()
 	"Open a file/directory in a new frame."
 	(interactive)
 	(find-file-other-frame (dired-get-file-for-visit))))
@@ -753,7 +763,7 @@ already been connected to."
 (use-package nxml-mode
   :ensure nil
   :config
-  (defun cppimmo/xml-insert-cdata ()
+  (defun cppimmo:xml-insert-cdata ()
 	"Insert CDATA tags for XML documents.
 Moves the point back 3 characters for immediate editing."
 	(interactive)
@@ -765,22 +775,22 @@ Moves the point back 3 characters for immediate editing."
 (use-package css-mode
   :ensure nil
   :config
-  (defun cppimmo/css-mode-hook ()
+  (defun cppimmo:css-mode-hook ()
 	"My css-mode hook."
 	(setq-local css-indent-offset 2))
-  (add-hook 'css-mode-hook #'cppimmo/css-mode-hook))
+  (add-hook 'css-mode-hook #'cppimmo:css-mode-hook))
 
 ;;; rst-mode
 (use-package rst
   :ensure nil
   :config
-  (defun cppimmo/rst-mode-hook ()
+  (defun cppimmo:rst-mode-hook ()
 	"My rst-mode hook."
 	(setq-local fill-column 80)
 	(auto-fill-mode t))
-  (add-hook 'rst-mode-hook #'cppimmo/rst-mode-hook))
+  (add-hook 'rst-mode-hook #'cppimmo:rst-mode-hook))
 
-;;; Diary.
+;;; Diary
 ;;(use-package calender
 ;;  :config
 ;;  (setq european-calendar-style nil))
@@ -791,7 +801,7 @@ Moves the point back 3 characters for immediate editing."
 ;;  :config
 ;;  (setq sql-product 'mysql)) ; Default SQL interpreter.
 
-;; Shell script mode
+;;; Shell script mode
 (use-package sh-script
   :config
   (progn
@@ -799,5 +809,6 @@ Moves the point back 3 characters for immediate editing."
 
 ;;; LOAD KEYBINDINGS ============================================================
 (load "cppimmo-keybindings")
-(cppimmo/bind-keys-g)
-(cppimmo/bind-keys-m)
+(cppimmo:bind-keys-g)
+(cppimmo:bind-keys-m)
+

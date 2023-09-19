@@ -28,7 +28,8 @@
 ;;; Miscellaneous Commands
 ;;; All interactive commands that don't belong to a mode or library.
 
-(defmacro cppimmo/call-when-interactive (fn-interactive &optional fn-non-interactive)
+(define-namespace cppimmo:
+(defmacro call-when-interactive (fn-interactive &optional fn-non-interactive)
   "Call FN-INTERACTIVE when the parent function is called
 interactively.  Call FN-NON-INTERACTIVE when optional argument is non-null."
   `(if (called-interactively-p 'interactive)
@@ -36,7 +37,7 @@ interactively.  Call FN-NON-INTERACTIVE when optional argument is non-null."
 	   (when (not (null ,fn-non-interactive))
 		 (,fn-non-interactive))))
 
-(defun cppimmo/kill-ring-buffer-save ()
+(defun kill-ring-buffer-save ()
   "Place the entirety of the current buffer in the kill ring."
   (interactive)
   (save-excursion
@@ -46,24 +47,24 @@ interactively.  Call FN-NON-INTERACTIVE when optional argument is non-null."
 	(kill-ring-save (region-beginning) (region-end)))
   (message "Buffer saved to kill ring."))
 
-(defun cppimmo/execute-command-other-frame (command)
+(defun execute-command-other-frame (command)
   "Run a command in a new frame.
 @COMMAND ."
   (interactive "CC-x 5 M-x ")
   (select-frame (make-frame))
   (call-interactively command))
 
-(defun cppimmo/buffer-menu-other-frame ()
+(defun buffer-menu-other-frame ()
   "Execute the buffer-menu command in a new frame."
   (interactive)
-  (cppimmo/execute-command-other-frame 'buffer-menu))
+  (cppimmo:execute-command-other-frame 'buffer-menu))
 
-(defun cppimmo/bookmark-bmenu-other-frame ()
+(defun bookmark-bmenu-other-frame ()
   "Execute the bookmark-bmenu-list command in a new frame."
   (interactive)
-  (cppimmo/execute-command-other-frame 'bookmark-bmenu-list))
+  (cppimmo:execute-command-other-frame 'bookmark-bmenu-list))
 
-(defun cppimmo/goto-percent (percent)
+(defun goto-percent (percent)
   "Move to PERCENT as a percentage of the buffer point position.
 PERCENT The percentage to move to in the buffer."
   (interactive "nGo to percent ([0, 100]%%): ")
@@ -71,7 +72,7 @@ PERCENT The percentage to move to in the buffer."
 	(error "PERCENT must be within the range: [0, 100]."))
   (goto-char (/ (* (point-max) percent) 100)))
 
-(defun cppimmo/pluralize (word amount-of &optional special-form)
+(defun pluralize (word amount-of &optional special-form)
   "Create a plural version of WORD.
 Insert the plural version of WORD in the current buffer when called
 interactively.  When called non-interatively return the plural version of WORD
@@ -87,32 +88,32 @@ SPECIAL-FORM Optional specialized plural form of WORD."
   (when (and (not (null special-form)) (not (stringp special-form)))
 	(error "SPECIAL-FORM must be of type string or set to nil."))
   (if (= (truncate amount-of) 1)
-	  (cppimmo/call-when-interactive
+	  (cppimmo:call-when-interactive
 	   (lambda ()
 		 (message "Inserting %s into the current buffer..." word)
 		 (insert word))
 	   (lambda ()
 		 word))
 	(if (or (null special-form) (string-empty-p special-form))
-		(cppimmo/call-when-interactive
+		(cppimmo:call-when-interactive
 		 (lambda ()
 		   (message "Inserting %ss into the current buffer..." word)
 		   (insert (concat word "s")))
 		 (lambda ()
 		   (concat word "s")))
-	  (cppimmo/call-when-interactive
+	  (cppimmo:call-when-interactive
 	   (lambda ()
 		 (message "Inserting %s into the current buffer..." special-form)
 		 (insert special-form))
 	   (lambda ()
 		 special-form)))))
 
-(defun cppimmo/apostrophize (word &optional plural-p)
+(defun apostrophize (word &optional plural-p)
   ""
   (interactive)
   nil)
 
-(defun cppimmo/describe-last-command ()
+(defun describe-last-command ()
   "Display the full documentation of the last command."
   (interactive)
   (let ((last-cmd last-command))
@@ -120,7 +121,7 @@ SPECIAL-FORM Optional specialized plural form of WORD."
 	  (error "LAST-COMMAND must be a command!"))
 	(describe-command last-cmd)))
 
-(defun cppimmo/custom-theme-day-night-cycle (day-theme night-theme)
+(defun custom-theme-day-night-cycle (day-theme night-theme)
   "Switch between the day/night custom themes denoted by
 DAY-THEME and NIGHT-THEME."
   (interactive "SEnter symbol for the daytime theme: \nSEnter a symbol for the nighttime theme: ")
@@ -134,21 +135,21 @@ DAY-THEME and NIGHT-THEME."
 	  (disable-theme night-theme)
 	  (load-theme day-theme t))))
 
-(defun cppimmo/custom-theme-fixed-cycle ()
+(defun custom-theme-fixed-cycle ()
   "Custom theme day/night cycle with fixed arguments."
   (interactive)
-  (cppimmo/custom-theme-day-night-cycle 'cppimmo-bright-ink 'modus-vivendi))
+  (cppimmo:custom-theme-day-night-cycle 'cppimmo-bright-ink 'modus-vivendi))
 
-(defun cppimmo/find-file-sudo (filename)
+(defun find-file-sudo (filename)
   "Edit file @FILE-NAME as the super user."
   (interactive "FFind file (sudo): ")
-  (cppimmo/when-system 'windows
+  (cppimmo:when-system 'windows
 	(error "Error this command is not applicable to Windows systems."))
   (let ((tramp-file-name (concat "/sudo::"
 								 (expand-file-name filename))))
 	(find-file tramp-file-name)))
 
-(defun cppimmo/zoom-all-buffers (&rest args)
+(defun zoom-all-buffers (&rest args)
   "Scale text in all buffers.
 ARGS Property list; set :INCREASE, :DECREASE, or :RESET to T"
    (dolist (buffer-elem (buffer-list))
@@ -163,33 +164,34 @@ ARGS Property list; set :INCREASE, :DECREASE, or :RESET to T"
 			  (message ":reset")
 			  (text-scale-set 0))))))
 
-(defun cppimmo/zoom-all-buffers-increase ()
+(defun zoom-all-buffers-increase ()
   "Increase text scale in all buffers."
-  (interactive (cppimmo/zoom-all-buffers :increase t)))
+  (interactive (cppimmo:zoom-all-buffers :increase t)))
 
-(defun cppimmo/zoom-all-buffers-decrease ()
+(defun zoom-all-buffers-decrease ()
   "Decrease text scale in all buffers."
-  (interactive (cppimmo/zoom-all-buffers :decrease t)))
+  (interactive (cppimmo:zoom-all-buffers :decrease t)))
 
-(defun cppimmo/zoom-all-buffers-reset ()
+(defun zoom-all-buffers-reset ()
   "Reset text scale in all buffers."
-  (interactive (cppimmo/zoom-all-buffers :reset t)))
+  (interactive (cppimmo:zoom-all-buffers :reset t)))
 
-(defun cppimmo/tabify-buffer ()
+(defun tabify-buffer ()
   "Tabify entire buffer."
   (interactive)
   (tabify (point-min) (point-max)))
 
-(defun cppimmo/untabify-buffer ()
+(defun untabify-buffer ()
   "Untabify entire buffer."
   (interactive)
   (untabify (point-min) (point-max)))
 
-(defun cppimmo/empty-trash ()
+(defun empty-trash ()
   "Empty the current user's recycle bin."
   (interactive)
-  (cppimmo/when-system 'windows
+  (cppimmo:when-system 'windows
 	(shell-command (format "powershell -Command {Clear-RecycleBin -Force}")))
-  (cppimmo/when-system 'linux
+  (cppimmo:when-system 'linux
 	nil))
+) ; End namespace (cppimmo:)
 

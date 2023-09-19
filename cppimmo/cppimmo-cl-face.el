@@ -30,19 +30,20 @@
 ;;;; Implementation of this article: https://www.n16f.net/blog/custom-font-lock-configuration-in-emacs/
 ;;;; Many thanks to the author.
 
-(defface cppimmo/cl-character-face
+(define-namespace cppimmo:
+(defface cl-character-face
   '((default :inherit font-lock-constant-face))
   "The face used to highlight Common Lisp character literals.")
 
-(defface cppimmo/cl-standard-function-face
+(defface cl-standard-function-face
   '((default :inherit font-lock-keyword-face))
   "The face used to highlight standard Common Lisp function symbols.")
 
-(defface cppimmo/cl-standard-value-face
+(defface cl-standard-value-face
   '((default :inherit font-lock-variable-name-face))
   "The face used to highlight standard Common Lisp value symbols.")
 
-(defvar cppimmo/cl-function-names
+(defvar cl-function-names
   (list "*" "+" "-" "/" "/=" "1+" "1-" "<" "<=" "=" ">" ">=" "abort" "abs" "acons"
       "acos" "acosh" "add-method" "adjoin" "adjust-array" "adjustable-array-p"
       "allocate-instance" "alpha-char-p" "alphanumericp" "and" "append" "apply"
@@ -195,7 +196,7 @@
       "yes-or-no-p" "zerop")
   "Common Lisp function name symbol list.")
 
-(defvar cppimmo/cl-value-names
+(defvar cl-value-names
   (list "*" "**" "***" "*break-on-signals*" "*compile-file-pathname*"
 		"*compile-file-truename*" "*compile-print*" "*compile-verbose*"
 		"*debug-io*" "*debugger-hook*" "*default-pathname-defaults*"
@@ -236,17 +237,17 @@
 		"single-float-negative-epsilon" "t")
   "Common Lisp variable names symbol list.")
 
-(defvar cppimmo/cl-font-lock-keywords
+(defvar cl-font-lock-keywords
   (let* ((character-regex (concat "#\\\\" lisp-mode-symbol-regexp "\\_>"))
-		 (function-regex (concat "(" (regexp-opt cppimmo/cl-function-names t) "\\_>"))
-		 (value-regex (regexp-opt cppimmo/cl-value-names 'symbols)))
-	`((,character-regex . 'cppimmo/cl-character-face)
+		 (function-regex (concat "(" (regexp-opt cl-function-names t) "\\_>"))
+		 (value-regex (regexp-opt cl-value-names 'symbols)))
+	`((,character-regex . 'cl-character-face)
 	  (,function-regex
-	   (1 'cppimmo/cl-standard-function-face))
-	  (,value-regex . 'cppimmo/cl-standard-value-face))))
+	   (1 'cl-standard-function-face))
+	  (,value-regex . 'cl-standard-value-face))))
 
-(defvar cppimmo/cl-font-lock-defaults
-  '((cppimmo/cl-font-lock-keywords)
+(defvar cl-font-lock-defaults
+  '((cl-font-lock-keywords)
 	nil ; Enable syntax highlighting
 	t   ; Case insensitive highlighting
 	nil ; Use the lisp-mode syntax table
@@ -254,7 +255,9 @@
 	(font-lock-extra-managed-props help-echo)
 	(font-lock-syntactic-face-function . lisp-font-lock-syntactic-face-function)))
 
-(defun cppimmo/init-lisp-font-lock ()
-  (setq font-lock-defaults cppimmo/cl-font-lock-defaults))
+(defun init-lisp-font-lock ()
+  (setq font-lock-defaults cl-font-lock-defaults))
 
-(add-hook 'lisp-mode-hook 'cppimmo/init-lisp-font-lock)
+(add-hook 'lisp-mode-hook 'init-lisp-font-lock)
+) ; End namespace (cppimmo:)
+

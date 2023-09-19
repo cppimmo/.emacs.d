@@ -30,7 +30,8 @@
 ;;;;
 
 ;;; Helper for abbreviation table definitions:
-(defmacro cppimmo/define-abbrev-table (table-name definitions)
+(define-namespace cppimmo:
+(defmacro define-abbrev-table (table-name definitions)
   "Wrapper for abbreviation table definitions.
 Clears the TABLE-NAME abbreviation table and redefines it with the DEFINITIONS list."
   (declare (indent defun))
@@ -41,9 +42,10 @@ Clears the TABLE-NAME abbreviation table and redefines it with the DEFINITIONS l
 	   (clear-abbrev-table (symbol-value ,table-name)))
 	 ;; Now define the table:
 	 (define-abbrev-table ,table-name ,definitions)))
+) ; End namespace (cppimmo:)
 
 ;;; Set global abbreviation table:
-(cppimmo/define-abbrev-table 'global-abbrev-table
+(cppimmo:define-abbrev-table 'global-abbrev-table
   '( ; Net lingo.
 	("ur" "you are")
 	("afaik" "as far as I know")
@@ -63,7 +65,7 @@ Clears the TABLE-NAME abbreviation table and redefines it with the DEFINITIONS l
 ;;; Programming language mode abbreviations (prefixed by major mode name):
 (progn
   ;; C++
-  (cppimmo/define-abbrev-table
+  (cppimmo:define-abbrev-table
 	'c++-mode-abbrev-table
 	'(
 	  ("std" "std:")
@@ -71,6 +73,8 @@ Clears the TABLE-NAME abbreviation table and redefines it with the DEFINITIONS l
   )
 
 ;;; Additional configuration:
-(setq save-abbrevs nil) ; Add abbreviations manually only
-(set-default 'abbrev-mode t) ; Enable abbrev-mode in most contexts.
+(progn
+  (setq save-abbrevs nil) ; Add abbreviations manually only
+  (set-default 'abbrev-mode t) ; Enable abbrev-mode in most contexts.
+  )
 

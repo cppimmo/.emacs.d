@@ -1,33 +1,35 @@
-;;; BSD 2-Clause License
-;;; 
-;;; Copyright (c) 2022, Brian Hoffpauir
-;;; All rights reserved.
-;;; 
-;;; Redistribution and use in source and binary forms, with or without
-;;; modification, are permitted provided that the following conditions are met:
-;;; 
-;;; 1. Redistributions of source code must retain the above copyright notice,
-;;;    this list of conditions and the following disclaimer.
-;;;     
-;;; 2. Redistributions in binary form must reproduce the above copyright notice,
-;;;    this list of conditions and the following disclaimer in the documentation
-;;;    and/or other materials provided with the distribution.
-;;; 
-;;; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-;;; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-;;; IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-;;; ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
-;;; LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-;;; CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-;;; SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-;;; INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-;;; CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-;;; ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-;;; POSSIBILITY OF SUCH DAMAGE.
-;;;
-;;; Bright Ink Theme
-;;;
-(deftheme cppimmo-bright-ink
+;;;; BSD 2-Clause License
+;;;; 
+;;;; Copyright (c) 2022, Brian Hoffpauir
+;;;; All rights reserved.
+;;;; 
+;;;; Redistribution and use in source and binary forms, with or without
+;;;; modification, are permitted provided that the following conditions are met:
+;;;; 
+;;;; 1. Redistributions of source code must retain the above copyright notice,
+;;;;    this list of conditions and the following disclaimer.
+;;;;     
+;;;; 2. Redistributions in binary form must reproduce the above copyright notice,
+;;;;    this list of conditions and the following disclaimer in the documentation
+;;;;    and/or other materials provided with the distribution.
+;;;; 
+;;;; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+;;;; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+;;;; IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+;;;; ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+;;;; LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+;;;; CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+;;;; SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+;;;; INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+;;;; CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+;;;; ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+;;;; POSSIBILITY OF SUCH DAMAGE.
+;;;;
+;;;; Bright Ink Theme
+;;;;
+
+(define-namespace cppimmo:
+(deftheme cppimmo:bright-ink
   "Bright ink theme for Emacs.
 Consider installing highlight-numbers and highlight-parentheses.")
 
@@ -35,8 +37,8 @@ Consider installing highlight-numbers and highlight-parentheses.")
 ;;  (setq cppimmo-theme '())
 ;;  (apply #'custom-theme-set-faces cppimmo-theme))
 
-(if (not (facep 'cppimmo/font-lock-operator-face))
-	(defface cppimmo/font-lock-operator-face
+(if (not (facep 'cppimmo:font-lock-operator-face))
+	(defface cppimmo:font-lock-operator-face
 	  '()
 	  "Face for operator highlighting."
 	  :group 'basic-faces))
@@ -46,7 +48,7 @@ Consider installing highlight-numbers and highlight-parentheses.")
 ;; '(("\\(~^&\|!<>:=,.\\+*/%-]\\)" 0 'cppimmo/font-lock-operator-face)))
 
 ;;; Operator Fonts
-(defface cppimmo/font-lock-operator-face
+(defface font-lock-operator-face
  '((t (:foreground "#ff1210"))) "Basic face for operator." :group 'basic-faces)
 ;;; C-Like
 (dolist (mode-iter '(c-mode c++-mode glsl-mode java-mode javascript-mode rust-mode))
@@ -58,7 +60,7 @@ Consider installing highlight-numbers and highlight-parentheses.")
    '(("\\([@~^&\|!<>:=,.\\+*/%-]\\)" 0 'cppimmo/font-lock-operator-face keep))))
 
 (custom-theme-set-faces
- 'cppimmo-bright-ink
+ 'cppimmo:bright-ink
  '(default ((t (:background "#ffffff" :foreground "#111111"))))
  '(cursor ((t (:background "#555577" :foreground "#ffffff"))))
  '(region ((t (:background "#919191"))))
@@ -91,9 +93,11 @@ Consider installing highlight-numbers and highlight-parentheses.")
  '(highlight-numbers-number ((t (:foreground "#f213f3")))) ; highlight-numbers
  ;;'(error ((t (:foreground "#fc0202"))))
  ;;'(highlight-parentheses- ) ; hightlight-parentheses
- '(cppimmo/font-lock-operator-face ((t (:foreground "#ff1210"))))
+ '(cppimmo:font-lock-operator-face ((t (:foreground "#ff1210"))))
  '(dired-directory ((t (:foreground "#3305a0"))))
- '(cppimmo/delim-face ((t (:foreground "#ff1210" :inherit shadow))))
+ '(cppimmo:delim-face ((t (:foreground "#ff1210" :inherit shadow))))
  )
+) ; End namespace (cppimmo:)
 
-(provide-theme 'cppimmo-bright-ink)
+(provide-theme 'cppimmo:bright-ink)
+

@@ -1,12 +1,13 @@
-;;; Vibrant Ink Theme
-;;; Note: I did not create this theme.  It was made by gerb13.
-;;; See: https://gist.github.com/germ13/770348fd8e4ff31860b9
+;;;; Vibrant Ink Theme
+;;;; Note: I did not create this theme.  It was made by gerb13.
+;;;; See: https://gist.github.com/germ13/770348fd8e4ff31860b9
 
-(deftheme cppimmo-vibrant-ink
+(define-namespace cppimmo:
+(deftheme cppimmo:vibrant-ink
   "Vibrant ink theme for Emacs.")
 
 (custom-theme-set-faces
- 'cppimmo-vibrant-ink
+ 'cppimmo:vibrant-ink
  '(default ((t (:background "#111111" :foreground "#ffffff"))))
  '(cursor ((t (:background "#555577" :foreground "#ffffff"))))
  '(region ((t (:background "#444444"))))
@@ -33,5 +34,7 @@
  '(link-visited ((t (:foreground "#aaccff" :underline t))))
  '(button ((t (:background "#bfbfbf" :underline t))))
  '(header-line ((t (:background "#e5e5e5" :foreground "#333333")))))
+) ; End namespace (cppimmo:)
 
-(provide-theme 'cppimmo-vibrant-ink)	    
+(provide-theme 'cppimmo:vibrant-ink)
+

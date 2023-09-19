@@ -27,7 +27,11 @@
 ;;;
 ;;; Public RSS Feeds.
 ;;;
-(defun cppimmo/append-to-elfeeds (feed-list)
+
+(define-namespace cppimmo:
+(defun append-to-elfeeds (feed-list)
   "Append @FEED-LIST to the elfeeds feed list.
 Use quoted list and refer to elfeeds documentation."
   (setq elfeed-feeds (append elfeed-feeds feed-list)))
+) ; End namespace (cppimmo:)
+

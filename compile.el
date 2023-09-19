@@ -30,11 +30,13 @@
 ;;;;
 ;;;; TODO: Generate the list by searching for .el files in the directory.
 
-(defun cppimmo/byte-compile (file-parent-dir filename)
+(define-namespace cppimmo:
+(defun byte-compile (file-parent-dir filename)
   "Byte compile @FILE-NAME."
   (if (eq (byte-compile-file (concat file-parent-dir filename)) nil)
 	  (message "%s compilation failure!" filename)
 	(message "%s compiled successfully." filename)))
+) ; End namespace (cppimmo:)
 
 (let ((file-list (list "cppimmo-abbrev.el"
 					   "cppimmo-commands.el"
@@ -45,5 +47,5 @@
 					   "cppimmo-xml.el"))
 	  (file-parent-dir "~/.emacs.d/cppimmo/"))
   (mapc (lambda (filename)
-		  (funcall #'cppimmo/byte-compile file-parent-dir filename)
-		  file-list)))
+		  (funcall #'cppimmo:byte-compile file-parent-dir filename))
+		  file-list))
