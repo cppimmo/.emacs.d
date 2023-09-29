@@ -145,18 +145,6 @@ URLS List of URL strings (set to package-archives by default)."
 (load "cppimmo-commands")
 ;;(cppimmo:load-directory "~/.emacs.d/cppimmo/")
 
-(progn
-  (require 'subr-x)
-  (cppimmo:when-system 'windows
-	(setq user-full-name (getenv "USERNAME"))))
-
-;;; User Iterface
-(defun cppimmo:configure-frame-size (width height)
-  "Set the initial frame size for floating window managers.
-@WIDTH the desired character width of the frame.
-@HEIGHT the desired character height of the frame."
-  (when window-system (set-frame-size (selected-frame) width height)))
-
 ;;;(defun cppimmo:cycle-custom-themes ()
 ;;;  "Cycle through the known custom themes."
 ;;;  (interactive)
@@ -176,20 +164,35 @@ URLS List of URL strings (set to package-archives by default)."
 ;;;	 (cond (()
 ;;;			)))))
 
+;;; User Iterface
 (progn
+  (defun cppimmo:configure-frame-size (width height)
+	"Set the initial frame size for floating window managers.
+@WIDTH the desired character width of the frame.
+@HEIGHT the desired character height of the frame."
+	(when window-system
+	  (set-frame-size (selected-frame) width height)))
+  
+  (cppimmo:when-system 'windows
+	(cppimmo:configure-frame-size 120 40)) ; Set frame size
+
+  (require 'subr-x)
+  (cppimmo:when-system 'windows
+	(setq user-full-name (getenv "USERNAME")))
   (setq inhibit-startup-message nil
-		initial-scratch-message (concat "Welcome, " (capitalize (user-login-name)) "!"))
+		initial-scratch-message (concat "Welcome, " (capitalize (user-login-name)) "!")
+		;; Set the frame title format (using backtick which produces list and comma operator to eval)		
+		frame-title-format `("GNU Emacs - %b | " ,(user-login-name) "@" ,(system-name))
+		cursor-type 'box ; Set the cursor type
+		font-lock-maximum-decoration t ; Max font decor
+		)
   
   (add-to-list 'custom-theme-load-path "~/.emacs.d/cppimmo-themes/") ; Set theme load path.
   ;;(load-theme 'cppimmo-bright-ink t) ; Set the theme (if custom).
   (add-hook 'prog-mode-hook #'show-paren-mode) ; Extra highlighting for programming modes.
-  (setq cursor-type 'bar) ; Set the cursor type.
-  (global-font-lock-mode t) ; Ensure syntax highlighting is always enabled.
-  (setq font-lock-maximum-decoration t) ; Max font decor.
 
-  ;; Set the frame title format (using backtick which produces list and comma operator to eval)
-  (setq frame-title-format `("GNU Emacs - %b | " ,(user-login-name) "@" ,(system-name)))
-  
+  ;; Enable various default modes.
+  (global-font-lock-mode t) ; Ensure syntax highlighting is always enabled.  
   (tool-bar-mode -1) ; Disable icon tool bar.
   (column-number-mode t) ; Always show line cursor position in the modeline.
   (when (version<= "28.1" emacs-version)
@@ -201,16 +204,12 @@ URLS List of URL strings (set to package-archives by default)."
 			 (not (string-match "N/A" (battery))))
 	;; Example of battery output: "Power on-line, battery N/A (N/A% load, remaining time N/A)"
 	(display-battery-mode t))
-  
   (when (version<= "26.0.50" emacs-version)
 	(global-display-line-numbers-mode t)) ; Enable line number bar globally.
   (when (version<= "24.4" emacs-version)
 	(global-visual-line-mode t) ; Enable visual line mode globally.
 	(setq visual-line-fringe-indicators
 		  '(left-curly-arrow right-curly-arrow))) ; Set the visual line fringe indicators.
-
-  (cppimmo:when-system 'windows
-	(cppimmo:configure-frame-size 90 34))
   ) ; End of user interface settings.
 
 ;;; File backup & saving configuration
@@ -260,18 +259,18 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX-esque systems."
   (if (version< emacs-version "28.1")
 	  (defalias 'yes-or-no-p 'y-or-n-p-)
 	(setq use-short-answers t)) ; I don't want to type yes or no each time.
-  ;; Set the default directory (for find-file, etc.).
-  (setq default-directory user-emacs-directory)
-  
-  (setq mouse-highlight t) ; The highlighting can white-out text on darker themes, enable it however.
-  (setq shift-select-mode t) ; I want to have select with shift + movement keys.
-  (setq line-move-visual t)
-  
+
+  (setq default-directory user-emacs-directory ; Set the default directory (for find-file, etc.)
+		mouse-highlight t ; NOTE: The highlighting can white-out text on darker themes
+		shift-select-mode t ; I want to have select with shift + movement keys
+		line-move-visual t ; 
+		set-mark-command-repeat-pop nil ; Disable mark popping (ex: Cu C-SPC)
+		mark-ring-max 10 ; 10 yanks limit
+		global-mark-ring-max 10 ; 10 yanks limit
+		)
+
   (delete-selection-mode t) ; Enable overwriting of marked region.
-  ;; (global-superword-mode t) ; Treat snake_case, etc. as a single word.
-  (setq set-mark-command-repeat-pop nil) ; Disable mark popping (ex: C-u C-SPC).
-  (setq mark-ring-max 10) ; 10 yanks limit.
-  (setq global-mark-ring-max 10) ; 10 yanks limit.
+  (global-superword-mode -1) ; Treat snake_case, etc. as a single word.
   
   ;; Enable disabled features.
   (progn
@@ -288,26 +287,23 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX-esque systems."
 ;;; PACKAGE CONFIGURATION - NON-REPOS ===========================================
 
 ;;; Install and configure glsl-mode.
-(autoload 'glsl-mode "glsl-mode" nil t)
-(add-to-list 'auto-mode-alist '("\\.vert\\'" . glsl-mode))
-(add-to-list 'auto-mode-alist '("\\.frag\\'" . glsl-mode))
+(progn
+  (autoload 'glsl-mode "glsl-mode" nil t)
+  (add-to-list 'auto-mode-alist '("\\.vert\\'" . glsl-mode))
+  (add-to-list 'auto-mode-alist '("\\.frag\\'" . glsl-mode)))
 
 ;;; PACKAGE CONFIGURATION - MY STUFF ============================================
 
-;;; Configure cppimmo:count-words-mode
-;;et ((use-package-ensure-elpa nil))
-;;se-package cppimmo-count-words-mode
-;;:ensure nil
-;;:load-path "~/.emacs.d/cppimmo/cppimmo-count-words-mode.el"
-;;:config
 (progn
-  (defun cppimmo:my-count-words-mode-hook ()
-	(setq *cppimmo:count-words-use-header-line* nil))
-  (add-hook 'cppimmo:count-words-mode-hook #'cppimmo:my-count-words-mode-hook))
-;; ; Add custom hook
-
-;;; Enable delim face mode
-(cppimmo:global-delim-face-mode 1)
+  ;; Configure cppimmo:count-words-mode
+  (progn
+	(defun cppimmo:my-count-words-mode-hook ()
+	  (setq *cppimmo:count-words-use-header-line* nil))
+	;; Add custom hook
+	(add-hook 'cppimmo:count-words-mode-hook #'cppimmo:my-count-words-mode-hook))
+	
+  ;; Enable delim face mode
+  (cppimmo:global-delim-face-mode 1))
 
 ;;; PACKAGE CONFIGURATION - REPOS ===============================================
 ;;; Settings for fill column indicator package. Toggle with "fci-mode".
@@ -691,7 +687,20 @@ already been connected to."
 	(if (or (not (circe-network-connected-p network))
 			(y-or-n-p (format "Already connected to %s, reconnect?" network)))
 		(circe network))))
-	
+
+(use-package clojure-mode)
+
+(use-package cider
+  :defer t
+  :init (progn
+		  (add-hook 'clojure-mode-hook 'cider-mode)
+		  (add-hook 'clojurescript-mode-hook 'cider-mode)
+		  (add-hook 'clojurec-mode-hook 'cider-mode)
+		  (add-hook 'cider-repl-mode-hook 'cider-mode))
+  :config
+  (setq cider-repl-display-help-banner nil
+		cider-auto-mode nil))
+
 ;;; BUILT-IN MODE CONFIGURATION =================================================
 
 ;;; Emacs bultin package configuration
