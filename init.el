@@ -816,6 +816,17 @@ Moves the point back 3 characters for immediate editing."
   (progn
 	(setq sh-indentation 2)))
 
+(use-package bookmark
+  :config
+  ;; Set the initial startup buffer
+  (defun cppimmo:retrieve-initial-buffer ()
+	"Callback returns the buffer object which should be displayed
+when Emacs starts."
+	(list-bookmarks)
+	(get-buffer bookmark-bmenu-buffer))
+  ;; Assign the callback to initial-buffer-choice
+  (setq initial-buffer-choice #'cppimmo:retrieve-initial-buffer))
+
 ;;; LOAD KEYBINDINGS ============================================================
 (load "cppimmo-keybindings")
 (cppimmo:bind-keys-g)
