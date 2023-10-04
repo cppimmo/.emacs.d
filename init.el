@@ -688,8 +688,10 @@ already been connected to."
 			(y-or-n-p (format "Already connected to %s, reconnect?" network)))
 		(circe network))))
 
+;; Configure clojure-mode
 (use-package clojure-mode)
 
+;; Configure cider
 (use-package cider
   :defer t
   :init (progn
@@ -701,12 +703,27 @@ already been connected to."
   (setq cider-repl-display-help-banner nil
 		cider-auto-mode nil))
 
+;; Configure paredit
+(use-package paredit
+  :config (progn
+			;; Set hooks for various lisp modes
+			(mapc (lambda (mode-hook)
+					(when (boundp mode-hook) ; Ensure symbol in MODE-HOOK exists
+					  (add-hook mode-hook 'enable-paredit-mode)))
+				  '(emacs-lisp-mode-hook	   ; Core Emacs lisp mode
+					lisp-mode-hook			   ; Core lisp mode
+					lisp-interaction-mode-hook ; Core lisp mode
+					scheme-mode-hook
+					racket-mode-hook
+					clojure-mode-hook
+					clojurescript-mode-hook))))
+
 ;;; BUILT-IN MODE CONFIGURATION =================================================
 
 ;;; Emacs bultin package configuration
 (use-package emacs
   :config
-    ;; Set the fill column in auto fill mode.
+  ;; Set the fill column in auto fill mode.
   (add-hook 'text-mode-hook
 			(lambda ()
 			  ;; (turn-on-auto-fill) ; Keep as reference.
