@@ -716,7 +716,9 @@ already been connected to."
 					scheme-mode-hook
 					racket-mode-hook
 					clojure-mode-hook
-					clojurescript-mode-hook))))
+					clojurescript-mode-hook
+					cider-repl-mode-hook
+					slime-repl-mode-hook))))
 
 ;;; BUILT-IN MODE CONFIGURATION =================================================
 
