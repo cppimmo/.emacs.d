@@ -315,14 +315,17 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX-esque systems."
 
 ;;; Settings for the pomodoro package.
 (use-package pomodoro
+  :defer 25 ; Wait 25 secs to load the package due to doom-modeline being loaded after this declaration
   :config
   (progn
-	(pomodoro-add-to-mode-line) ; Add to modeline.
+	;; Add to the mode line once
+	(defvar cppimmo:pomodoro-mode-line-set-p nil)
+	(unless cppimmo:pomodoro-mode-line-set-p
+	  (pomodoro-add-to-mode-line) ; Add to modeline.
+	  (setq cppimmo:pomodoro-mode-line-set-p t))
 	;; Place all audio files in the repository to make things easier.
-	(setq pomodoro-work-start-sound
-		  "~/.emacs.d/audio/beacon-alarm.wav") ; Work time alert.
-	(setq pomodoro-break-start-sound
-		  "~/.emacs.d/audio/beacon-alarm.wav") ; Break time alert.
+	(setq pomodoro-work-start-sound  "~/.emacs.d/audio/beacon-alarm.wav"  ; Work time alert.
+		  pomodoro-break-start-sound "~/.emacs.d/audio/beacon-alarm.wav") ; Break time alert.
 	(defun cppimmo:play-pomodoro-sound (sound)
 	  "Replace the play sound function for the pomodoro package."
 	  (play-sound-file (expand-file-name sound)))
@@ -368,38 +371,31 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX-esque systems."
 
 ;;; Install and configure SLIME.
 (use-package slime
-  :ensure t
-  :defer t
-  :init (setq inferior-lisp-program "sbcl"))
+  :config (setq inferior-lisp-program "sbcl"))
 
 (use-package slime-company
   :after (slime company)
-  :ensure t
   :config (setq slime-company-completion 'fuzzy
 				slime-company-after-completion 'slime-company-just-one-space))
 
 (slime-setup '(slime-fancy slime-company slime-cl-indent slime-fuzzy slime-quicklisp slime-asdf))
 
 ;;; Install and configure magit.
-(use-package magit
-  :ensure t)
+(use-package magit)
 
 ;;; Install and configure highlight numbers.
 (use-package highlight-numbers
-  :ensure t
   :config
   (add-hook 'prog-mode-hook #'highlight-numbers-mode))
 
 ;;; Install and configure highlight parentheses.
 (use-package highlight-parentheses
-  :ensure t
   :config
   (add-hook 'prog-mode-hook #'highlight-parentheses-mode)
   (add-hook 'minibuffer-setup-hook #'highlight-parentheses-minibuffer-setup))
 
 ;;; Install and configure elfeed.
 (use-package elfeed
-  :ensure t
   :config
   (progn
     (load "~/.emacs.d/cppimmo/cppimmo-feeds-pub.el")
@@ -541,8 +537,7 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX-esque systems."
 
 ;;; Customized modeline used in Doom Emacs
 (use-package doom-modeline
-  :ensure t
-  :init (doom-modeline-mode 1))
+  :config (doom-modeline-mode 1))
 
 ;;; Autocomplete for C/C++ stdlib headers
 (use-package company-c-headers
@@ -551,7 +546,6 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX-esque systems."
 ;;; vtermlib for LINUX
 (cppimmo:when-system '(linux macos bsd)
   (use-package vterm
-	:ensure t
 	:config
 	(progn
 	  (defun cppimmo:pathname-contains-home-p (path)
