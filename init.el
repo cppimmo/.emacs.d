@@ -537,7 +537,14 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX-esque systems."
 
 ;;; Customized modeline used in Doom Emacs
 (use-package doom-modeline
-  :config (doom-modeline-mode 1))
+  :config (doom-modeline-mode 1)
+  :custom
+  (doom-modeline-buffer-file-name-style 'truncate-with-project)
+  ;;(doom-modeline-enable-word-count t)
+  (doom-modeline-buffer-encoding t)
+  (doom-modeline-buffer-modification-icon t)
+  ;; Needs display-time-mode to be on
+  (doom-modeline-time t))
 
 ;;; Autocomplete for C/C++ stdlib headers
 (use-package company-c-headers
@@ -713,6 +720,10 @@ already been connected to."
 					clojurescript-mode-hook
 					cider-repl-mode-hook
 					slime-repl-mode-hook))))
+
+;;; Visually distinguish file attached buffers from others such as REPL
+(use-package solaire-mode
+  :hook (after-init . solaire-global-mode))
 
 ;;; BUILT-IN MODE CONFIGURATION =================================================
 
