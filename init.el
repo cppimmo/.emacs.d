@@ -185,8 +185,8 @@ URLS List of URL strings (set to package-archives by default)."
 		frame-title-format `("GNU Emacs - %b | " ,(user-login-name) "@" ,(system-name))
 		cursor-type 'box ; Set the cursor type
 		font-lock-maximum-decoration t ; Max font decor
-		)
-  
+		confirm-kill-emacs 'y-or-n-p)
+  (defalias 'yes-or-no-p 'y-or-n-p)
   (add-to-list 'custom-theme-load-path "~/.emacs.d/cppimmo-themes/") ; Set theme load path.
   ;;(load-theme 'cppimmo-bright-ink t) ; Set the theme (if custom).
   (add-hook 'prog-mode-hook #'show-paren-mode) ; Extra highlighting for programming modes.
@@ -306,12 +306,6 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX-esque systems."
   (cppimmo:global-delim-face-mode 1))
 
 ;;; PACKAGE CONFIGURATION - REPOS ===============================================
-;;; Settings for fill column indicator package. Toggle with "fci-mode".
-(use-package fill-column-indicator
-  :config
-  (setq fci-rule-column 80
-		fci-rule-width  2
-		fci-rule-color  "red"))
 
 ;;; Settings for the pomodoro package.
 (use-package pomodoro
@@ -321,10 +315,10 @@ Other methods of backup can easily exceed the MAX_PATH of POSIX-esque systems."
 	;; Add to the mode line once
 	(defvar cppimmo:pomodoro-mode-line-set-p nil)
 	(unless cppimmo:pomodoro-mode-line-set-p
-	  (pomodoro-add-to-mode-line) ; Add to modeline.
+	  (pomodoro-add-to-mode-line)		; Add to modeline.
 	  (setq cppimmo:pomodoro-mode-line-set-p t))
 	;; Place all audio files in the repository to make things easier.
-	(setq pomodoro-work-start-sound  "~/.emacs.d/audio/beacon-alarm.wav"  ; Work time alert.
+	(setq pomodoro-work-start-sound  "~/.emacs.d/audio/beacon-alarm.wav" ; Work time alert.
 		  pomodoro-break-start-sound "~/.emacs.d/audio/beacon-alarm.wav") ; Break time alert.
 	(defun cppimmo:play-pomodoro-sound (sound)
 	  "Replace the play sound function for the pomodoro package."
@@ -725,6 +719,10 @@ already been connected to."
 (use-package solaire-mode
   :hook (after-init . solaire-global-mode))
 
+;;; Expand/collapse regions.
+;;;(use-package expand-region
+;;;  :general ("C-q" 'er/expand-region))
+
 ;;; BUILT-IN MODE CONFIGURATION =================================================
 
 ;;; Emacs bultin package configuration
@@ -850,6 +848,17 @@ when Emacs starts."
 	(get-buffer bookmark-bmenu-buffer))
   ;; Assign the callback to initial-buffer-choice
   (setq initial-buffer-choice #'cppimmo:retrieve-initial-buffer))
+
+(use-package autorevert
+  ;; Ensure real-time file modifications are propogated in the buffer
+  :config (global-auto-revert-mode 1))
+
+;;; Settings for fill column indicator package. Toggle with "fci-mode".
+(use-package fill-column-indicator
+  :config
+  (setq fci-rule-column 80
+		fci-rule-width  2
+		fci-rule-color  "red"))
 
 ;;; LOAD KEYBINDINGS ============================================================
 (load "cppimmo-keybindings")
